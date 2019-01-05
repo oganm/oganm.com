@@ -40,7 +40,7 @@ my shiny server. It is running an nginx web server.
 
 This site is created using [blogdown](https://cran.r-project.org/web/packages/blogdown/index.html). Reading the [blogdown book](https://bookdown.org/yihui/blogdown/), I simply started with the `blogdown::new_site()` 
 command which created the basic template and launched the site.
-Viewing the site for the first time, it looked horrible because images and css did not
+As I looked at my creation for the first time, it looked horrible because images and css did not
 correctly load. This is because as described in [this](https://github.com/rstudio/blogdown/issues/124) issue,
 default settings break blogdown in rstudio and I need to add
 
@@ -51,7 +51,7 @@ relativeurls = true
 to the `config.toml`. I may run into issues later as that conversation seems to
 continue in the issue but its midnight and I don't have time to go on.
 
-While I am at it I edit the title, github and twitter links in the `config.toml` along
+While I am at it I edit the title, github and twitter links in the `config.toml`, along
 with adding a new image to `static/images` path and change the url of the `[params.logo]`
 to that filename.
 
@@ -68,7 +68,7 @@ This is what the site looks like now
 Was half expecting that not to work. Just like the logo, I placed this image in the 
 `static/images` directory as `site1.PNG` and did `![](/images/site1.PNG)` to link to
 it. One of the first comments in the github issue was complaining about this not working.
-Well I won't have to revisit that issue now yay. I then delete the files for the default posts. 
+I won't have to revisit that issue for now. I proceed to delete the files for the default posts. 
 
 I also rewrote the `content/about.md` to write a few minor details about me.
 
@@ -89,13 +89,13 @@ sudo ./deploy
 ```
 
 to move all files to where they should be. I navigate to oganm.com and everything
-looks as it should be.
+looks fine
 
 
 ## Font-awesome (and emojis)
 
 First thing I want to do add is the abilitiy to add support for font-awesome icons. I don't like the Github and 
-Twitter links literally saying Github and Twitter. They take too much space they can easily be replaced with icons.
+Twitter links literally saying "Github" and "Twitter". They take too much space they can easily be replaced with icons.
 
 A google search eventually leads me to [these](https://alison.rbind.io/slides/blogdown-workshop-slides.html#1) slides by Alison Hill
 through [another blog](https://mikmart.rbind.io/2018/02/18/testing-font-awesome/). It
@@ -104,7 +104,9 @@ is a pretty comprehensive summary of everything, it's great.
 On my way to font-awesome configuration I see that I also need to manually allow emojis.
 She adds one using the code `:heart :`. Lets try: :heart:. Hmm you can't see the code
 itself because I don't know how to escape the thing that replaces the code with emojis here. I'll just
-add a space after `heart` to make it visible for now. I wonder what happens if I 
+add a space after `heart` to make it visible for now. 
+
+I wonder what happens if I 
 add a real emoji ❤️. That also works so do I even need to set `enableEmoji = true`?
 
 Let's try turning it off... 
@@ -117,7 +119,7 @@ place. It is probably about how rstudio isn't designed to support fonts that are
 not monospaced. That might push me to flip this setting back later. Anyway, back to
 font-awesome.
 
-<details><summary>Hidden here is a rabbithole I got into that lead nowhere. Click at your own peril. I will now pretend this never happened.</summary>
+<details><summary><i>Hidden here is a rabbithole I got into that lead nowhere. Click at your own peril. I will now pretend this never happened.</i></summary>
 It seems like things have changed since these slides are prepared. They tell me to
 go to [this](http://fontawesome.io/get-started/) link and give them my e-mail to get
 my code but it just redirects me to [here](https://fontawesome.com/start) and providing
@@ -160,11 +162,11 @@ I am unsure about the relationship between the `head_custom.html` and `header.ht
 That means I am using out of date fontawesome but I can deal with that later. Or maybe I'll just switch to "hugo-academic". I am an academic after all. I delete  the `assets.toml` before  I leave to not have leftovers.
 </details>
 
-As anyone who knows what they are doing would do, I went to [this](https://fontawesome.com/start) site to get the code required to enable font-awesome. I created `layouts/partials/head_custom.html` and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. 
+As anyone who knows what they are doing would do, I went to [this](https://fontawesome.com/start) site to get the code required to enable font-awesome. I created `layouts/partials/head_custom.html` and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different. 
 
 Here's an igloo: <i class="fas fa-igloo"></i>
 
-In order to enable using font-awesome at the `[[menu.main]]`s however I need to modify `nav.html` as well. I will just get that from the 
+In order to enable font-awesome at the `[[menu.main]]`s however I need to modify `nav.html` as well. I will just get that from Allison Hill's 
 [workshop repository](https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-nav.html), hopefully icon ids are the same.
 
 I go to `config.toml` and add a `pre` tag to Twitter
@@ -227,7 +229,9 @@ And it just works. Great. Now we can get rid of the names to leave the icons. Ac
 because it seems names are important in differentiating the menus. When I delete both of their names,
 one of them disappear which is not ideal. Looking at [someone else's](https://github.com/mikmart/mikkomarttila/blob/master/config.toml)
 `config.toml`, I infer that the name can be the same if you provide `weight`s. Probably
-because they are sorted based on their names if a `weight` isn't provided. Nope that didn't fix it.
+because they are sorted based on their names if a `weight` isn't provided. 
+
+Nope that didn't fix it.
 Turns out it is the `identifier`. `weight` does allow sorting things though so that's nice. Our final `[[menu.main]]`s in
 `config.toml` now look like this
 
@@ -271,8 +275,12 @@ url = 'oganm.com/shiny/printSheetApp'
 
 ```
 
-should do the trick, alas it doesn't work. It seems the default bookdown theme doesn't support dropdown menus. Let's look at a theme that does and see if we can
-steal the [relevant code](https://github.com/gcushen/hugo-academic/blob/6cac50ecd6f97b52c4d38ff6f351ef1cace891d2/layouts/partials/navbar.html#L27-L67). I can't just copy and paste this code as it seems to use the menu item properties differently than the default theme. However just looking at the code I have a better understanding of how hugo is supposed to work. I see structures like loops 
+should do the trick. 
+
+Alas it doesn't work. It seems the default bookdown theme doesn't support dropdown menus. Let's look at a theme that does and see if we can
+steal the [relevant code](https://github.com/gcushen/hugo-academic/blob/6cac50ecd6f97b52c4d38ff6f351ef1cace891d2/layouts/partials/navbar.html#L27-L67). 
+
+I can't just copy and paste this code as it seems to use the menu item properties differently than the default theme. However just looking at the code I have a better understanding of how hugo is supposed to work. I see structures like loops 
 
 ```
 {{ range .Site.Menus.main }}
@@ -299,11 +307,11 @@ I assume all `[[menu.main]]` items are processed through this loop to create sub
     {{ end }}
 ```
 
-Nothing should change. If the menu item has a child just don't do anything and that's exactly what I see.
+Nothing should change.Note that the code above ignores any menu item with a child. That's exactly what I see.
 
 I imagine if I use the code in the academic theme, I'll face issues with missing
 classes in my CSS. So I find a basic tutorial that explains [how to create a dropdown navbar](https://www.w3schools.com/howto/howto_css_dropdown_navbar.asp). For now I will
-lift the entire css file and will tweak later if needed. I create a `dropdown.css` file
+copy the entire css file and will tweak later if needed. I create a `dropdown.css` file
 in `static/css` (this is also explained in Alison Hill's slides). To create the html portion I will
 see what the suggested code is and try to adapt it to incorporate the loop structure of Hugo.
 
@@ -434,16 +442,20 @@ After some fiddling my `nav.html` file
 </nav>
 ```
 
-Now this "works" but the coloring placement of the item is very wrong. This should be solvable 
-by fiddling with the css. To simplify, I delete the `.navbar` classes. The `.dropdown` seems to be configured
+Now this "works" but the coloring and placement of the item is very wrong. This should be solvable 
+by fiddling with the css. 
+
+To simplify, I delete the `.navbar` classes. The `.dropdown` seems to be configured
 to float to left so I change that to right. The `.dropbtn` has all sorts of properties like padding, font size etc.
-I imagine it will work fine if it just inherit those from it's parent so I delete them. It stats looking like it belongs now. I change the background color of the hovering to a respectable gray from that horrible red. It is almost perfect now.
+I imagine it will work fine if it just inherit those from it's parent so I delete them. It stats looking like it belongs there now. I change the background color of the hovering to a respectable gray from that horrible red. It is almost perfect.
 
 However when the page is enlarged, the submenu items appear on the same line. It is because I used `<li>` tag before `<a>` tag on those links.
 I need to make sure `<li>` tags have the `display: block` in the css instead of `<a>` tags.
 
 It seems that I now have an alignment problem. When I have two elements on the submenu,
-they don't align together. Examining the element reveals the issue: the theme. While 
+they don't align together. Examining the element reveals the issue: the default theme. 
+
+While 
 the theme doesn't have support for dropdown menus, it seems to have set properties for the `.nav-linkgs li:first-child`. It has a `margin-left: 0px` in it which makes it slide
 differently than the child element. No idea what is the purpose of that but I can get behind that 0 margin so I add it to `.dropdown-content li`
 
@@ -602,7 +614,7 @@ Hmmm... what?
 
 
 Ok this was totally unexpected. How the hell did that happen. I am guessing this will be
-a missing html closing time from the time I wrote the dropdown menu code so I go back to `nav.html`.
+a missing html closing tag from the time I wrote the dropdown menu code so I go back to `nav.html`.
 
 
 ```
@@ -641,7 +653,7 @@ And sure enough we get the desired result.
 ![](/images/correctNest.PNG)
 
 
-Wait a minute no it's not. Why did it place the tools tab before blog tab. Weren't the weights
+Wait a minute no we don't! Why did it place the tools tab before blog tab. Weren't the weights
 responsible for keeping the correct order? I try shifting the weights of other objects and they to seem to follow the correct order for the most
 part. But dropdown menu's are ignoring the ordering. I look at the page code and see that the code is generated in the correct order.
 So we must have a problem with the CSS. I remember having similar problems with `float` options before so I remove
@@ -674,9 +686,13 @@ It is not horrible so I'll leave it like that for now.
 ## Google analytics and disqus
 
 This is an easy problem to solve. I create the tracking code from the google analytic page and paste it to
-`config.toml`'s `googleAnalytics` setting. However when I tested it there was no traffic seen. After a short googling I remembered I use browser plugins to stop google from tracking me. I was happy to see that it works on other browsers.
+`config.toml`'s `googleAnalytics` setting. However when I tested it there was no traffic.
 
-For disqus I just created a forum from disqus page and added the code in to the `config.toml`. It just worked.
+After a short googling I remembered I use browser plugins to stop google from tracking me. I am now happy to see that it works on other browsers.
+
+For disqus I just created a forum from disqus page and added the code in to the `config.toml`. It just worked. 
+
+I remember disqus adding horrible ads all around though. That didn't seem to happen now even when I made sure I am not using an adblocker. I should probably ask Dean about it later. He had issues with ads before. 
 
 
 ## Homepage
@@ -686,7 +702,7 @@ need to place an `index.html` to the layouts section. A question is what do I wa
 
 I kinda like how the academic theme home looks, I can try to replicate it. At this point I copied or attempted to copy so much stuff from the academic theme that I might as well switch to it. But I'll let the sunk cost fallacy rule the day for now.
 
-For starters, I know I don't want to deal with html. This is where I part from Alison Hill's slides again as the way she does it looks like it'll force me edit html. To make a markdown file render, I figured I could just make a `index.md` or `index.Rmd` on the `content` dir. Sure enough creating that file replaces the index file that lists the posts. However since this file is created based on `single.html` of the template, just like posts, this also has a disqus commenting section. This means I need to create my own `single.html` and make the appearance of disqus conditional. I place the code that generates the discus thingy in an if caluse. 
+For starters, I know I don't want to deal with html. This is where I part from Alison Hill's slides again as the way she does it looks like it'll force me edit html. To make a markdown file render, I figured I could just make a `index.md` or `index.Rmd` on the `content` dir. Sure enough creating that file replaces the index file that lists the posts. However since this file is created based on `single.html` of the template, just like posts, it also has a disqus commenting section. This means I need to create my own `single.html` and make the appearance of disqus conditional. I place the code that generates the discus thingy in an if caluse. 
 
 ```
 {{if .Params.disqus}}
@@ -694,4 +710,34 @@ For starters, I know I don't want to deal with html. This is where I part from A
 {{end}}
 ```
 
-This means I in my `disqus.Rmd` I can set `disqus: false` using the yaml and discus section should disappear... And it did. So I guess I am done for now. If I change anything else I will return...
+This means I in my `disqus.Rmd` I can set `disqus: false` using the yaml and discus section should disappear... And it did. So I guess I am done for now. I will delete the about file now and if I change anything else, I will return...
+
+Well that didn't take long did it. Turns out you can't have an `index.Rmd` in `content`. [It has to be named `_index.Rmd`](https://discourse.gohugo.io/t/render-index-md-as-single/5533). The annoying thing is, this causes updates to fail silently while existing posts and front page updates work fine...
+
+And now that I use `_index.Rmd`, the posts appear underneath again. Should have expected that... That is because the `list.html` file in layout is being used. Should have listened to Alison Hill... Here's the relevant bit from `list.html`.
+
+```
+  <article class="article">
+    <div class="article-content">
+      {{ .Content }}
+    </div>
+  </article>
+```
+
+It seems like the `list.html` includes the `_index.Rmd` when rendering using the `{{ .Content }}` tag. That part is all I need so I can create an `index.html` in `layouts` that only copies the relevant bits from `list.html`
+
+```
+{{ partial "header.html" . }}
+
+<main class="content" role="main">
+  <article class="article">
+    <div class="article-content">
+	{{.Content}}
+    </div>
+  </article>
+</main>
+
+{{ partial "footer.html" . }}
+```
+
+Ok now I'm done I think... Also I finally solved the alignment of the navbar items by adding a `vertical-align: middle` to both `.nav-links li` and `.dropdown` in the css.

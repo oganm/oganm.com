@@ -12,10 +12,7 @@ enableEmoji = false
 [permalinks]
     post = "/:year/:month/:day/:slug/"
 
-[[menu.main]]
-    name = "About"
-    url = "/about/"
-    weight = -1
+
 [[menu.main]]
 	name = ""
 	identifier = "github"
@@ -23,7 +20,7 @@ enableEmoji = false
     url = "https://github.com/oganm"
     weight = 1
 [[menu.main]]
-	name = ""
+	name = "Publications"
 	identifier = "scholar"
     pre = "fas fa-graduation-cap"
     url = "https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&hl=en"
@@ -33,7 +30,7 @@ enableEmoji = false
 	identifier = "twitter"
     pre = "fab fa-twitter"
     url = "https://twitter.com/oganm"
-    weight = 3
+    weight = 2
 [[menu.main]]
     name = "Tools"
     identifier = "tools"

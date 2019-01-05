@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Index on Ogan Mancarci</title>
+    <link>/tags/index/</link>
+    <description>Recent content in Index on Ogan Mancarci</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="/tags/index/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>index</title>
+      <link>/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/</guid>
+      <description>B. Ogan Mancarci I am a PhD student of bioinformatics in UBC. I work on gene expression in brain cell types and try to extract cell type specific signals from whole brain gene expression data. Here’s a CV.
+ Work projects  NeuroExpresso is my lab’s database cell type specific gene expression. It was released with Mancarci et al. 2017 paper.
+ markerGeneProfile is an R package to infer cell type proportion changes from whole tissue expression profiles.</description>
+    </item>
+    
+  </channel>
+</rss>

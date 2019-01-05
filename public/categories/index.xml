@@ -10,5 +10,14 @@
 	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>Notes to Self</title>
+      <link>/categories/notes-to-self/</link>
+      <pubDate>Fri, 04 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/notes-to-self/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
