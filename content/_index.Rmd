@@ -29,11 +29,11 @@ I am a PhD student of bioinformatics in UBC. I work on gene expression in brain 
 
 # Just-for-Fun projects
 
-* [**staplr**](https://github.com/pridiltal/staplr) is an R package for PDF manipulation. I contributed PDF form filling functionality and worked on some overall improvements.
+* [**staplr**](https://github.com/pridiltal/staplr) is an R package for PDF manipulation. I contributed its PDF form filling functionality.
 
 * [**stockfisher**](https://github.com/oganm/stockfisher) is an R package that allows easy interaction with UCI capable chess engines through R.
 
-* [**import5eChar**](https://github.com/oganm/import5eChar) is an R package that reads D&D character data exported from Walter Kammerer's [Fifth Edition Character Sheet](https://play.google.com/store/apps/details?id=com.wgkammerer.testgui.basiccharactersheet.app) and allows automation of character actions, printing PDF character sheets (this is where staplr contributions came from) and includes a shiny app that acts as an interactive character sheet.
+* [**import5eChar**](https://github.com/oganm/import5eChar) is an R package that reads D&D character data exported from Walter Kammerer's [Fifth Edition Character Sheet](https://play.google.com/store/apps/details?id=com.wgkammerer.testgui.basiccharactersheet.app) and allows automation of character actions, printing PDF character sheets (this is where staplr contributions came from). It also includes a shiny app that acts as an interactive character sheet.
 
 * [**printSheetApp**](http://oganm.com/shiny/printSheetApp/) is a shiny app that wraps import5eChar's pdf printing functionality for non-R-users.
 

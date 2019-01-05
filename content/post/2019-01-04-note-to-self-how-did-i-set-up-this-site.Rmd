@@ -4,6 +4,7 @@ author: Ogan Mancarci
 date: '2019-01-04'
 categories:
   - Notes To Self
+disqus: true
 tags:
   - blogdown
 slug: note-to-self-how-did-i-set-up-this-site
@@ -119,7 +120,7 @@ place. It is probably about how rstudio isn't designed to support fonts that are
 not monospaced. That might push me to flip this setting back later. Anyway, back to
 font-awesome.
 
-<details><summary><i>Hidden here is a rabbithole I got into that lead nowhere. Click at your own peril. I will now pretend this never happened.</i></summary>
+<details><summary><i>Hidden here is a rabbithole I got into that lead to nowhere. Click at your own peril. I will now pretend this never happened.</i></summary>
 It seems like things have changed since these slides are prepared. They tell me to
 go to [this](http://fontawesome.io/get-started/) link and give them my e-mail to get
 my code but it just redirects me to [here](https://fontawesome.com/start) and providing
@@ -162,7 +163,7 @@ I am unsure about the relationship between the `head_custom.html` and `header.ht
 That means I am using out of date fontawesome but I can deal with that later. Or maybe I'll just switch to "hugo-academic". I am an academic after all. I delete  the `assets.toml` before  I leave to not have leftovers.
 </details>
 
-As anyone who knows what they are doing would do, I went to [this](https://fontawesome.com/start) site to get the code required to enable font-awesome. I created `layouts/partials/head_custom.html` and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different. 
+Like anyone who knows what they are doing would do, I went to [this](https://fontawesome.com/start) site to get the code required to enable font-awesome. I created `layouts/partials/head_custom.html` and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different. 
 
 Here's an igloo: <i class="fas fa-igloo"></i>
 
@@ -198,7 +199,7 @@ What we should be doing is
 <i class="fab fa-twitter"></i>
 ```
 
-So let's dispense with the shorcuts here and change `nav.html` to be
+So let's dispense with the shortcuts here and change `nav.html` to be
 
 ```
 <nav class="nav">
@@ -225,9 +226,11 @@ Then we can give the entire id to `pre` field in `config.toml`
     url = "https://twitter.com/oganm"
 ```
 
-And it just works. Great. Now we can get rid of the names to leave the icons. Actually we can't
-because it seems names are important in differentiating the menus. When I delete both of their names,
-one of them disappear which is not ideal. Looking at [someone else's](https://github.com/mikmart/mikkomarttila/blob/master/config.toml)
+And it just works. Great. Now we can get rid of the names to leave the icons. 
+
+Actually we can't
+because it seems like names are important in differentiating the menus. When I delete both of their names,
+one of them disappear. Looking at [someone else's](https://github.com/mikmart/mikkomarttila/blob/master/config.toml)
 `config.toml`, I infer that the name can be the same if you provide `weight`s. Probably
 because they are sorted based on their names if a `weight` isn't provided. 
 
@@ -740,4 +743,10 @@ It seems like the `list.html` includes the `_index.Rmd` when rendering using the
 {{ partial "footer.html" . }}
 ```
 
-Ok now I'm done I think... Also I finally solved the alignment of the navbar items by adding a `vertical-align: middle` to both `.nav-links li` and `.dropdown` in the css.
+Also it turns out I need to add `disqus: true` on the beginning of my posts now
+to enable disqus because the default doesn't seem to be true. Didn't notice it when index
+file was blocking updates.
+
+I finally solved the alignment of the navbar items by adding a `vertical-align: middle` to both `.nav-links li` and `.dropdown` in the css.
+
+Ok now I'm done I think... 

@@ -20,33 +20,49 @@ enableEmoji = false
     url = "https://github.com/oganm"
     weight = 1
 [[menu.main]]
-	name = "Publications"
-	identifier = "scholar"
-    pre = "fas fa-graduation-cap"
-    url = "https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&hl=en"
-    weight = 3
-[[menu.main]]
 	name = ""
 	identifier = "twitter"
     pre = "fab fa-twitter"
     url = "https://twitter.com/oganm"
     weight = 2
 [[menu.main]]
-    name = "Tools"
-    identifier = "tools"
+	name = ""
+	identifier = "mail"
+    pre = "fas fa-at"
+    url = "mailto:ogan.mancarci@gmail.com"
+    weight = 3
+[[menu.main]]
+	name = "Publications"
+	identifier = "scholar"
+    pre = "fas fa-graduation-cap"
+    url = "https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&hl=en"
     weight = 4
 [[menu.main]]
-	name = "5e char sheet printer"
-	parent = "tools"
-	url = "https://oganm.com/shiny/printSheetApp"
+    name = "Work tools"
+    identifier = "worktools"
+    weight = 5
 [[menu.main]]
-	name = "5e interactive sheet"
-	parent = "tools"
-	url = "http://oganm.com/shiny/interactiveSheet/"
+    name = "Fun tools"
+    identifier = "funtools"
+    weight = 6
 [[menu.main]]
     name = "Blog"
     identifier = "blog"
-    weight = 5
+    weight = 7
+[[menu.main]]
+	name = "NeuroExpresso"
+	parent = "worktools"
+	url = "http://neuroexpresso.org"
+	weight = 1
+[[menu.main]]
+	name = "5e char sheet printer"
+	parent = "funtools"
+	url = "https://oganm.com/shiny/printSheetApp"
+	weight = 2
+[[menu.main]]
+	name = "5e interactive sheet"
+	parent = "funtools"
+	url = "http://oganm.com/shiny/interactiveSheet/"
 [[menu.main]]
 	name = "Notes to self"
 	parent = "blog"
@@ -54,7 +70,7 @@ enableEmoji = false
 
 [params]
     description = "Ogan Mancarci's blog"
-	customCSS = ["css/dropdown.css"]
+	customCSS = ["css/dropdown.css","css/links.css","css/navbarcolors.css"]
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.12.0"
     highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"

@@ -30,6 +30,10 @@
 
 <link rel="stylesheet" href="../../../../css/dropdown.css">
 
+<link rel="stylesheet" href="../../../../css/links.css">
+
+<link rel="stylesheet" href="../../../../css/navbarcolors.css">
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
   </head>
@@ -54,12 +58,29 @@
     
     
     
+        <li><a href="mailto:ogan.mancarci@gmail.com"><i class="fas fa-at" aria-hidden="true"></i>&nbsp; </a></li>
+    
+    
+    
         <li><a href="https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&amp;hl=en"><i class="fas fa-graduation-cap" aria-hidden="true"></i>&nbsp; Publications</a></li>
     
     
     
     	<div class="dropdown">
-    		<button class="dropbtn"><i class="" aria-hidden="true"></i>&nbsp; Tools
+    		<button class="dropbtn"><i class="" aria-hidden="true"></i>&nbsp; Work tools
+    		  <i class="fas fa-caret-down"></i>
+    		</button>
+    		<div class="dropdown-content">
+    			
+    			    <li><a href="http://neuroexpresso.org"><i class="" aria-hidden="true"></i>&nbsp; NeuroExpresso</a></li>
+    			
+    	     </div>
+    	</div>
+    
+    
+    
+    	<div class="dropdown">
+    		<button class="dropbtn"><i class="" aria-hidden="true"></i>&nbsp; Fun tools
     		  <i class="fas fa-caret-down"></i>
     		</button>
     		<div class="dropdown-content">
@@ -156,7 +177,7 @@ cp -r public/. /var/www/html</code></pre>
 <p>I wonder what happens if I add a real emoji ❤️. That also works so do I even need to set <code>enableEmoji = true</code>?</p>
 <p>Let’s try turning it off… Ok real emojis work on their own so I will keep this off for now. This means the previous paragraph will look very weird but oh well..</p>
 <p>Using real emojis has its problems though. It seems like rstudio editor doesn’t quite know how to deal with emojis and they make the cursor appear at the wrong place. It is probably about how rstudio isn’t designed to support fonts that are not monospaced. That might push me to flip this setting back later. Anyway, back to font-awesome.</p>
-<p><details><summary><i>Hidden here is a rabbithole I got into that lead nowhere. Click at your own peril. I will now pretend this never happened.</i></summary> It seems like things have changed since these slides are prepared. They tell me to go to <a href="http://fontawesome.io/get-started/">this</a> link and give them my e-mail to get my code but it just redirects me to <a href="https://fontawesome.com/start">here</a> and providing an e-mail doesn’t seem to be necesary.</p>
+<p><details><summary><i>Hidden here is a rabbithole I got into that lead to nowhere. Click at your own peril. I will now pretend this never happened.</i></summary> It seems like things have changed since these slides are prepared. They tell me to go to <a href="http://fontawesome.io/get-started/">this</a> link and give them my e-mail to get my code but it just redirects me to <a href="https://fontawesome.com/start">here</a> and providing an e-mail doesn’t seem to be necesary.</p>
 <p>Actually I am not sure if things work the same way at all. I am instructed to add a <code>font-awesome.min.css</code> to my path that is included in the github repo for the tutorial. I assume this file is acquired from font awesome and I google for the name. I am directed to <a href="https://fontawesome.com/v4.7.0/get-started/">this</a> link which is a tutorial for an older version of font awesome. The page aggressively suggests I should switch to version 5.0. The code that is given in the link seems to include a remote css file but I am not a web design guy so who knows what is required.</p>
 <p>Before I try anything I want to see if font awesome is supported by default. Things seems to have changed so why not this too. So lets do <code>&lt;i class=&quot;fa fa-envelope-open&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;</code> right here: <i class="fa fa-envelope-open" aria-hidden="true"></i>. There is probably an envelope there now (in the future) but right now I see nothing. So sadly, no default support for font awesome.</p>
 <p>Before I give up and follow the instructions from the slides, I quickly google “fontawesome 5 blogdown” which leads me to <a href="https://github.com/gcushen/hugo-academic/issues/541">this</a> issue on another theme that seems to support font awesome by default and switching to fontawesome 5. I could switch to that theme but I don’t want to get into that right now. Instead I look at the linked <a href="https://github.com/gcushen/hugo-academic/pull/659/files">pull request</a> that is supposed to handle fontawesome 5 support. Quite a bit of files seem to be changed but most of them seem to be adding the icons to various places. The first important looking file is <code>data/assest.toml</code>. I see that neither the default theme nor the current site has anything in <code>data</code> directory. So I create the <code>assets.toml</code> in there and copy the bits that seem to be related to font-awesome support, which are helpfully highlighted in the pull request’s diff. Well.. that didn’t work. Which means there are other pieces to this.</p>
@@ -165,7 +186,7 @@ cp -r public/. /var/www/html</code></pre>
 <pre><code>&lt;script src=&quot;https://use.fontawesome.com/dc8f5495c2.js&quot;&gt;&lt;/script&gt;</code></pre>
 <p>So it only adds the font-awesome javascript.</p>
 <p>I am unsure about the relationship between the <code>head_custom.html</code> and <code>header.html</code> and the the hugo-academic theme’s <code>header.html</code> seems considerably complex. I am out of my depth for now and its 3 am. Will probably just return to doing what I am told by the slides tomorrow. That means I am using out of date fontawesome but I can deal with that later. Or maybe I’ll just switch to “hugo-academic”. I am an academic after all. I delete the <code>assets.toml</code> before I leave to not have leftovers. </details></p>
-<p>As anyone who knows what they are doing would do, I went to <a href="https://fontawesome.com/start">this</a> site to get the code required to enable font-awesome. I created <code>layouts/partials/head_custom.html</code> and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different.</p>
+<p>Like anyone who knows what they are doing would do, I went to <a href="https://fontawesome.com/start">this</a> site to get the code required to enable font-awesome. I created <code>layouts/partials/head_custom.html</code> and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different.</p>
 <p>Here’s an igloo: <i class="fas fa-igloo"></i></p>
 <p>In order to enable font-awesome at the <code>[[menu.main]]</code>s however I need to modify <code>nav.html</code> as well. I will just get that from Allison Hill’s <a href="https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-nav.html">workshop repository</a>, hopefully icon ids are the same.</p>
 <p>I go to <code>config.toml</code> and add a <code>pre</code> tag to Twitter</p>
@@ -183,7 +204,7 @@ cp -r public/. /var/www/html</code></pre>
 <pre><code>&lt;i class=&quot;fa fa-twitter fa-lg fa-fw&quot; aria-hidden=&quot;true&quot;&gt;</code></pre>
 <p>What we should be doing is</p>
 <pre><code>&lt;i class=&quot;fab fa-twitter&quot;&gt;&lt;/i&gt;</code></pre>
-<p>So let’s dispense with the shorcuts here and change <code>nav.html</code> to be</p>
+<p>So let’s dispense with the shortcuts here and change <code>nav.html</code> to be</p>
 <pre><code>&lt;nav class=&quot;nav&quot;&gt;
   &lt;a href=&quot;{{ &quot;/&quot; | relURL }}&quot; class=&quot;nav-logo&quot;&gt;
     &lt;img src=&quot;{{ print &quot;images/&quot; .Site.Params.logo.url | relURL }}&quot;
@@ -202,7 +223,8 @@ cp -r public/. /var/www/html</code></pre>
     name = &quot;Twitter&quot;
     pre = &quot;fab fa-twitter&quot;
     url = &quot;https://twitter.com/oganm&quot;</code></pre>
-<p>And it just works. Great. Now we can get rid of the names to leave the icons. Actually we can’t because it seems names are important in differentiating the menus. When I delete both of their names, one of them disappear which is not ideal. Looking at <a href="https://github.com/mikmart/mikkomarttila/blob/master/config.toml">someone else’s</a> <code>config.toml</code>, I infer that the name can be the same if you provide <code>weight</code>s. Probably because they are sorted based on their names if a <code>weight</code> isn’t provided.</p>
+<p>And it just works. Great. Now we can get rid of the names to leave the icons.</p>
+<p>Actually we can’t because it seems like names are important in differentiating the menus. When I delete both of their names, one of them disappear. Looking at <a href="https://github.com/mikmart/mikkomarttila/blob/master/config.toml">someone else’s</a> <code>config.toml</code>, I infer that the name can be the same if you provide <code>weight</code>s. Probably because they are sorted based on their names if a <code>weight</code> isn’t provided.</p>
 <p>Nope that didn’t fix it. Turns out it is the <code>identifier</code>. <code>weight</code> does allow sorting things though so that’s nice. Our final <code>[[menu.main]]</code>s in <code>config.toml</code> now look like this</p>
 <pre><code>[[menu.main]]
     name = &quot;About&quot;
@@ -582,12 +604,39 @@ url = &#39;oganm.com/shiny/printSheetApp&#39;
 &lt;/main&gt;
 
 {{ partial &quot;footer.html&quot; . }}</code></pre>
-<p>Ok now I’m done I think… Also I finally solved the alignment of the navbar items by adding a <code>vertical-align: middle</code> to both <code>.nav-links li</code> and <code>.dropdown</code> in the css.</p>
+<p>Also it turns out I need to add <code>disqus: true</code> on the beginning of my posts now to enable disqus because the default doesn’t seem to be true. Didn’t notice it when index file was blocking updates.</p>
+<p>I finally solved the alignment of the navbar items by adding a <code>vertical-align: middle</code> to both <code>.nav-links li</code> and <code>.dropdown</code> in the css.</p>
+<p>Ok now I’m done I think…</p>
 </div>
 </div>
 
 	</div>
 		</article>
+		
+		
+<section id="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var d = document, s = d.createElement('script');
+    s.src = '//oganm.disqus.com/embed.js'; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
 		
 	
 	</main>

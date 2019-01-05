@@ -28,6 +28,10 @@
 
 <link rel="stylesheet" href="./css/dropdown.css">
 
+<link rel="stylesheet" href="./css/links.css">
+
+<link rel="stylesheet" href="./css/navbarcolors.css">
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
   </head>
@@ -52,12 +56,29 @@
     
     
     
+        <li><a href="mailto:ogan.mancarci@gmail.com"><i class="fas fa-at" aria-hidden="true"></i>&nbsp; </a></li>
+    
+    
+    
         <li><a href="https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&amp;hl=en"><i class="fas fa-graduation-cap" aria-hidden="true"></i>&nbsp; Publications</a></li>
     
     
     
     	<div class="dropdown">
-    		<button class="dropbtn"><i class="" aria-hidden="true"></i>&nbsp; Tools
+    		<button class="dropbtn"><i class="" aria-hidden="true"></i>&nbsp; Work tools
+    		  <i class="fas fa-caret-down"></i>
+    		</button>
+    		<div class="dropdown-content">
+    			
+    			    <li><a href="http://neuroexpresso.org"><i class="" aria-hidden="true"></i>&nbsp; NeuroExpresso</a></li>
+    			
+    	     </div>
+    	</div>
+    
+    
+    
+    	<div class="dropdown">
+    		<button class="dropbtn"><i class="" aria-hidden="true"></i>&nbsp; Fun tools
     		  <i class="fas fa-caret-down"></i>
     		</button>
     		<div class="dropdown-content">
@@ -114,9 +135,9 @@
 <div id="just-for-fun-projects" class="section level1">
 <h1>Just-for-Fun projects</h1>
 <ul>
-<li><p><a href="https://github.com/pridiltal/staplr"><strong>staplr</strong></a> is an R package for PDF manipulation. I contributed PDF form filling functionality and worked on some overall improvements.</p></li>
+<li><p><a href="https://github.com/pridiltal/staplr"><strong>staplr</strong></a> is an R package for PDF manipulation. I contributed its PDF form filling functionality.</p></li>
 <li><p><a href="https://github.com/oganm/stockfisher"><strong>stockfisher</strong></a> is an R package that allows easy interaction with UCI capable chess engines through R.</p></li>
-<li><p><a href="https://github.com/oganm/import5eChar"><strong>import5eChar</strong></a> is an R package that reads D&amp;D character data exported from Walter Kammerer’s <a href="https://play.google.com/store/apps/details?id=com.wgkammerer.testgui.basiccharactersheet.app">Fifth Edition Character Sheet</a> and allows automation of character actions, printing PDF character sheets (this is where staplr contributions came from) and includes a shiny app that acts as an interactive character sheet.</p></li>
+<li><p><a href="https://github.com/oganm/import5eChar"><strong>import5eChar</strong></a> is an R package that reads D&amp;D character data exported from Walter Kammerer’s <a href="https://play.google.com/store/apps/details?id=com.wgkammerer.testgui.basiccharactersheet.app">Fifth Edition Character Sheet</a> and allows automation of character actions, printing PDF character sheets (this is where staplr contributions came from). It also includes a shiny app that acts as an interactive character sheet.</p></li>
 <li><p><a href="http://oganm.com/shiny/printSheetApp/"><strong>printSheetApp</strong></a> is a shiny app that wraps import5eChar’s pdf printing functionality for non-R-users.</p></li>
 <li><p><a href="http://oganm.com/shiny/interactiveSheet/"><strong>interactiveSheet</strong></a> is the shiny app that ships with import5eChar package</p></li>
 <li><p><a href="https://github.com/oganm/diceSyntax"><strong>diceSyntax</strong></a> is an R package that supports complex dice rolling syntax such as <code>10d8d3ro&lt;3</code>. That means roll 10 d8s, reroll anything below 3 once, drop three lowest dice. import5eChar and my other D&amp;D related packages depend on this</p></li>
