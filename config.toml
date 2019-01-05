@@ -1,0 +1,75 @@
+baseurl = "/"
+languageCode = "en-us"
+title = "Ogan Mancarci"
+theme = "hugo-lithium"
+googleAnalytics = "UA-111816736-3"
+disqusShortname = "oganm"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+relativeurls = true
+enableEmoji = false
+
+
+[permalinks]
+    post = "/:year/:month/:day/:slug/"
+
+[[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = -1
+[[menu.main]]
+	name = ""
+	identifier = "github"
+    pre = "fab fa-github"
+    url = "https://github.com/oganm"
+    weight = 1
+[[menu.main]]
+	name = ""
+	identifier = "scholar"
+    pre = "fas fa-graduation-cap"
+    url = "https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&hl=en"
+    weight = 3
+[[menu.main]]
+	name = ""
+	identifier = "twitter"
+    pre = "fab fa-twitter"
+    url = "https://twitter.com/oganm"
+    weight = 3
+[[menu.main]]
+    name = "Tools"
+    identifier = "tools"
+    weight = 4
+[[menu.main]]
+	name = "5e char sheet printer"
+	parent = "tools"
+	url = "https://oganm.com/shiny/printSheetApp"
+[[menu.main]]
+	name = "5e interactive sheet"
+	parent = "tools"
+	url = "http://oganm.com/shiny/interactiveSheet/"
+[[menu.main]]
+    name = "Blog"
+    identifier = "blog"
+    weight = 5
+[[menu.main]]
+	name = "Notes to self"
+	parent = "blog"
+	url = "/categories/notes-to-self/"
+
+[params]
+    description = "Ogan Mancarci's blog"
+	customCSS = ["css/dropdown.css"]
+    # options for highlight.js (version, additional languages, and theme)
+    highlightjsVersion = "9.12.0"
+    highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
+    highlightjsLang = ["r", "yaml"]
+    highlightjsTheme = "github"
+
+    MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
+    MathJaxVersion = "2.7.5"
+
+    [params.logo]
+    url = "oglogo.png"
+    width = 50
+    height = 50
+    alt = "Logo"
+

@@ -1,0 +1,460 @@
+---
+title: 'Note to self: How did I set up this site'
+author: Ogan Mancarci
+date: '2019-01-04'
+categories:
+  - Notes To Self
+tags:
+  - blogdown
+slug: note-to-self-how-did-i-set-up-this-site
+---
+
+
+
+<p>This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</p>
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
+<ul>
+<li><a href="#baseline">Baseline</a></li>
+<li><a href="#basic-set-up">Basic set-up</a></li>
+<li><a href="#font-awesome-and-emojis">Font-awesome (and emojis)</a></li>
+<li><a href="#menu.main-children">[[menu.main]] Children</a></li>
+<li><a href="#a-favicon">A favicon</a></li>
+<li><a href="#category-links">Category links</a></li>
+<li><a href="#google-analytics-and-disqus">Google analytics</a></li>
+<li><a href="#homepage">Homepage</a></li>
+</ul>
+<div id="baseline" class="section level2">
+<h2>Baseline</h2>
+<p>I am currently on my digitalocean server, set up mostly in accordance with Dean Attali’s <a href="https://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/">tutorial</a> to run my shiny server. It is running an nginx web server.</p>
+</div>
+<div id="basic-set-up" class="section level2">
+<h2>Basic set-up</h2>
+<p>This site is created using <a href="https://cran.r-project.org/web/packages/blogdown/index.html">blogdown</a>. Reading the <a href="https://bookdown.org/yihui/blogdown/">blogdown book</a>, I simply started with the <code>blogdown::new_site()</code> command which created the basic template and launched the site. Viewing the site for the first time, it looked horrible because images and css did not correctly load. This is because as described in <a href="https://github.com/rstudio/blogdown/issues/124">this</a> issue, default settings break blogdown in rstudio and I need to add</p>
+<pre><code>relativeurls = true</code></pre>
+<p>to the <code>config.toml</code>. I may run into issues later as that conversation seems to continue in the issue but its midnight and I don’t have time to go on.</p>
+<p>While I am at it I edit the title, github and twitter links in the <code>config.toml</code> along with adding a new image to <code>static/images</code> path and change the url of the <code>[params.logo]</code> to that filename.</p>
+<p>I then started writing this post by doing <code>blogdown::new_post(title= 'Note to self: How did I set up this site',ext = '.Rmd')</code>. At this point I noticed the blogdown book mentions a blogdown addin. I click Addins and yes, blogdown options are already there in the UI. I don’t need to run commands manually anymore. I click “Update Metadata” to add categories and tags. Ideally I would want to be able to group things using the categories but will look into that later.</p>
+<p>This is what the site looks like now</p>
+<div class="figure">
+<img src="/images/site1.PNG" />
+
+</div>
+<p>Was half expecting that not to work. Just like the logo, I placed this image in the <code>static/images</code> directory as <code>site1.PNG</code> and did <code>![](/images/site1.PNG)</code> to link to it. One of the first comments in the github issue was complaining about this not working. Well I won’t have to revisit that issue now yay. I then delete the files for the default posts.</p>
+<p>I also rewrote the <code>content/about.md</code> to write a few minor details about me.</p>
+<p>I eventually have to deploy this site so third parties can see it. Based on my nginx configuration, <code>oganm.com</code> leads to the index file stored at <code>var/www/html</code>. By default the site is built into the <code>public</code> directory. Don’t know how to change this and have no desire to do so. I create a file called deploy with the one liner</p>
+<pre><code>#!/bin/bash
+cp -r public/. /var/www/html</code></pre>
+<p>I make the file executible by doing <code>chmod +x deploy</code> and run</p>
+<pre><code>sudo ./deploy</code></pre>
+<p>to move all files to where they should be. I navigate to oganm.com and everything looks as it should be.</p>
+</div>
+<div id="font-awesome-and-emojis" class="section level2">
+<h2>Font-awesome (and emojis)</h2>
+<p>First thing I want to do add is the abilitiy to add support for font-awesome icons. I don’t like the Github and Twitter links literally saying Github and Twitter. They take too much space they can easily be replaced with icons.</p>
+<p>A google search eventually leads me to <a href="https://alison.rbind.io/slides/blogdown-workshop-slides.html#1">these</a> slides by Alison Hill through <a href="https://mikmart.rbind.io/2018/02/18/testing-font-awesome/">another blog</a>. It is a pretty comprehensive summary of everything, it’s great.</p>
+<p>On my way to font-awesome configuration I see that I also need to manually allow emojis. She adds one using the code <code>:heart :</code>. Lets try: :heart:. Hmm you can’t see the code itself because I don’t know how to escape the thing that replaces the code with emojis here. I’ll just add a space after <code>heart</code> to make it visible for now. I wonder what happens if I add a real emoji ❤️. That also works so do I even need to set <code>enableEmoji = true</code>?</p>
+<p>Let’s try turning it off… Ok real emojis work on their own so I will keep this off for now. This means the previous paragraph will look very weird but oh well..</p>
+<p>Using real emojis has its problems though. It seems like rstudio editor doesn’t quite know how to deal with emojis and they make the cursor appear at the wrong place. It is probably about how rstudio isn’t designed to support fonts that are not monospaced. That might push me to flip this setting back later. Anyway, back to font-awesome.</p>
+<p><details><summary>Hidden here is a rabbithole I got into that lead nowhere. Click at your own peril. I will now pretend this never happened.</summary> It seems like things have changed since these slides are prepared. They tell me to go to <a href="http://fontawesome.io/get-started/">this</a> link and give them my e-mail to get my code but it just redirects me to <a href="https://fontawesome.com/start">here</a> and providing an e-mail doesn’t seem to be necesary.</p>
+<p>Actually I am not sure if things work the same way at all. I am instructed to add a <code>font-awesome.min.css</code> to my path that is included in the github repo for the tutorial. I assume this file is acquired from font awesome and I google for the name. I am directed to <a href="https://fontawesome.com/v4.7.0/get-started/">this</a> link which is a tutorial for an older version of font awesome. The page aggressively suggests I should switch to version 5.0. The code that is given in the link seems to include a remote css file but I am not a web design guy so who knows what is required.</p>
+<p>Before I try anything I want to see if font awesome is supported by default. Things seems to have changed so why not this too. So lets do <code>&lt;i class=&quot;fa fa-envelope-open&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;</code> right here: <i class="fa fa-envelope-open" aria-hidden="true"></i>. There is probably an envelope there now (in the future) but right now I see nothing. So sadly, no default support for font awesome.</p>
+<p>Before I give up and follow the instructions from the slides, I quickly google “fontawesome 5 blogdown” which leads me to <a href="https://github.com/gcushen/hugo-academic/issues/541">this</a> issue on another theme that seems to support font awesome by default and switching to fontawesome 5. I could switch to that theme but I don’t want to get into that right now. Instead I look at the linked <a href="https://github.com/gcushen/hugo-academic/pull/659/files">pull request</a> that is supposed to handle fontawesome 5 support. Quite a bit of files seem to be changed but most of them seem to be adding the icons to various places. The first important looking file is <code>data/assest.toml</code>. I see that neither the default theme nor the current site has anything in <code>data</code> directory. So I create the <code>assets.toml</code> in there and copy the bits that seem to be related to font-awesome support, which are helpfully highlighted in the pull request’s diff. Well.. that didn’t work. Which means there are other pieces to this.</p>
+<p>I am unsure if <code>assets.toml</code> is even considered by default. So I search the entire repository for mention of <a href="https://github.com/gcushen/hugo-academic/search?q=assets&amp;unscoped_q=assets&amp;type=Code"><code>assets</code></a>. I look at the file and it seems to have direct mentions of font awesome in multiple locations as well.</p>
+<p>I see that <code>layouts/partials/header.html</code> mentions <a href="https://github.com/gcushen/hugo-academic/blob/935e31470d4769ca0e50f8f42a9cc5ca3481562c/layouts/partials/header.html#L34-L35">assets</a>. Come to think of it, the slides also mentioned the <code>partials</code> directory. I go to the github repo to look at the <a href="https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-head_custom.html">file mentioned</a> and it is a one liner.</p>
+<pre><code>&lt;script src=&quot;https://use.fontawesome.com/dc8f5495c2.js&quot;&gt;&lt;/script&gt;</code></pre>
+<p>So it only adds the font-awesome javascript.</p>
+<p>I am unsure about the relationship between the <code>head_custom.html</code> and <code>header.html</code> and the the hugo-academic theme’s <code>header.html</code> seems considerably complex. I am out of my depth for now and its 3 am. Will probably just return to doing what I am told by the slides tomorrow. That means I am using out of date fontawesome but I can deal with that later. Or maybe I’ll just switch to “hugo-academic”. I am an academic after all. I delete the <code>assets.toml</code> before I leave to not have leftovers. </details></p>
+<p>As anyone who knows what they are doing would do, I went to <a href="https://fontawesome.com/start">this</a> site to get the code required to enable font-awesome. I created <code>layouts/partials/head_custom.html</code> and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome.</p>
+<p>Here’s an igloo: <i class="fas fa-igloo"></i></p>
+<p>In order to enable using font-awesome at the <code>[[menu.main]]</code>s however I need to modify <code>nav.html</code> as well. I will just get that from the <a href="https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-nav.html">workshop repository</a>, hopefully icon ids are the same.</p>
+<p>I go to <code>config.toml</code> and add a <code>pre</code> tag to Twitter</p>
+<pre><code>[[menu.main]]
+    name = &quot;Twitter&quot;
+    pre = &quot;fa-twitter&quot;
+    url = &quot;https://twitter.com/oganm&quot;</code></pre>
+<p>aaand</p>
+<div class="figure">
+<img src="/images/siteTwit.png" />
+
+</div>
+<p>Bah!. Ok things clearly aren’t the same. lets see how would you refer to the <a href="https://fontawesome.com/icons/twitter?style=brands">twitter icon now</a>.</p>
+<p>Ok if I read this right what we are currently doing does</p>
+<pre><code>&lt;i class=&quot;fa fa-twitter fa-lg fa-fw&quot; aria-hidden=&quot;true&quot;&gt;</code></pre>
+<p>What we should be doing is</p>
+<pre><code>&lt;i class=&quot;fab fa-twitter&quot;&gt;&lt;/i&gt;</code></pre>
+<p>So let’s dispense with the shorcuts here and change <code>nav.html</code> to be</p>
+<pre><code>&lt;nav class=&quot;nav&quot;&gt;
+  &lt;a href=&quot;{{ &quot;/&quot; | relURL }}&quot; class=&quot;nav-logo&quot;&gt;
+    &lt;img src=&quot;{{ print &quot;images/&quot; .Site.Params.logo.url | relURL }}&quot;
+         width=&quot;{{ .Site.Params.logo.width }}&quot;
+         height=&quot;{{ .Site.Params.logo.height }}&quot;
+         alt=&quot;{{ .Site.Params.logo.alt }}&quot;&gt;
+  &lt;/a&gt;
+  &lt;ul class=&quot;nav-links&quot;&gt;
+    {{ range .Site.Menus.main }}
+    &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
+    {{ end }}
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+<p>Then we can give the entire id to <code>pre</code> field in <code>config.toml</code></p>
+<pre><code>[[menu.main]]
+    name = &quot;Twitter&quot;
+    pre = &quot;fab fa-twitter&quot;
+    url = &quot;https://twitter.com/oganm&quot;</code></pre>
+<p>And it just works. Great. Now we can get rid of the names to leave the icons. Actually we can’t because it seems names are important in differentiating the menus. When I delete both of their names, one of them disappear which is not ideal. Looking at <a href="https://github.com/mikmart/mikkomarttila/blob/master/config.toml">someone else’s</a> <code>config.toml</code>, I infer that the name can be the same if you provide <code>weight</code>s. Probably because they are sorted based on their names if a <code>weight</code> isn’t provided. Nope that didn’t fix it. Turns out it is the <code>identifier</code>. <code>weight</code> does allow sorting things though so that’s nice. Our final <code>[[menu.main]]</code>s in <code>config.toml</code> now look like this</p>
+<pre><code>[[menu.main]]
+    name = &quot;About&quot;
+    url = &quot;/about/&quot;
+    weight = -1
+[[menu.main]]
+    name = &quot; &quot;
+    identifier = &quot;github&quot;
+    pre = &quot;fab fa-github&quot;
+    url = &quot;https://github.com/oganm&quot;
+    weight = 1
+[[menu.main]]
+    name = &quot; &quot;
+    identifier = &quot;twitter&quot;
+    pre = &quot;fab fa-twitter&quot;
+    url = &quot;https://twitter.com/oganm&quot;
+    weight = 2</code></pre>
+</div>
+<div id="menu.main-children" class="section level2">
+<h2><code>[[menu.main]]</code> Children</h2>
+<p>I want to be able to have menus with sublinks to direct to my various projects.</p>
+<p>I simply googled “[[menu.main]] children” and found <a href="https://discourse.gohugo.io/t/hierarchical-menus/2406">this</a> support ticket. Which seems to do what I want. Something like</p>
+<pre><code>[[menu.main]]
+name = &quot;Projects&quot;
+identifier = &#39;projects&#39;
+
+
+[[menu.main]]
+name = &#39;printSheetApp&#39;
+parent = &#39;projects&#39;
+url = &#39;oganm.com/shiny/printSheetApp&#39;
+</code></pre>
+<p>should do the trick, alas it doesn’t work. It seems the default bookdown theme doesn’t support dropdown menus. Let’s look at a theme that does and see if we can steal the <a href="https://github.com/gcushen/hugo-academic/blob/6cac50ecd6f97b52c4d38ff6f351ef1cace891d2/layouts/partials/navbar.html#L27-L67">relevant code</a>. I can’t just copy and paste this code as it seems to use the menu item properties differently than the default theme. However just looking at the code I have a better understanding of how hugo is supposed to work. I see structures like loops</p>
+<pre><code>{{ range .Site.Menus.main }}
+    {{ if .HasChildren }}
+    
+    do stuff
+    
+    {{ else }}
+    
+    do stuff
+    
+    {{ end }}
+{{end}}</code></pre>
+<p>I assume all <code>[[menu.main]]</code> items are processed through this loop to create sub menus for items who have children. So if I change my existing code to</p>
+<pre><code>    {{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+    {{ else }}
+        &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
+    {{ end }}
+    {{ end }}</code></pre>
+<p>Nothing should change. If the menu item has a child just don’t do anything and that’s exactly what I see.</p>
+<p>I imagine if I use the code in the academic theme, I’ll face issues with missing classes in my CSS. So I find a basic tutorial that explains <a href="https://www.w3schools.com/howto/howto_css_dropdown_navbar.asp">how to create a dropdown navbar</a>. For now I will lift the entire css file and will tweak later if needed. I create a <code>dropdown.css</code> file in <code>static/css</code> (this is also explained in Alison Hill’s slides). To create the html portion I will see what the suggested code is and try to adapt it to incorporate the loop structure of Hugo.</p>
+<p>The tutorial code looks like this</p>
+<pre><code>&lt;div class=&quot;navbar&quot;&gt;
+  &lt;a href=&quot;#home&quot;&gt;Home&lt;/a&gt;
+  &lt;a href=&quot;#news&quot;&gt;News&lt;/a&gt;
+  &lt;div class=&quot;dropdown&quot;&gt;
+    &lt;button class=&quot;dropbtn&quot;&gt;Dropdown 
+      &lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt;
+    &lt;/button&gt;
+    &lt;div class=&quot;dropdown-content&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Link 1&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Link 2&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Link 3&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt; 
+&lt;/div&gt;</code></pre>
+<p>and the css</p>
+<pre><code>/* Navbar container */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px; 
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}</code></pre>
+<p>As I look at the code I see that it starts right from <code>&lt;div class=&quot;navbar&quot;&gt;</code> to add the menu items. I won’t be using this class as that is already defined as <code>nav</code> in my theme. Thankfully, dropdown classes are not defined as children of navbar so I shouldn’t need to edit the css for now.</p>
+<p>After some fiddling my <code>nav.html</code> file</p>
+<pre><code>&lt;nav class=&quot;nav&quot;&gt;
+  &lt;a href=&quot;{{ &quot;/&quot; | relURL }}&quot; class=&quot;nav-logo&quot;&gt;
+    &lt;img src=&quot;{{ print &quot;images/&quot; .Site.Params.logo.url | relURL }}&quot;
+         width=&quot;{{ .Site.Params.logo.width }}&quot;
+         height=&quot;{{ .Site.Params.logo.height }}&quot;
+         alt=&quot;{{ .Site.Params.logo.alt }}&quot;&gt;
+  &lt;/a&gt;
+  &lt;ul class=&quot;nav-links&quot;&gt;
+    {{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+        &lt;div class=&quot;dropdown&quot;&gt;
+            &lt;button class=&quot;dropbtn&quot;&gt;{{ .Name }}
+              &lt;i class=&quot;fas fa-caret-down&quot;&gt;&lt;/i&gt;
+            &lt;/button&gt;
+            &lt;div class=&quot;dropdown-content&quot;&gt;
+                {{range .Children}}
+                    &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
+                {{ end }}
+    {{ else }}
+        &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
+    {{ end }}
+    {{ end }}
+
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+<p>Now this “works” but the coloring placement of the item is very wrong. This should be solvable by fiddling with the css. To simplify, I delete the <code>.navbar</code> classes. The <code>.dropdown</code> seems to be configured to float to left so I change that to right. The <code>.dropbtn</code> has all sorts of properties like padding, font size etc. I imagine it will work fine if it just inherit those from it’s parent so I delete them. It stats looking like it belongs now. I change the background color of the hovering to a respectable gray from that horrible red. It is almost perfect now.</p>
+<p>However when the page is enlarged, the submenu items appear on the same line. It is because I used <code>&lt;li&gt;</code> tag before <code>&lt;a&gt;</code> tag on those links. I need to make sure <code>&lt;li&gt;</code> tags have the <code>display: block</code> in the css instead of <code>&lt;a&gt;</code> tags.</p>
+<p>It seems that I now have an alignment problem. When I have two elements on the submenu, they don’t align together. Examining the element reveals the issue: the theme. While the theme doesn’t have support for dropdown menus, it seems to have set properties for the <code>.nav-linkgs li:first-child</code>. It has a <code>margin-left: 0px</code> in it which makes it slide differently than the child element. No idea what is the purpose of that but I can get behind that 0 margin so I add it to <code>.dropdown-content li</code></p>
+<p>The only issue is the font size. It seems like the scaling of the menu and its items doesn’t work like the scaling of other navbar elements. The title of the dropdown menu never scales while its sub elements does. Inspecting the elements lead me to something I never saw before. Properties of the elements seem to change based on the screen size, as directed by <code>@media</code> sections. These sections are followed by something that looks like a condition <code>min-width: 600px</code> It seems like one can set things to behave differently in different screen sizes. Scary stuff. I will have to copy the behaviour of regular links so the dropdown title behaves the same. Just to be sure I look for other <code>@media</code> tags in the main css and there doesnt’t seem to be anything else other than 600 pixel minimum width condition.</p>
+<p>I add</p>
+<pre><code>@media (min-width: 600px) {
+    .dropdown .dropbtn {
+          font-size: 18px;
+    }
+}</code></pre>
+<p>to the <code>dropdown.css</code> so it knows to scale up the dropdown menu titles when screen size grows.</p>
+<p>Now I want sub elements of the dropdown menu to be slightly smaller and also have sclaing rules so I give them 12pt on small screens and 14pt on large screens. So the final css looks like this</p>
+<pre><code>
+
+/* The dropdown container */
+.dropdown {
+  float: right;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  margin: 0 0 0 0px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #ddd;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 0px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content li {
+  font-size: 12px;
+  margin-left: 0;
+  float: none;
+  text-align: left;
+  color: black;
+  padding: 10px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content li:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+@media (min-width: 600px) {
+    .dropdown .dropbtn {
+          font-size: 18px;
+    }
+    .dropdown-content li {
+        font-size: 14px;
+    }
+
+}</code></pre>
+<p>Some parts of it could be not necessary and has inconsistent tabbing but we can deal with that later.</p>
+<p>I probably need to <a href="https://github.com/rstudio/blogdown/issues/155">ask someone</a> about what the deal with the definition of that first child in the theme css is…</p>
+</div>
+<div id="a-favicon" class="section level2">
+<h2>A favicon</h2>
+<p>Adding a favicon is easy enough. Just get your favicon.ico file into <code>static</code> and add <code>&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; href=&quot;favicon.ico&quot;&gt;</code> somewhere in the head. Keep <a href="https://stackoverflow.com/questions/2208933/how-do-i-force-a-favicon-refresh">this</a> in mind if you ever want to change it.</p>
+</div>
+<div id="category-links" class="section level2">
+<h2>Category links</h2>
+<p>I don’t like the main page looks right now. I think it would be better if I split the posts by category as I expect to write about wildly unrelated things and host wildy unrelated products. Which means a homepage that shows all the posts is not very helpful and needs to go. Through some experimentation, I know I can create links to all posts doing <code>http://oganm.com/post/</code>, and to post within categories by doing <code>http://oganm.com/tags/blogdown/</code> or <code>http://oganm.com/categories/notes-to-self/</code>. Why post is singular while other stuff is plural? Doesn’t matter.</p>
+<p>I start with creating a dropdown menu for my posts. I will be adding categories here as they become relevant. Currently it only has “Notes to self” option which is the category I assigned to this post. I suspect there’ll be an automated way to do this by looping over the categories or tags but I can look into that later. So currently my <code>[[menu.main]]</code> list in the <code>config.toml</code> looks like this</p>
+<pre><code>[[menu.main]]
+    name = &quot;About&quot;
+    url = &quot;/about/&quot;
+    weight = -1
+[[menu.main]]
+    name = &quot; &quot;
+    identifier = &quot;github&quot;
+    pre = &quot;fab fa-github&quot;
+    url = &quot;https://github.com/oganm&quot;
+    weight = 1
+[[menu.main]]
+    name = &quot; &quot;
+    identifier = &quot;twitter&quot;
+    pre = &quot;fab fa-twitter&quot;
+    url = &quot;https://twitter.com/oganm&quot;
+    weight = 2
+[[menu.main]]
+    name = &quot;Tools&quot;
+    identifier = &quot;tools&quot;
+    weight = 3
+[[menu.main]]
+    name = &quot;5e char sheet printer&quot;
+    parent = &quot;tools&quot;
+    url = &quot;https://oganm.com/shiny/printSheetApp&quot;
+[[menu.main]]
+    name = &quot;5e interactive sheet&quot;
+    parent = &quot;tools&quot;
+    url = &quot;http://oganm.com/shiny/interactiveSheet/&quot;
+[[menu.main]]
+    name = &quot;Blog&quot;
+    identifier = &quot;blog&quot;
+    weight = 4
+[[menu.main]]
+    name = &quot;Notes to self&quot;
+    parent = &quot;blog&quot;
+    url = &quot;/categories/notes-to-self/&quot;</code></pre>
+<p>Hmmm… what?</p>
+<div class="figure">
+<img src="/images/nesting.PNG" />
+
+</div>
+<p>Ok this was totally unexpected. How the hell did that happen. I am guessing this will be a missing html closing time from the time I wrote the dropdown menu code so I go back to <code>nav.html</code>.</p>
+<pre><code>{{ if .HasChildren}}
+        &lt;div class=&quot;dropdown&quot;&gt;
+            &lt;button class=&quot;dropbtn&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}
+              &lt;i class=&quot;fas fa-caret-down&quot;&gt;&lt;/i&gt;
+            &lt;/button&gt;
+            &lt;div class=&quot;dropdown-content&quot;&gt;
+                {{range .Children}}
+                    &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
+                {{ end }}
+{{ else }}</code></pre>
+<p>yep, the <code>&lt;div&gt;</code> that opens the dropdown menu never closes… I am surprised the entire site didn’t end up under that menu. So let’s change that with</p>
+<pre><code>{{ if .HasChildren}}
+        &lt;div class=&quot;dropdown&quot;&gt;
+            &lt;button class=&quot;dropbtn&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}
+              &lt;i class=&quot;fas fa-caret-down&quot;&gt;&lt;/i&gt;
+            &lt;/button&gt;
+            &lt;div class=&quot;dropdown-content&quot;&gt;
+                {{range .Children}}
+                    &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
+                {{ end }}
+            &lt;/div&gt;
+        &lt;/div&gt;
+{{ else }}</code></pre>
+<p>And sure enough we get the desired result.</p>
+<div class="figure">
+<img src="/images/correctNest.PNG" />
+
+</div>
+<p>Wait a minute no it’s not. Why did it place the tools tab before blog tab. Weren’t the weights responsible for keeping the correct order? I try shifting the weights of other objects and they to seem to follow the correct order for the most part. But dropdown menu’s are ignoring the ordering. I look at the page code and see that the code is generated in the correct order. So we must have a problem with the CSS. I remember having similar problems with <code>float</code> options before so I remove</p>
+<pre><code>float: right;</code></pre>
+<p>for the <code>dropdown</code> class.</p>
+<div class="figure">
+<img src="/images/nofloat.png" />
+
+</div>
+<p>Well they are in the correct order now but also on top each other… Based on how the <code>&lt;li&gt;</code> tags are configured, It seems like doing</p>
+<pre><code>display: inline-block;</code></pre>
+<p>Somewhat solves the issue. Now they are not aligned with the rest of the icons though.</p>
+<div class="figure">
+<img src="/images/misaligned.PNG" />
+
+</div>
+<p>It is not horrible so I’ll leave it like that for now.</p>
+</div>
+<div id="google-analytics-and-disqus" class="section level2">
+<h2>Google analytics and disqus</h2>
+<p>This is an easy problem to solve. I create the tracking code from the google analytic page and paste it to <code>config.toml</code>’s <code>googleAnalytics</code> setting. However when I tested it there was no traffic seen. After a short googling I remembered I use browser plugins to stop google from tracking me. I was happy to see that it works on other browsers.</p>
+<p>For disqus I just created a forum from disqus page and added the code in to the <code>config.toml</code>. It just worked.</p>
+</div>
+<div id="homepage" class="section level2">
+<h2>Homepage</h2>
+<p>Now we need to replace the default homepage that shows all posts. I’ll go back to Alison Hill’s slides for that. Seems like I need to place an <code>index.html</code> to the layouts section. A question is what do I want my homepage to look like. Also do I need an About page if I am going to have a homepage? All the big questions…</p>
+<p>I kinda like how the academic theme home looks, I can try to replicate it. At this point I copied or attempted to copy so much stuff from the academic theme that I might as well switch to it. But I’ll let the sunk cost fallacy rule the day for now.</p>
+<p>For starters, I know I don’t want to deal with html. This is where I part from Alison Hill’s slides again as the way she does it looks like it’ll force me edit html. To make a markdown file render, I figured I could just make a <code>index.md</code> or <code>index.Rmd</code> on the <code>content</code> dir. Sure enough creating that file replaces the index file that lists the posts. However since this file is created based on <code>single.html</code> of the template, just like posts, this also has a disqus commenting section. This means I need to create my own <code>single.html</code> and make the appearance of disqus conditional. I place the code that generates the discus thingy in an if caluse.</p>
+<pre><code>{{if .Params.disqus}}
+    {{ partial &quot;disqus.html&quot; .}}
+{{end}}</code></pre>
+<p>This means I in my <code>disqus.Rmd</code> I can set <code>disqus: false</code> using the yaml and discus section should disappear… And it did.</p>
+</div>
+</div>

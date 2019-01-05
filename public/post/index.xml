@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Ogan Mancarci</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on Ogan Mancarci</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 04 Jan 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Note to self: How did I set up this site</title>
+      <link>/2019/01/04/note-to-self-how-did-i-set-up-this-site/</link>
+      <pubDate>Fri, 04 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/01/04/note-to-self-how-did-i-set-up-this-site/</guid>
+      <description>This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.
+Table of Contents  Baseline Basic set-up Font-awesome (and emojis) [[menu.</description>
+    </item>
+    
+  </channel>
+</rss>
