@@ -1,0 +1,50 @@
+---
+title: 'index'
+date: ''
+---
+
+## Ogan Mancarci
+
+
+
+<img src="./images/cropogbrain.png" align="left" height="180" width="180" title="colorized MRI scan of my head. DICOM is a widely used medical imaging format that can be read from R using the oro.dicom package. The image is colorized using the prisma app. You can also see why I always sleep on my left site to breath easier" style="margin:0px 20px">
+
+
+
+I am a PhD student of bioinformatics in UBC. I work on gene expression in brain cell types and try to extract cell type specific signals from whole brain gene expression data. Here's a [CV](http://oganm.github.io/CV/).
+
+
+# Work projects
+
+* [**NeuroExpresso**](http://neuroexpresso.org/) is my lab's database cell type specific gene expression. It was released with [Mancarci et al. 2017](http://www.eneuro.org/content/4/6/ENEURO.0212-17.2017) paper. 
+
+* [**markerGeneProfile**](https://github.com/PavlidisLab/markerGeneProfile) is an R package to infer cell type proportion changes from whole tissue expression profiles. My current work involves improving the reliability of this package and using it on as many whole tissue datasets that I can find.
+
+* [**gemmaAPI**](https://github.com/PavlidisLab/gemmaAPI.R) is an R package that wraps the newly released [API](https://gemma.msl.ubc.ca/resources/restapidocs/) for [Gemma](https://gemma.msl.ubc.ca/), our lab's manually curated gene expression database.
+
+* [**ermineR**](https://github.com/PavlidisLab/ermineR) is an R package that wraps ermineJ, our lab's gene set enrichment tool.
+
+* [**allenBrain**](https://github.com/oganm/allenBrain) is an R package that wraps parts of the [Allen Brain Atlas](http://portal.brain-map.org/) API. It focuses on extracting ISH images and syncronization between reference atlases and ISH images.
+
+* I maintain bunch of [**other packages**](https://github.com/topics/ogan-bio) as well. Packages for gene [homology](https://github.com/oganm/homologene) and [synonym](https://github.com/oganm/geneSynonym) detection, an [MRI visualization tool](https://github.com/oganm/brainspriteR) etc.
+
+# Fun projects
+
+* [**staplr**](https://github.com/pridiltal/staplr) is an R package for PDF manipulation. I contributed PDF form filling functionality and worked on some overall improvements.
+
+* [**stockfisher**](https://github.com/oganm/stockfisher) is an R package that allows easy interaction with UCI capable chess engines through R.
+
+* [**import5eChar**] is an R package that reads D&D character data exported from Walter Kammerer's [Fifth Edition Character Sheet](https://play.google.com/store/apps/details?id=com.wgkammerer.testgui.basiccharactersheet.app) and allows automation of character actions, printing PDF character sheets (this is where staplr contributions came from) and includes a shiny app that acts as an interactive character sheet.
+
+* [**printSheetApp**](http://oganm.com/shiny/printSheetApp/) is a shiny app that wraps import5eChar's pdf printing functionality for non-R-users.
+
+* [**interactiveSheet**](http://oganm.com/shiny/interactiveSheet/) is the shiny app that ships with import5eChar package
+
+* [**diceSyntax**] is an R package that supports complex dice rolling syntax such as `10d8d3ro<3`. That means roll 10 d8s reroll anything below 3 once drop three lowest dice. import5eChar and my other D&D related packages depend on this
+
+* I wrote [**this article**](https://oganm.github.io/dndstats) about statistics of D&D characters submitted to my shiny applications.
+
+* I maintain [**other D&D related packages**](https://github.com/topics/ogan-dnd) as well.
+
+* I run a small plumber [**API**](http://oganm.com/api/__swagger__/). It's main functionality is to create image from texts that are redirected to imgur. Try `oganm.com/api/t2img?t=Whatever`. Primarily developed for use in [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/).
+

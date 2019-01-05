@@ -694,4 +694,4 @@ For starters, I know I don't want to deal with html. This is where I part from A
 {{end}}
 ```
 
-This means I in my `disqus.Rmd` I can set `disqus: false` using the yaml and discus section should disappear... And it did.
+This means I in my `disqus.Rmd` I can set `disqus: false` using the yaml and discus section should disappear... And it did. So I guess I am done for now. If I change anything else I will return...

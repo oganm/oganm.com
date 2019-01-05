@@ -96,20 +96,20 @@
 
 
 <main class="content" role="main">
+	
+	<article class="article">
+	
+	<span class="article-duration">19 min read</span>
+	
+	
+	<h1 class="article-title">Note to self: How did I set up this site</h1>
 
-  <article class="article">
-    
-    <span class="article-duration">19 min read</span>
-    
-
-    <h1 class="article-title">Note to self: How did I set up this site</h1>
-
-    
-    <span class="article-date">2019/01/04</span>
-    
-
-    <div class="article-content">
-      
+	
+	<span class="article-date">2019/01/04</span>
+	
+	
+	<div class="article-content">
+	
 
 
 <p>This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</p>
@@ -122,7 +122,7 @@
 <li><a href="#menu.main-children">[[menu.main]] Children</a></li>
 <li><a href="#a-favicon">A favicon</a></li>
 <li><a href="#category-links">Category links</a></li>
-<li><a href="#google-analytics">Google analytics</a></li>
+<li><a href="#google-analytics-and-disqus">Google analytics</a></li>
 <li><a href="#homepage">Homepage</a></li>
 </ul>
 <div id="baseline" class="section level2">
@@ -543,48 +543,30 @@ url = &#39;oganm.com/shiny/printSheetApp&#39;
 </div>
 <p>It is not horrible so I’ll leave it like that for now.</p>
 </div>
-<div id="google-analytics" class="section level2">
-<h2>Google analytics</h2>
+<div id="google-analytics-and-disqus" class="section level2">
+<h2>Google analytics and disqus</h2>
 <p>This is an easy problem to solve. I create the tracking code from the google analytic page and paste it to <code>config.toml</code>’s <code>googleAnalytics</code> setting. However when I tested it there was no traffic seen. After a short googling I remembered I use browser plugins to stop google from tracking me. I was happy to see that it works on other browsers.</p>
+<p>For disqus I just created a forum from disqus page and added the code in to the <code>config.toml</code>. It just worked.</p>
 </div>
 <div id="homepage" class="section level2">
 <h2>Homepage</h2>
 <p>Now we need to replace the default homepage that shows all posts. I’ll go back to Alison Hill’s slides for that. Seems like I need to place an <code>index.html</code> to the layouts section. A question is what do I want my homepage to look like. Also do I need an About page if I am going to have a homepage? All the big questions…</p>
 <p>I kinda like how the academic theme home looks, I can try to replicate it. At this point I copied or attempted to copy so much stuff from the academic theme that I might as well switch to it. But I’ll let the sunk cost fallacy rule the day for now.</p>
+<p>For starters, I know I don’t want to deal with html. This is where I part from Alison Hill’s slides again as the way she does it looks like it’ll force me edit html. To make a markdown file render, I figured I could just make a <code>index.md</code> or <code>index.Rmd</code> on the <code>content</code> dir. Sure enough creating that file replaces the index file that lists the posts. However since this file is created based on <code>single.html</code> of the template, just like posts, this also has a disqus commenting section. This means I need to create my own <code>single.html</code> and make the appearance of disqus conditional. I place the code that generates the discus thingy in an if caluse.</p>
+<pre><code>{{if .Params.disqus}}
+    {{ partial &quot;disqus.html&quot; .}}
+{{end}}</code></pre>
+<p>This means I in my <code>disqus.Rmd</code> I can set <code>disqus: false</code> using the yaml and discus section should disappear… And it did.</p>
 </div>
 </div>
 
-    </div>
-  </article>
-
-  
-<section id="comments">
-  <div id="disqus_thread"></div>
-  <script>
-  var disqus_config = function () {
-  
-  };
-  (function() {
-    var inIFrame = function() {
-      var iframe = true;
-      try { iframe = window.self !== window.top; } catch (e) {}
-      return iframe;
-    };
-    if (inIFrame()) return;
-    var d = document, s = d.createElement('script');
-    s.src = '//oganm.disqus.com/embed.js'; s.async = true;
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</section>
-
-
-
-</main>
-
-      <footer class="footer">
+	</div>
+		</article>
+		
+	
+	</main>
+		
+	      <footer class="footer">
         <ul class="footer-links">
           <li>
             <a href="../../../../index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
@@ -629,3 +611,4 @@ if (!doNotTrack) {
   </body>
 </html>
 
+	
