@@ -7,20 +7,21 @@
   </a>
   <ul class="nav-links">
     {{ range .Site.Menus.main }}
-    {{ if .HasChildren}}
-    	<div class="dropdown">
-    		<button class="dropbtn"><i class="{{ .Pre }}" aria-hidden="true"></i>&nbsp; {{ .Name }}
-    		  <i class="fas fa-caret-down"></i>
-    		</button>
-    		<div class="dropdown-content">
-    			{{range .Children}}
-    			    <li><a href="{{ .URL }}"><i class="{{ .Pre }}" aria-hidden="true"></i>&nbsp; {{ .Name }}</a></li>
-    			{{ end }}
-    	     </div>
-    	</div>
-    {{ else }}
-        <li><a href="{{ .URL }}"><i class="{{ .Pre }}" aria-hidden="true"></i>&nbsp; {{ .Name }}</a></li>
-    {{ end }}
+    	{{ if .HasChildren}}
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				{{ partial "menu.main.html" .}}
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				{{range .Children}}
+    					{{ partial "menu.main.html" .}}
+    				{{ end }}
+    	     	</div>
+    		</div>
+    	{{ else }}
+    		{{ partial "menu.main.html" .}}
+    	{{ end }}
     {{ end }}
 
   </ul>

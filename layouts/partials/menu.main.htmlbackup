@@ -1,0 +1,14 @@
+<li>
+	{{ with .URL }}
+		<a href = {{.}}>
+	{{ end }}
+	
+	{{ with .Pre }}
+		{{ . }}
+	{{ end }}
+	{{ .Name }}
+	
+	{{ with .URL }}
+		</a>
+	{{ end }}
+</li>

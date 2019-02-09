@@ -1,0 +1,9 @@
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#disqus_thread iframe[src*="disqusads"] {
+  display: none;
+}

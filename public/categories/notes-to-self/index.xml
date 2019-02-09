@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Notes to Self on Ogan Mancarci</title>
+    <title>Notes to Self on B. Ogan Mancarci</title>
     <link>/categories/notes-to-self/</link>
-    <description>Recent content in Notes to Self on Ogan Mancarci</description>
+    <description>Recent content in Notes to Self on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 04 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 08 Jan 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/notes-to-self/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Note to self: Fine tuning the site</title>
+      <link>/note-to-self-fine-tuning-the-site/</link>
+      <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/note-to-self-fine-tuning-the-site/</guid>
+      <description>Static resource organization Code cleanup A wild issue appeared Homepage   This is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</description>
+    </item>
+    
+    <item>
       <title>Note to self: How did I set up this site</title>
-      <link>/2019/01/04/note-to-self-how-did-i-set-up-this-site/</link>
+      <link>/note-to-self-how-did-i-set-up-this-site/</link>
       <pubDate>Fri, 04 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019/01/04/note-to-self-how-did-i-set-up-this-site/</guid>
-      <description>This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.
-Table of Contents  Baseline Basic set-up Font-awesome (and emojis) [[menu.</description>
+      <guid>/note-to-self-how-did-i-set-up-this-site/</guid>
+      <description>Baseline Basic set-up Font-awesome (and emojis) [[menu.main]] Children A favicon Category links Google analytics and disqus Homepage   This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</description>
     </item>
     
   </channel>

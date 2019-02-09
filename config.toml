@@ -1,6 +1,6 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "Ogan Mancarci"
+title = "B. Ogan Mancarci"
 theme = "hugo-lithium"
 googleAnalytics = "UA-111816736-3"
 disqusShortname = "oganm"
@@ -10,38 +10,40 @@ enableEmoji = false
 
 
 [permalinks]
-    post = "/:year/:month/:day/:slug/"
+    post = "/:slug/"
 
 
 [[menu.main]]
 	name = ""
 	identifier = "github"
-    pre = "fab fa-github"
+    pre = "<i class='fab fa-github'></i>"
     url = "https://github.com/oganm"
     weight = 1
 [[menu.main]]
 	name = ""
 	identifier = "twitter"
-    pre = "fab fa-twitter"
+    pre = "<i class='fab fa-twitter'></i>"
     url = "https://twitter.com/oganm"
     weight = 2
 [[menu.main]]
 	name = ""
 	identifier = "mail"
-    pre = "fas fa-at"
+    pre = "<i class='fas fa-at'></i>"
     url = "mailto:ogan.mancarci@gmail.com"
     weight = 3
 [[menu.main]]
 	name = "Publications"
 	identifier = "scholar"
-    pre = "fas fa-graduation-cap"
+    pre = "<i class='fas fa-graduation-cap' aria-hidden></i>"
     url = "https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&hl=en"
     weight = 4
 [[menu.main]]
-    name = "Work tools"
+	pre = "&nbsp;"
+    name = "Tools"
     identifier = "worktools"
     weight = 5
 [[menu.main]]
+	pre = "&nbsp;"
     name = "Fun tools"
     identifier = "funtools"
     weight = 6
@@ -49,6 +51,7 @@ enableEmoji = false
     name = "Blog"
     identifier = "blog"
     weight = 7
+    url = "/post/"
 [[menu.main]]
 	name = "NeuroExpresso"
 	parent = "worktools"
@@ -62,15 +65,28 @@ enableEmoji = false
 [[menu.main]]
 	name = "5e interactive sheet"
 	parent = "funtools"
-	url = "http://oganm.com/shiny/interactiveSheet/"
+	url = "https://oganm.com/shiny/interactiveSheet/"
 [[menu.main]]
 	name = "Notes to self"
 	parent = "blog"
+	weight = 3
 	url = "/categories/notes-to-self/"
+[[menu.main]]
+	name = "Programming"
+	parent = "blog"
+	weight = 1
+	url = "/categories/programming/"
+[[menu.main]]
+	name = "Other"
+	parent = "blog"
+	weight = 2
+	url = "/categories/other/"
 
 [params]
-    description = "Ogan Mancarci's blog"
-	customCSS = ["css/dropdown.css","css/links.css","css/navbarcolors.css"]
+    description = "Personal blog of Ogan Mancarci"
+    author = "Ogan Mancarci"
+	customCSS = ["css/dropdown.css?v=1","css/navbarcolors.css?v=1","css/mainoverwrite.css?v=1","css/misc.css"]
+	preCSS = ["css/grid12.css"]
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.12.0"
     highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
@@ -79,6 +95,7 @@ enableEmoji = false
 
     MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
     MathJaxVersion = "2.7.5"
+
 
     [params.logo]
     url = "oglogo.png"

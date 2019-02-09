@@ -1,10 +1,13 @@
 ---
 title: 'Note to self: How did I set up this site'
-author: Ogan Mancarci
+author: "Ogan Mancarci"
+description: 'A convoluted description of how this site was created'
 date: '2019-01-04'
+output:
+  blogdown::html_page:
+    toc: true
 categories:
   - Notes To Self
-disqus: true
 tags:
   - blogdown
 slug: note-to-self-how-did-i-set-up-this-site
@@ -16,20 +19,6 @@ later reference. It's not a tutorial. Just a description of every single step I
 followed to build this. It will include dead ends and obvious mistakes. It might
 be somewhat educational but I know nothing about Hugo and very little about web design
 so it might also include misguided attempts at pretty much everything.
-
-
-Table of Contents
-=================
-
-* [Baseline](#baseline)
-* [Basic set-up](#basic-set-up)
-* [Font-awesome (and emojis)](#font-awesome-and-emojis)
-* [[[menu.main]] Children](#menu.main-children)
-* [A favicon](#a-favicon)
-* [Category links](#category-links)
-* [Google analytics](#google-analytics-and-disqus)
-* [Homepage](#homepage)
-
 
 ## Baseline
 
@@ -64,7 +53,7 @@ be able to group things using the categories but will look into that later.
 This is what the site looks like now
 
 
-![](/images/site1.PNG)
+![](/images/settingUp/site1.PNG)
 
 Was half expecting that not to work. Just like the logo, I placed this image in the 
 `static/images` directory as `site1.PNG` and did `![](/images/site1.PNG)` to link to
@@ -153,14 +142,16 @@ and it seems to have direct mentions of font awesome in multiple locations as we
 
 I see that `layouts/partials/header.html` mentions [assets](https://github.com/gcushen/hugo-academic/blob/935e31470d4769ca0e50f8f42a9cc5ca3481562c/layouts/partials/header.html#L34-L35). Come to think of it, the slides also mentioned the `partials` directory. I go to the github repo to look at the [file mentioned](https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-head_custom.html) and it is a one liner. 
 
-```
+```html
 <script src="https://use.fontawesome.com/dc8f5495c2.js"></script>
 ```
 
 So it only adds the font-awesome javascript. 
 
 I am unsure about the relationship between the `head_custom.html` and `header.html` and the the hugo-academic theme's `header.html` seems considerably complex. I am out of my depth for now and its 3 am. Will probably just return to doing what I am told by the slides tomorrow.
-That means I am using out of date fontawesome but I can deal with that later. Or maybe I'll just switch to "hugo-academic". I am an academic after all. I delete  the `assets.toml` before  I leave to not have leftovers.
+That means I am using out of date fontawesome but I can deal with that later. Or maybe I'll just switch to "hugo-academic". I am an academic after all. I delete  the `assets.toml` before  I leave to clean up the mess.
+
+<hr>
 </details>
 
 Like anyone who knows what they are doing would do, I went to [this](https://fontawesome.com/start) site to get the code required to enable font-awesome. I created `layouts/partials/head_custom.html` and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different. 
@@ -173,7 +164,7 @@ In order to enable font-awesome at the `[[menu.main]]`s however I need to modify
 I go to `config.toml` and add a `pre` tag to Twitter
 
 
-```
+```toml
 [[menu.main]]
     name = "Twitter"
     pre = "fa-twitter"
@@ -183,25 +174,25 @@ I go to `config.toml` and add a `pre` tag to Twitter
 
 aaand 
 
-![](/images/siteTwit.png)
+![](/images/settingUp/siteTwit.png)
 
 Bah!. Ok things clearly aren't the same. lets see how would you refer to the [twitter icon now](https://fontawesome.com/icons/twitter?style=brands).
 
 Ok if I read this right what we are currently doing does 
 
-```
+```html
 <i class="fa fa-twitter fa-lg fa-fw" aria-hidden="true">
 ```
 
 What we should be doing is
 
-```
+```html
 <i class="fab fa-twitter"></i>
 ```
 
 So let's dispense with the shortcuts here and change `nav.html` to be
 
-```
+```html
 <nav class="nav">
   <a href="{{ "/" | relURL }}" class="nav-logo">
     <img src="{{ print "images/" .Site.Params.logo.url | relURL }}"
@@ -219,7 +210,7 @@ So let's dispense with the shortcuts here and change `nav.html` to be
 
 Then we can give the entire id to `pre` field in `config.toml`
 
-```
+```toml
 [[menu.main]]
     name = "Twitter"
     pre = "fab fa-twitter"
@@ -239,7 +230,7 @@ Turns out it is the `identifier`. `weight` does allow sorting things though so t
 `config.toml` now look like this
 
 
-```
+```toml
 [[menu.main]]
     name = "About"
     url = "/about/"
@@ -265,7 +256,7 @@ I want to be able to have menus with sublinks to direct to my various projects.
 I simply googled "[[menu.main]] children" and found [this](https://discourse.gohugo.io/t/hierarchical-menus/2406) support ticket. Which seems to do what I want. Something like
 
 
-```
+```toml
 [[menu.main]]
 name = "Projects"
 identifier = 'projects'
@@ -285,7 +276,7 @@ steal the [relevant code](https://github.com/gcushen/hugo-academic/blob/6cac50ec
 
 I can't just copy and paste this code as it seems to use the menu item properties differently than the default theme. However just looking at the code I have a better understanding of how hugo is supposed to work. I see structures like loops 
 
-```
+```html
 {{ range .Site.Menus.main }}
 	{{ if .HasChildren }}
 	
@@ -301,7 +292,7 @@ I can't just copy and paste this code as it seems to use the menu item propertie
 
 I assume all `[[menu.main]]` items are processed through this loop to create sub menus for items who have children. So if I change my existing code to
 
-```
+```html
     {{ range .Site.Menus.main }}
     {{ if .HasChildren}}
     {{ else }}
@@ -320,7 +311,7 @@ see what the suggested code is and try to adapt it to incorporate the loop struc
 
 The tutorial code looks like this
 
-```
+```html
 <div class="navbar">
   <a href="#home">Home</a>
   <a href="#news">News</a>
@@ -339,7 +330,7 @@ The tutorial code looks like this
 
 and the css
 
-```
+```css
 /* Navbar container */
 .navbar {
   overflow: hidden;
@@ -417,7 +408,7 @@ classes are not defined as children of navbar so I shouldn't need to edit the cs
 
 After some fiddling my `nav.html` file
 
-```
+```html
 <nav class="nav">
   <a href="{{ "/" | relURL }}" class="nav-logo">
     <img src="{{ print "images/" .Site.Params.logo.url | relURL }}"
@@ -470,7 +461,7 @@ to be anything else other than 600 pixel minimum width condition.
 
 I add 
 
-```
+```css
 @media (min-width: 600px) {
 	.dropdown .dropbtn {
 		  font-size: 18px;
@@ -484,8 +475,7 @@ grows.
 Now I want sub elements of the dropdown menu to be slightly smaller and also have sclaing rules so I give them 12pt on small screens and 14pt on large screens. So the final css looks like this
 
 
-```
-
+```css
 
 /* The dropdown container */
 .dropdown {
@@ -572,7 +562,7 @@ I start with creating a dropdown menu for my posts. I will be adding categories 
 is the category I assigned to this post. I suspect there'll be an automated way to do this by looping over the categories or tags but I can look into that later. So currently my `[[menu.main]]` list in the `config.toml` looks like this
 
 
-```
+```toml
 [[menu.main]]
     name = "About"
     url = "/about/"
@@ -613,14 +603,14 @@ is the category I assigned to this post. I suspect there'll be an automated way 
 
 Hmmm... what?
 
-![](/images/nesting.PNG)
+![](/images/settingUp/nesting.PNG)
 
 
 Ok this was totally unexpected. How the hell did that happen. I am guessing this will be
 a missing html closing tag from the time I wrote the dropdown menu code so I go back to `nav.html`.
 
 
-```
+```html
 {{ if .HasChildren}}
     	<div class="dropdown">
     		<button class="dropbtn"><i class="{{ .Pre }}" aria-hidden="true"></i>&nbsp; {{ .Name }}
@@ -636,7 +626,7 @@ a missing html closing tag from the time I wrote the dropdown menu code so I go 
 yep, the `<div>` that opens the dropdown menu never closes... I am surprised the entire site didn't end up under that menu.
 So let's change that with
 
-```
+```html
 {{ if .HasChildren}}
     	<div class="dropdown">
     		<button class="dropbtn"><i class="{{ .Pre }}" aria-hidden="true"></i>&nbsp; {{ .Name }}
@@ -653,7 +643,7 @@ So let's change that with
 
 And sure enough we get the desired result.
 
-![](/images/correctNest.PNG)
+![](/images/settingUp/correctNest.PNG)
 
 
 Wait a minute no we don't! Why did it place the tools tab before blog tab. Weren't the weights
@@ -667,7 +657,7 @@ float: right;
 
 for the `dropdown` class.
 
-![](/images/nofloat.png)
+![](/images/settingUp/nofloat.png)
 
 
 Well they are in the correct order now but also on top each other... Based on how the `<li>` tags are configured, It seems like doing
@@ -680,7 +670,7 @@ display: inline-block;
 Somewhat solves the issue. Now they are not aligned with the rest of the icons though.
 
 
-![](/images/misaligned.PNG)
+![](/images/settingUp/misaligned.PNG)
 
 
 It is not horrible so I'll leave it like that for now.
@@ -707,7 +697,7 @@ I kinda like how the academic theme home looks, I can try to replicate it. At th
 
 For starters, I know I don't want to deal with html. This is where I part from Alison Hill's slides again as the way she does it looks like it'll force me edit html. To make a markdown file render, I figured I could just make a `index.md` or `index.Rmd` on the `content` dir. Sure enough creating that file replaces the index file that lists the posts. However since this file is created based on `single.html` of the template, just like posts, it also has a disqus commenting section. This means I need to create my own `single.html` and make the appearance of disqus conditional. I place the code that generates the discus thingy in an if caluse. 
 
-```
+```html
 {{if .Params.disqus}}
 	{{ partial "disqus.html" .}}
 {{end}}
@@ -719,7 +709,7 @@ Well that didn't take long did it. Turns out you can't have an `index.Rmd` in `c
 
 And now that I use `_index.Rmd`, the posts appear underneath again. Should have expected that... That is because the `list.html` file in layout is being used. Should have listened to Alison Hill... Here's the relevant bit from `list.html`.
 
-```
+```html
   <article class="article">
     <div class="article-content">
       {{ .Content }}
@@ -729,7 +719,7 @@ And now that I use `_index.Rmd`, the posts appear underneath again. Should have 
 
 It seems like the `list.html` includes the `_index.Rmd` when rendering using the `{{ .Content }}` tag. That part is all I need so I can create an `index.html` in `layouts` that only copies the relevant bits from `list.html`
 
-```
+```html
 {{ partial "header.html" . }}
 
 <main class="content" role="main">
@@ -745,7 +735,8 @@ It seems like the `list.html` includes the `_index.Rmd` when rendering using the
 
 Also it turns out I need to add `disqus: true` on the beginning of my posts now
 to enable disqus because the default doesn't seem to be true. Didn't notice it when index
-file was blocking updates.
+file was blocking updates. Also since I am using the `index.html` as a template now, disqus argument
+might not be necassarry at all but I will keep it to use in posts in case I want to suppress the masses.
 
 I finally solved the alignment of the navbar items by adding a `vertical-align: middle` to both `.nav-links li` and `.dropdown` in the css.
 
