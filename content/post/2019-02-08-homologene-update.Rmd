@@ -127,7 +127,7 @@ nrow(mistmatched_new_names)
 head(mistmatched_new_names, 10)
 ```
 
-That is `r nrow(mistmatched_new_names)` genes that have a different official symbol than they used to in 2014. And that is only in mouse. Considering this only corresponds to `r format(100*nrow(mistmatched_new_names)/nrow(mouse_genes),digits = 2)`% of all gene symbols, this number isn't too much but it does mean that we will be missing a few genes if we were using gene symbols to for matching. Alas, since I wasn't wise enough 4 years ago when I started my projects, there are parts of my pipelines that still rely on gene symbol matching.
+That is `r nrow(mistmatched_new_names)` genes that have a different official symbol than they used to in 2014. And that is only in mouse. Considering this only corresponds to `r format(100*nrow(mistmatched_new_names)/nrow(mouse_genes),digits = 2)`% of all gene symbols, this number isn't too much but it does mean that we will be missing a few genes if we were using gene symbols for matching. Alas, since I wasn't wise enough 4 years ago when I started my projects, there are parts of my pipelines that still rely on gene symbol matching.
 
 Most common transformation I make is translating my lists of brain cell type markers that were created using mouse data [@mancarci2017cross] to their human orthologues. I can see which markers are lost due to differences in gene symbols when making this transformation.
 
