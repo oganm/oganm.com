@@ -254,7 +254,7 @@ Immedately, I see that this broke my dropdown menus. I am not sure what the issu
 
 Another thing that's broken by bootstrap is the spacing between the Logo and the navigation links
 
-![](/images/fineTuning/nalinks.png)
+![](/images/fineTuning/navlinks.png)
 
 Also the fonts have changed, the post links look funny. Bloody hell everything's broken. 
 

@@ -38,7 +38,7 @@ library(ogbox) # github.com/oganm/ogbox
 
 print(getwd())
 
-knitr::opts_chunk$set(echo = FALSE, fig.align ='center')
+knitr::opts_chunk$set(echo = FALSE, fig.align ='center', cache = TRUE)
 getUniqueTable = function(charTable){
     uniqueTable = charTable %>% arrange(desc(level)) %>% filter(!duplicated(paste(name,justClass))) %>% 
         filter(!level > 20)
@@ -94,7 +94,6 @@ barPalette = c('#7DD4A6','#C15BC5','#D65242','#415455',
 ```
 
 *Edited: 9 September 2018 (see [changlelog](#changelog))*
-
 
 
 ## Introduction
