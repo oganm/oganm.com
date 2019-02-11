@@ -2,6 +2,7 @@
 title: Updating the good old Homologene database
 author: Ogan Mancarci
 date: '2019-02-10'
+description: Updating the gene symbols and IDs of the homologene database
 slug: homologene-update
 bibliography: bibliography.bib
 csl: nature.csl

@@ -8,16 +8,26 @@
 <meta property="og:type" content="website">
 {{ else }}
 <title>{{ .Title }}{{ with .Params.subtitle }} - {{ . }} {{ end }} - {{ .Site.Title }}</title>
+<meta name="twitter:card" content="summary" >
+<meta name="twitter:site" content="@oganm" >
+
+<meta name="twitter:image" content="http://oganm.com/images/ogbrain.jpg" >
+
+<meta property="twitter:title" content="{{ .Title }} - {{ .Site.Title }}">
 <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
 {{ end }}
 
 {{ if eq .URL "/" }}
 <meta property="description" content="{{ .Site.Params.description }}">
+<meta name = "twitter:description" content="{{ .Site.Params.description }}" >
 {{ else }}
   {{ if .Description }}
   <meta property="description" content="{{ .Description }}">
+  <meta name = "twitter:description" content="{{ .Description }}" >
   {{ end }}
 {{ end }}
+
+
 
 {{ if .Keywords }}
 <meta property="keywords" content="{{ delimit .Keywords ", " }}">
