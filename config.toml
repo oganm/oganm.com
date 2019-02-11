@@ -98,7 +98,8 @@ enableEmoji = false
 
 
     [params.logo]
-    url = "oglogo.png"
+    url = "ogbrain.jpg"
+    title = ""
     width = 50
     height = 50
     alt = "Logo"

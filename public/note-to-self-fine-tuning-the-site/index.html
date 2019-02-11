@@ -59,10 +59,11 @@
       <header class="header">
         <nav class="nav">
   <a href="../" class="nav-logo">
-    <img src="../images/oglogo.png"
+    <img src="../images/ogbrain.jpg"
          width="50"
          height="50"
-         alt="Logo">
+         alt="Logo"
+         title="">
   </a>
   <ul class="nav-links">
     
@@ -336,10 +337,7 @@
 </ul>
 </div>
 
-<p>This is still me rambling about the building process of this site but I have a better idea
-how things work. It seems like for now this blog is mostly about itself.
-I am generally happy with how things look but there are still a few visible and invisible
-changes I want to make to the site.</p>
+<p>This is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</p>
 <p>Currently the site looks like this</p>
 <p><img src="../images/fineTuning/before.png" height="400"></p>
 <p>My plan now is to make a two column structure for the homepage and some behind the scene changes that should help me to make changes easier and organize things better.</p>
@@ -355,19 +353,15 @@ changes I want to make to the site.</p>
 </div>
 <div id="code-cleanup" class="section level2">
 <h2>Code cleanup</h2>
-<p>As I was looking at the code of the default theme, I noticed that Disqus comment section
-is already controlled by a built in variable <code>disable_comments</code></p>
+<p>As I was looking at the code of the default theme, I noticed that Disqus comment section is already controlled by a built in variable <code>disable_comments</code></p>
 <pre><code>{{ if and (not (eq .Site.DisqusShortname &quot;&quot;)) (not .Params.disable_comments) }}
 ...
 {{end}}</code></pre>
-<p>Which means my edit to the <code>single.html</code> was completely unnecesary. The built in support
-also has me set the variable to <code>true</code> to disable. Based on experimentation with the previous
-post, the default value for a variable seems to be <code>false</code> as my</p>
+<p>Which means my edit to the <code>single.html</code> was completely unnecesary. The built in support also has me set the variable to <code>true</code> to disable. Based on experimentation with the previous post, the default value for a variable seems to be <code>false</code> as my</p>
 <pre><code>{{if .Params.disqus}}
 {{ partial &quot;disqus.html&quot; .}}
 {{end}}</code></pre>
-<p>block in the <code>single.html</code> caused disqus comments to be disabled if I didn’t set anything.
-The default approach is simply superior and I didn’t make any other changes on the <code>single.html</code>. I was considering just deleting it but then I remembered I didn’t want the reading time to appear next to my page title so I’ll just revert my previous edits and comment out the reading time section instead.</p>
+<p>block in the <code>single.html</code> caused disqus comments to be disabled if I didn’t set anything. The default approach is simply superior and I didn’t make any other changes on the <code>single.html</code>. I was considering just deleting it but then I remembered I didn’t want the reading time to appear next to my page title so I’ll just revert my previous edits and comment out the reading time section instead.</p>
 <p>The other thing I want to change is how I handle the <code>Pre</code> argument of <code>[[menu.main]]</code> items in <code>config.toml</code> are handled. Currently, it assumes they are a font-awesome icon. It also sets the <code>aria-hidden</code> attribute of the icons to <code>true</code>. <code>aria-hidden</code> appears to be an <a href="https://fontawesome.com/how-to-use/on-the-web/other-topics/accessibility">accessibility</a> feature that makes screen readers ignore the icon. I want better control over what I add before a menu item because:</p>
 <ul>
 <li>Some of the menu items only use the icon to describe themselves. So making them invisible for the blind is not the best idea.</li>
@@ -393,11 +387,8 @@ The default approach is simply superior and I didn’t make any other changes on
         &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;&lt;i class=&quot;{{ .Pre }}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp; {{ .Name }}&lt;/a&gt;&lt;/li&gt;
     {{ end }}
 {{ end }}</code></pre>
-<p><code>{{ .Pre }}</code> is repeated 3 times here. For regular menu items, for dropdowns and for children. Children and regular menu items are essentially
-identical. They are both links and have an icon and the name. The parent items currently do not support links. If I make the <code>URL</code> argument an optional one
-I can create a tiny <code>partial</code> for all of them that should eliminate this code triplication. I also might want to add links to dropdown roots themselves in the future. For instance the “Blog” button currently list categories (manually, I may want to automate this) but clicking on itself might lead to the <code>/post</code> address and list all posts regardless of category.</p>
-<p>To make the <code>URL</code> an optional argument, I need to make sure the output doesn’t have the <code>&lt;a&gt;</code> tag if URL is not defined. Based on <a href="https://discourse.gohugo.io/t/solved-isset-how-to-check-variable-is-empty/1764">this</a> question on Hugo support site, one can check if an argument is defined using
-<code>isset</code> However in the example they always use it like <code>(isset .Params &quot;argument&quot;)</code> for arguments that are normally called with <code>.Params.argument</code> syntax. I am still not well versed in the syntax and scoping rules of hugo but this is clearly different that how arguments are called within the iterators. So some experimentation is needed. Initially I replace the code for dropdown children and the code for regular menu items with the new partial that we will be calling.</p>
+<p><code>{{ .Pre }}</code> is repeated 3 times here. For regular menu items, for dropdowns and for children. Children and regular menu items are essentially identical. They are both links and have an icon and the name. The parent items currently do not support links. If I make the <code>URL</code> argument an optional one I can create a tiny <code>partial</code> for all of them that should eliminate this code triplication. I also might want to add links to dropdown roots themselves in the future. For instance the “Blog” button currently list categories (manually, I may want to automate this) but clicking on itself might lead to the <code>/post</code> address and list all posts regardless of category.</p>
+<p>To make the <code>URL</code> an optional argument, I need to make sure the output doesn’t have the <code>&lt;a&gt;</code> tag if URL is not defined. Based on <a href="https://discourse.gohugo.io/t/solved-isset-how-to-check-variable-is-empty/1764">this</a> question on Hugo support site, one can check if an argument is defined using <code>isset</code> However in the example they always use it like <code>(isset .Params &quot;argument&quot;)</code> for arguments that are normally called with <code>.Params.argument</code> syntax. I am still not well versed in the syntax and scoping rules of hugo but this is clearly different that how arguments are called within the iterators. So some experimentation is needed. Initially I replace the code for dropdown children and the code for regular menu items with the new partial that we will be calling.</p>
 <pre class="html"><code>{{ range .Site.Menus.main }}
     {{ if .HasChildren}}
         &lt;div class=&quot;dropdown&quot;&gt;
@@ -424,9 +415,7 @@ I can create a tiny <code>partial</code> for all of them that should eliminate t
     name = &quot;Dummy&quot;
     identifier = &quot;dummy&quot;
     weight = 9999</code></pre>
-<p><img src="images/fineTuning/dummy.png" />
-Note that weird gap in between dummy and everything else. Wonder what’s happening there… Anyway, currently, it is a link that goes nowhere because the object is still generated as an <code>&lt;a&gt;</code> with no <code>href</code>. Before I proceed any further,
-I quickly google “hugo isset range” and find <a href="https://discourse.gohugo.io/t/isset-in-range/12895">this</a> question that suggests using <code>with</code> instead or that <code>isset</code> in this context works as <code>isset . &quot;argument&quot;</code>. I won’t have to trust on random experiments after all. Even the exact example given is mostly the same. So <code>menu.main.html</code> should be</p>
+<p><img src="images/fineTuning/dummy.png" /> Note that weird gap in between dummy and everything else. Wonder what’s happening there… Anyway, currently, it is a link that goes nowhere because the object is still generated as an <code>&lt;a&gt;</code> with no <code>href</code>. Before I proceed any further, I quickly google “hugo isset range” and find <a href="https://discourse.gohugo.io/t/isset-in-range/12895">this</a> question that suggests using <code>with</code> instead or that <code>isset</code> in this context works as <code>isset . &quot;argument&quot;</code>. I won’t have to trust on random experiments after all. Even the exact example given is mostly the same. So <code>menu.main.html</code> should be</p>
 <pre class="html"><code>&lt;li&gt;
     {{ if isset . &quot;URL&quot; }}
         &lt;a href = {{.}}&gt;
@@ -456,8 +445,7 @@ I quickly google “hugo isset range” and find <a href="https://discourse.gohu
         {{ partial &quot;menu.main.html&quot; .}}
     {{ end }}
 {{ end }}</code></pre>
-<p>Now that all menu labels are unified I can go back to dealing with <code>Pre</code> tags. I simply replace the entire thing with <code>{{.Pre}}</code>.
-Any addition should be written as full html.</p>
+<p>Now that all menu labels are unified I can go back to dealing with <code>Pre</code> tags. I simply replace the entire thing with <code>{{.Pre}}</code>. Any addition should be written as full html.</p>
 <pre class="html"><code>&lt;li&gt;
     {{ with .URL }}
         &lt;a href = {{.}}&gt;
@@ -484,35 +472,41 @@ Any addition should be written as full html.</p>
     identifier = &quot;scholar&quot;
     pre = &quot;&lt;i class=&#39;fas fa-graduation-cap&#39; aria-hidden&gt;&lt;/i&gt;&quot;
     url = &quot;https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&amp;hl=en&quot;</code></pre>
-<p>Note that I can set aria-hidden property from here for menu items that do have
-a text description.</p>
+<p>Note that I can set aria-hidden property from here for menu items that do have a text description.</p>
 </div>
 <div id="a-wild-issue-appeared" class="section level2">
 <h2>A wild issue appeared</h2>
-<p>While I was dealing with all that I noticed a subtle change in the site. The URLs of the menu bars now link me to to relative links based on <code>oganm.com</code> while in the previous build they used to provide relative links based on where I am. This must be related to the changes I have made with the navigation bar. Sure enough,
-if I change the code that generates the dropdown children into</p>
+<p>While I was dealing with all that I noticed a subtle change in the site. The URLs of the menu bars now link me to to relative links based on <code>oganm.com</code> while in the previous build they used to provide relative links based on where I am. This must be related to the changes I have made with the navigation bar. Sure enough, if I change the code that generates the dropdown children into</p>
 <pre class="html"><code>{{range .Children}}
     &lt;li&gt;&lt;a href=&quot;{{ .URL }}&quot;&gt;{{ .Name }}&lt;/a&gt;&lt;/li&gt;
     {{ partial &quot;menu.main.html&quot; .}}
 {{ end }}</code></pre>
 <p>I get two links, the first one generated by the native code, second one generated by the new code. The first one is an appropriate relative link, second one just sends you back to the root no matter where you are. This is fine for the actual page but it breaks my testing environment.</p>
-<p><img src="../images/fineTuning/badlink.png" />
-Now the code within the <code>menu.main.html</code> should have been using the exact same arguments. Not sure what is causing the change here. I would have a better idea if I knew what was originally reponsible for changing the URL to be the way it is. Turns out instead of doing <code>&lt;a href=&quot;{{.}}&quot;&gt;</code> in <code>menu.main.html</code> I did <code>&lt;a href={{.}}&gt;</code>. Not sure how the absence of quotes changes things but it certainly does.</p>
+<p><img src="../images/fineTuning/badlink.png" /> Now the code within the <code>menu.main.html</code> should have been using the exact same arguments. Not sure what is causing the change here. I would have a better idea if I knew what was originally reponsible for changing the URL to be the way it is. Turns out instead of doing <code>&lt;a href=&quot;{{.}}&quot;&gt;</code> in <code>menu.main.html</code> I did <code>&lt;a href={{.}}&gt;</code>. Not sure how the absence of quotes changes things but it certainly does.</p>
 <p>Another thing I learned was not to use the output of <code>serve_site()</code> directly to make deployments. <code>serve_site()</code> also renders the draft sites which cause this post to be online prematurely. What I should be doing instead is to use <code>build_site()</code>.</p>
 </div>
 <div id="homepage" class="section level2">
 <h2>Homepage</h2>
 <p>So far nothing I have done has changed anything visually. Before this post and after the previous one I fiddled with the colors and formatting a little. Replaced the link markers to a dark green, made them a little thinner to get them out of the way. I also used the same dark green on titles and navigation bar text. As a side effect, the navigation bar items turn black when moused over due to the pre-existing theme CSS so it added a subtle effect that I like. Currently the dropdown menu’s don’t have the same turn-to-black effect but they already drop down so I am unsure if they need any more responsiveness. I know that I like the dark green link identifiers better than their previous version but I am unsure if they are still too prominent for comfort.</p>
 <p>I know however I am not really satisfied with the homepage. This is hard for me because along with not knowing much about web design I also have a limited taste in aesthetics. Once again, the academic theme’s setup seems welcoming with the two column structure and once again, I will refuse to switch to it and emulate it by hand for no good reason.</p>
-<p><img src="../images/fineTuning/academic.png" /></p>
+<div class="figure">
+<img src="../images/fineTuning/academic.png" />
+
+</div>
 <p>I start with adding the entire bootstrap package which is probably an overkill but don’t have the time to write the code for creating multiple columns. I add bootstrap by modifying the <code>head.html</code> in the default theme to require a <code>prehead.html</code> before loading the other css items. In the <code>prehead.html</code> I add the link to the bootstrap stylesheet as described <a href="https://getbootstrap.com/docs/4.2/getting-started/introduction/">here</a>. I also add the javascript links at the end of the <code>footer.html</code>.</p>
 <p>Immedately, I see that this broke my dropdown menus. I am not sure what the issue here is. I should have been overwriting any bootstrap classes. Changing the class name from <code>dropdown</code> to <code>drpdwn</code> works for now but that may require further invenstigation in the future. Who doesn’t love some sweet technical dept. I did consider switching to boostrap’s drowndown menus but they seem to come with quite a few bells and whistles I don’t need right now.</p>
 <p>Another thing that’s broken by bootstrap is the spacing between the Logo and the navigation links</p>
-<p><img src="../images/fineTuning/nalinks.png" /></p>
+<div class="figure">
+<img src="../images/fineTuning/nalinks.png" />
+
+</div>
 <p>Also the fonts have changed, the post links look funny. Bloody hell everything’s broken.</p>
 <p>Maybe this wasn’t the best idea. I remove all marks of bootstrap. All I want from bootstrap is the column system. Googling “bootstrap just columns” leads me to <a href="https://stackoverflow.com/questions/20403443/how-to-get-just-the-responsive-grid-from-bootstrap-3">this</a> stackoverflow question where I learn I can get parts of bootstrap <a href="http://getbootstrap.com/customize/">here</a>. As advised I try to get a version of bootstrap that only includes column. The results are less horrible but for some reason, removing typography doesn’t seem to be a real option. When the page loads, they are quickly overwritten by the <code>main.css</code> but you still see the flicker when the fonts change. I imagine someone must have implemented this on their own. After another quick look at google, I find <a href="https://github.com/zirafa/bootstrap-grid-only">this</a> github repo. Dropping <code>grid-12.css</code> Lets me use bootstraps columns without making a mess.</p>
 <p>Now that I can have some columns, I can split my homepage into two. I simply use the <code>row</code> and <code>col-sm</code> tags within the <code>_index.Rmd</code> to do this. Which cause the main page to look like this:</p>
-<p><img src="../images/fineTuning/columns.png" /></p>
+<div class="figure">
+<img src="../images/fineTuning/columns.png" />
+
+</div>
 <p>This looks a little constrained to me. The reason is the default <code>max-width</code> porperty for the article <code>content</code>s which is 800px. To fix that I can just add another class to the <code>content</code> of <code>index.html</code></p>
 <pre class="html"><code>{{ partial &quot;header.html&quot; . }}
 
@@ -537,7 +531,10 @@ Now the code within the <code>menu.main.html</code> should have been using the e
     max-width: 1200px;
 }</code></pre>
 <p>Finally if I change the order of the text a little in <code>_index.Rmd</code> it’ll look just fine.</p>
-<p><img src="../images/fineTuning/final.png" /></p>
+<div class="figure">
+<img src="../images/fineTuning/final.png" />
+
+</div>
 <p>I am happy how this looks for now. Based on google results it may need some SEO optimization though which might be the next post.</p>
 </div>
 

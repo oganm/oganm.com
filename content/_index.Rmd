@@ -11,11 +11,13 @@ keywords: ogan,mancarci,bioinformatics,rstats,dnd,oganm
 <div class="col-sm-4">
 
 
-<img src="./images/cropogbrain.png" height="200" width="200" align="" title="colorized MRI scan of my head. DICOM is a widely used medical imaging format that can be read from R using the oro.dicom package. The image is colorized using the prisma app. You can also see why I always sleep on my left site to breath easier" class="center">
+<img src="./images/oganm.jpg" height="200" width="200" align="" style="border-radius: 50%;" class="center">
 
 ## B. Ogan Mancarci
 
-I am a PhD student of bioinformatics in UBC. I work on gene expression in brain cell types and try to extract cell type specific signals from whole brain gene expression data. Here's a [CV](http://oganm.github.io/CV/).
+I am a PhD student of bioinformatics in UBC. I work on gene expression in brain cell types and try to extract cell type specific signals from whole brain gene expression data. 
+
+Here's a [CV](http://oganm.github.io/CV/).
 
 </div>
 

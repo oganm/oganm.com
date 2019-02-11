@@ -7,8 +7,8 @@
 <meta name="generator" content="Hugo 0.53" />
 
 
-<title>Dragging 5 year old homologene to today - B. Ogan Mancarci</title>
-<meta property="og:title" content="Dragging 5 year old homologene to today - B. Ogan Mancarci">
+<title>Updating the good old Homologene database - B. Ogan Mancarci</title>
+<meta property="og:title" content="Updating the good old Homologene database - B. Ogan Mancarci">
 
 
 
@@ -59,10 +59,11 @@
       <header class="header">
         <nav class="nav">
   <a href="../" class="nav-logo">
-    <img src="../images/oglogo.png"
+    <img src="../images/ogbrain.jpg"
          width="50"
          height="50"
-         alt="Logo">
+         alt="Logo"
+         title="">
   </a>
   <ul class="nav-links">
     
@@ -317,11 +318,11 @@
 	
 	
 	
-	<h1 class="article-title">Dragging 5 year old homologene to today</h1>
+	<h1 class="article-title">Updating the good old Homologene database</h1>
 	
 
 	
-	<span class="article-date">2019/02/08</span>
+	<span class="article-date">2019/02/10</span>
 	
 	
 	<div class="article-content">
@@ -331,6 +332,7 @@
 <ul>
 <li><a href="#homologene">Homologene</a></li>
 <li><a href="#what-is-wrong-with-homologene">What is wrong with homologene?</a></li>
+<li><a href="#updating-homologene-gene-ids">Updating homologene gene IDs</a></li>
 <li><a href="#updating-homologene-gene-symbols">Updating homologene gene symbols</a></li>
 <li><a href="#bibliography">Bibliography</a></li>
 </ul>
@@ -338,19 +340,15 @@
 
 <div id="homologene" class="section level2">
 <h2>Homologene</h2>
-<p>I am the author of a small package called <a href="https://github.com/oganm/homologene">homologene</a>. The package wraps
-the identically named <a href="https://www.ncbi.nlm.nih.gov/homologene">homologene database released by NCBI</a>. This database includes
-information about genes that are homologues/orthologues of each other. It is structured
-as a simple table. One can simply access it by doing</p>
+<p>I am the author of a small package called <a href="https://github.com/oganm/homologene">homologene</a>. The package wraps the identically named <a href="https://www.ncbi.nlm.nih.gov/homologene">homologene database released by NCBI</a>. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing</p>
 <pre class="r"><code>library(readr)
 library(magrittr)
 library(dplyr)
-
-tmp = tempfile()
+dir.create(&#39;homologene-files&#39;,showWarnings = FALSE)
 download.file(url = &quot;ftp://ftp.ncbi.nih.gov/pub/HomoloGene/current/homologene.data&quot;, 
-              destfile = tmp)
+              destfile = &#39;homologene-files/homologene.data&#39;)
 
-homologene = read_tsv(tmp,
+homologene = read_tsv(&#39;homologene-files/homologene.data&#39;,
                       col_names = c(&#39;HID&#39;,
                                   &#39;Taxonomy&#39;,
                                   &#39;Gene.ID&#39;,
@@ -358,17 +356,22 @@ homologene = read_tsv(tmp,
                                   &#39;Protein.GI&#39;,
                                   &#39;Protein.Accession&#39;))
 
-head(homologene)</code></pre>
-<pre><code>## # A tibble: 6 x 6
-##     HID Taxonomy Gene.ID Gene.Symbol Protein.GI Protein.Accession
-##   &lt;int&gt;    &lt;int&gt;   &lt;int&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;            
-## 1     3     9606      34 ACADM          4557231 NP_000007.1      
-## 2     3     9598  469356 ACADM        160961497 NP_001104286.1   
-## 3     3     9544  705168 ACADM        109008502 XP_001101274.1   
-## 4     3     9615  490207 ACADM        545503811 XP_005622188.1   
-## 5     3     9913  505968 ACADM        115497690 NP_001068703.1   
-## 6     3    10090   11364 Acadm          6680618 NP_031408.1</code></pre>
-<p>In homologene package, a subset of this data is available for querying.</p>
+homologene</code></pre>
+<pre><code>## # A tibble: 275,237 x 6
+##      HID Taxonomy Gene.ID Gene.Symbol     Protein.GI Protein.Accession
+##    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;            
+##  1     3     9606      34 ACADM              4557231 NP_000007.1      
+##  2     3     9598  469356 ACADM            160961497 NP_001104286.1   
+##  3     3     9544  705168 ACADM            109008502 XP_001101274.1   
+##  4     3     9615  490207 ACADM            545503811 XP_005622188.1   
+##  5     3     9913  505968 ACADM            115497690 NP_001068703.1   
+##  6     3    10090   11364 Acadm              6680618 NP_031408.1      
+##  7     3    10116   24158 Acadm            292494885 NP_058682.2      
+##  8     3     7955  406283 acadm            390190229 NP_998175.2      
+##  9     3     7227   38864 CG12262           24660351 NP_648149.1      
+## 10     3     7165 1276346 AgaP_AGAP005662   58387602 XP_315683.2      
+## # ... with 275,227 more rows</code></pre>
+<p>In the homologene package, a subset of this data is available for querying.</p>
 <pre class="r"><code>head(homologene::homologeneData)</code></pre>
 <pre><code>##   HID Gene.Symbol Taxonomy Gene.ID
 ## 1   3      acdh-8     6239  173979
@@ -377,82 +380,312 @@ head(homologene)</code></pre>
 ## 4   6       kat-1     6239  174161
 ## 5   6     T02G5.4     6239  187992
 ## 6  13     R04B3.2     6239  180550</code></pre>
-<p>At the time I removed the <code>Protein.GI</code> and <code>Protein.Accession</code> since my work had no use
-for them and limited the information to 7 popular model organisms to so that package
-wouldn’t be too bloated.</p>
-<p>My use of the the package mostly consists of translating orthologues between mouse and human.</p>
-<pre class="r"><code>homologene::human2mouse(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;))</code></pre>
-<pre><code>##   humanGene mouseGene humanID mouseID
-## 1      ENO2      Eno2    2026   13807
-## 2       MOG       Mog    4340   17441
-## 3      GZMH      Gzmd    2999   14941
-## 4      GZMH      Gzme    2999   14942
-## 5      GZMH      Gzmg    2999   14944
-## 6      GZMH      Gzmf    2999   14943</code></pre>
-<p>In general I like using this method because it’s fast, the syntax is simple and it’s easy to extend it at a whim. A single set of gene symbols and IDs are used to identify genes and organism level data is tied to taxonomy identifiers which makes things easier. The obvious alternative to this would be to use <code>biomart</code> <span class="citation">(Durinck et al. 2005)</span> which to me, is less intuitive and clunky.</p>
+<p>At the time I removed the <code>Protein.GI</code> and <code>Protein.Accession</code> since my work had no use for them and limited the information to 7 popular model organisms to so that package wouldn’t be too bloated.</p>
+<p>The package includes functions to translate orthologues between species with a one liner</p>
+<pre class="r"><code>homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
+                       inTax = 9606, # human
+                       outTax = 10090) # mouse</code></pre>
+<pre><code>##   9606 10090 9606_ID 10090_ID
+## 1 ENO2  Eno2    2026    13807
+## 2  MOG   Mog    4340    17441
+## 3 GZMH  Gzmd    2999    14941
+## 4 GZMH  Gzme    2999    14942
+## 5 GZMH  Gzmg    2999    14944
+## 6 GZMH  Gzmf    2999    14943</code></pre>
+<p>In general I like using this method because it’s fast, the syntax is simple and it’s easy to extend it at a whim. A single set of gene symbols and IDs are used to identify genes and organism level data is tied to taxonomy identifiers which makes things easier. The obvious alternative to this would be to use <code>biomart</code><span class="citation"><sup>1</sup></span> which to me, is less intuitive and clunky.</p>
 </div>
 <div id="what-is-wrong-with-homologene" class="section level2">
 <h2>What is wrong with homologene?</h2>
-<p>Not everyone is happy with using homologene for orthology detection. The database has not been updated since 2014. This means it is not created using the latest annotations. The reference genomes have been getting updates and gene symbols change fairly frequently. In fact we can see how many of the genes don’t have the same official first name or ID by using the <a href="https://github.com/oganm/geneSynonym">geneSynonym</a> package. This package includes</p>
+<p>Not everyone is happy with using homologene for orthology detection. The database has not been updated since 2014. This means it is not created using the latest annotations. The reference genomes have been getting updates and gene symbols change frequently. For example <a href="https://github.com/oganm/geneSynonym/commit/c2b92a6965fd56d73c016cb0f31e5550b5be7da2">here</a> you can see a list of gene name changes that happened in a 15 day period at February 9th 2019.</p>
+<p>That list above is generated by parsing <a href="ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/">gene_info.gz</a> file provided by NCBI. I use this file to keep an up to date list of gene symbols and their synonyms. It comes in handy when I use data released by other researchers that only include gene symbols as identifiers. Using the data here, we can identify how many genes in homologene have changed their names, assuming the NCBI ids are the same. I will be using the data in the form it is made available in the <a href="https://github.com/oganm/geneSynonym">geneSyonym</a> package.</p>
 <pre class="r"><code>library(geneSynonym)
 library(homologene)
-library(purrr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;purrr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:magrittr&#39;:
-## 
-##     set_names</code></pre>
-<pre class="r"><code># get human gene IDs from the human synonym data shipped with geneSynonym
-geneIDs = names(syno10090)
-homologeneData %&gt;%
-    filter(Gene.ID %in% geneIDs) -&gt;
-    mouseGenes
+library(purrr)
 
-# get first names from the human synonym data
-syno10090[as.character(mouseGenes$Gene.ID)] %&gt;%
-    strsplit(&#39;\\|&#39;) %&gt;% map_chr(1) -&gt;
-    firstNames
+# get mouse gene IDs from the mouse synonym data shipped with geneSynonym
+gene_IDs = names(syno10090)
+
+# get mouse genes from the homologene data
+homologene::homologeneData %&gt;%
+    filter(Gene.ID %in% gene_IDs) -&gt;
+    mouse_genes
+
+# get fisrt names (official symbol) from the mouse synonym data
+syno10090[as.character(mouse_genes$Gene.ID)] %&gt;%
+    strsplit(&#39;\\|&#39;) %&gt;%
+    map_chr(1) -&gt;
+    first_names
 
 # set new names as a column
-mouseGenes$newNames = firstNames
+mouse_genes$new_names = first_names
 
-mistmatchedNewNames = 
-    mouseGenes %&gt;% filter(newNames != Gene.Symbol)
+mistmatched_new_names = 
+    mouse_genes %&gt;% filter(new_names != Gene.Symbol)
 
-nrow(mistmatchedNewNames)</code></pre>
-<pre><code>## [1] 1410</code></pre>
-<pre class="r"><code>head(mistmatchedNewNames)</code></pre>
-<pre><code>##    HID Gene.Symbol Taxonomy   Gene.ID newNames
-## 1   93      Epb4.2    10090     13828    Epb42
-## 2  479        Daf2    10090     13137    Cd55b
-## 3  660      Gm3934    10090 100042625  Gstp-ps
-## 4  664     Gucy1b3    10090     54195  Gucy1b1
-## 5  984       Clca3    10090     23844    Clca1
-## 6 1137        Gbas    10090     14467 Nipsnap2</code></pre>
-<p>That is 1410 genes that have a different official symbol than they used to in 2014. And that is only in mouse. Considering we are looking at a total of 21077 genes here, this number isn’t too much but it does mean that we will be missing a few genes if we were using gene symbols to for matching. Alas, since I wasn’t wise enough 4 years ago when I started my projects, there are parts of my pipelines that still rely on gene symbol matching.</p>
-<p>Most common gene list I translate using homologene is my list of brain cell type markers that were created using mouse data <span class="citation">(Mancarci et al. 2017)</span>.</p>
+# how many mismatches
+nrow(mistmatched_new_names)</code></pre>
+<pre><code>## [1] 1418</code></pre>
+<pre class="r"><code># take a peek at the first 10
+head(mistmatched_new_names, 10)</code></pre>
+<pre><code>##     HID   Gene.Symbol Taxonomy   Gene.ID new_names
+## 1    93        Epb4.2    10090     13828     Epb42
+## 2   479          Daf2    10090     13137     Cd55b
+## 3   660        Gm3934    10090 100042625   Gstp-ps
+## 4   664       Gucy1b3    10090     54195   Gucy1b1
+## 5   984         Clca3    10090     23844     Clca1
+## 6  1137          Gbas    10090     14467  Nipsnap2
+## 7  1185          Ict1    10090     68572    Mrpl58
+## 8  1189 I830012O16Rik    10090    667370    Ifit3b
+## 9  1194         Cyr61    10090     16007      Ccn1
+## 10 1223        Adrbk1    10090    110355      Grk2</code></pre>
+<p>That is 1418 genes that have a different official symbol than they used to in 2014. And that is only in mouse. Considering this only corresponds to 6.7% of all gene symbols, this number isn’t too much but it does mean that we will be missing a few genes if we were using gene symbols to for matching. Alas, since I wasn’t wise enough 4 years ago when I started my projects, there are parts of my pipelines that still rely on gene symbol matching.</p>
+<p>Most common transformation I make is translating my lists of brain cell type markers that were created using mouse data<span class="citation"><sup>2</sup></span> to their human orthologues. I can see which markers are lost due to differences in gene symbols when making this transformation.</p>
 <pre class="r"><code>library(markerGeneProfile)
 data(&quot;mouseMarkerGenesCombined&quot;)
 
 mouseMarkerGenesCombined %&gt;% 
     unlist %&gt;%
     unique %&gt;% 
-    {. %in% mistmatchedNewNames$newNames} %&gt;% 
-    sum</code></pre>
-<pre><code>## [1] 46</code></pre>
-<p>I will see that there are mistmatches. Again, this isn’t much but it means that by default my pipelines are also effected by this issue.</p>
+    {.[. %in% mistmatched_new_names$new_names]} </code></pre>
+<pre><code>##  [1] &quot;Adgrg1&quot;   &quot;Hacd2&quot;    &quot;Msmo1&quot;    &quot;Nat8f4&quot;   &quot;Pdzph1&quot;   &quot;Arhgap45&quot;
+##  [7] &quot;Cd300c2&quot;  &quot;Fam91a1&quot;  &quot;Hacd4&quot;    &quot;Siglecf&quot;  &quot;Washc2&quot;   &quot;Adgre1&quot;  
+## [13] &quot;Stk26&quot;    &quot;Vsir&quot;     &quot;Mcub&quot;     &quot;Plpp3&quot;    &quot;Patj&quot;     &quot;Scn2a&quot;   
+## [19] &quot;Diaph2&quot;   &quot;Epb41l2&quot;  &quot;Grk2&quot;     &quot;Nat8f5&quot;   &quot;Naprt&quot;    &quot;Nat8f1&quot;  
+## [25] &quot;Adgre5&quot;   &quot;Adgrf5&quot;   &quot;Adgrl4&quot;   &quot;Map3k20&quot;  &quot;Rflnb&quot;    &quot;Tns2&quot;    
+## [31] &quot;Nectin3&quot;  &quot;Adgre4&quot;   &quot;Cntrl&quot;    &quot;Hcar2&quot;    &quot;Rp2&quot;      &quot;Spata46&quot; 
+## [37] &quot;Cnmd&quot;     &quot;Plpp2&quot;    &quot;Ankub1&quot;   &quot;Mfsd13b&quot;  &quot;Phf24&quot;    &quot;Cbarp&quot;   
+## [43] &quot;Cops9&quot;    &quot;Ints6l&quot;   &quot;Epb41l1&quot;  &quot;Adgrb1&quot;</code></pre>
+<p>That is 46 genes which corresponds to a 1.8%. This is probably a more realistic image of real world implications since not all genes are equally important. Many genes that are prone to change are pseudogenes, non-coding transcripts etc. Such genes are less likely to come up in an analysis.</p>
+</div>
+<div id="updating-homologene-gene-ids" class="section level2">
+<h2>Updating homologene gene IDs</h2>
+<p>One small thing we can do to improve this situation is to manually replace the old gene symbols with new ones. Assuming the gene IDs are the same, we could just replace the old names with the new. However, gene IDs are also prone to changes<span class="citation"><sup>3</sup></span> and there is a whole different file that keeps track of these changes. We need to look into that file and update the gene IDs too.</p>
+<pre class="r"><code>download.file(url = &quot;ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene_history.gz&quot;, 
+              destfile = &#39;homologene-files/gene_history.gz&#39;)
+
+gene_history = read_tsv(&#39;homologene-files/gene_history.gz&#39;,
+                        col_names = c(&#39;tax_id&#39;, 
+                                      &#39;GeneID&#39;,
+                                      &#39;Discontinued_GeneID&#39;,
+                                      &#39;Discontinued_Symbol&#39;,
+                                      &#39;Discontinue_Date&#39;))
+
+gene_history</code></pre>
+<pre><code>## # A tibble: 11,165,348 x 5
+##    tax_id GeneID Discontinued_GeneID Discontinued_Symbol Discontinue_Date
+##     &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;                          &lt;dbl&gt;
+##  1      9 -                  1246494 repA1                       20031113
+##  2      9 -                  1246495 repA2                       20031113
+##  3      9 -                  1246496 leuA                        20031113
+##  4      9 -                  1246497 leuB                        20031113
+##  5      9 -                  1246498 leuC                        20031113
+##  6      9 -                  1246499 leuD                        20031113
+##  7      9 -                  1246506 yqhA                        20031113
+##  8      9 -                  1246507 repA2                       20031113
+##  9      9 -                  1246508 repA1                       20031113
+## 10     24 -                 24952829 jef                         20150716
+## # ... with 11,165,338 more rows</code></pre>
+<p>One unverified assumption I am making is that once an ID is discontinued, it won’t be used for another gene. Let’s make sure that is actually the case before doing anything else</p>
+<pre class="r"><code># combine all the modern IDs from the geneSynonym package (same species as the homologene package)
+modern_IDs  = list(syno10090,
+                   syno10116,
+                   syno6239,
+                   syno7227,
+                   syno7955,
+                   syno9544,
+                   syno9606) %&gt;%
+    lapply(names) %&gt;%
+    do.call(c,.)
+
+gene_history %&gt;% filter(Discontinued_GeneID %in% modern_IDs)</code></pre>
+<pre><code>## # A tibble: 0 x 5
+## # ... with 5 variables: tax_id &lt;dbl&gt;, GeneID &lt;chr&gt;,
+## #   Discontinued_GeneID &lt;dbl&gt;, Discontinued_Symbol &lt;chr&gt;,
+## #   Discontinue_Date &lt;dbl&gt;</code></pre>
+<p>No current ID was ever discontinued. That’s a good sign. I can just trace the history of discontinued IDs and find the current IDs. Note that when I first tried this here were 20 IDs here. 20 IDs that were discontinued since I last updated the <code>geneSynonym</code> package. Since all of these files area updated nightly it is important to update the databases at the same time.</p>
+<pre class="r"><code>discontinued_ids = homologeneData %&gt;% 
+    filter(Gene.ID %in% gene_history$Discontinued_GeneID)
+
+dim(discontinued_ids)</code></pre>
+<pre><code>## [1] 3169    4</code></pre>
+<pre class="r"><code>unchanged_ids = homologeneData %&gt;%  
+    filter(!Gene.ID %in% gene_history$Discontinued_GeneID)</code></pre>
+<p>It’s good to see that only a relatively small number of IDs were discontinued. We can trace their history to get their current IDs (if it exists). To make this process faster, we will also take a relevant subset of the <code>gene_history</code> frame.</p>
+<pre class="r"><code># get the earliest date where we see one of our ID change events from homologene
+# since homologene was updated in 2014, this should be no earlier that that date
+earlierst_date = gene_history %&gt;%
+    filter(Discontinued_GeneID %in% homologeneData$Gene.ID) %$%
+    Discontinue_Date %&gt;% 
+    min
+
+earlierst_date</code></pre>
+<pre><code>## [1] 20100919</code></pre>
+<p>This is interesting. Why does homologene includes gene IDs that were discontinued 4 years before it’s creation? How many such IDs are out there</p>
+<pre class="r"><code># get all discontinuation events earlier than 2014. Events are coded as integers
+# in YYYYMMDD format
+gene_history %&gt;%
+    filter(Discontinue_Date &lt; 20140000 &amp; Discontinued_GeneID %in% homologeneData$Gene.ID)</code></pre>
+<pre><code>## # A tibble: 9 x 5
+##   tax_id GeneID    Discontinued_GeneID Discontinued_Symbol Discontinue_Date
+##    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt; &lt;chr&gt;                          &lt;dbl&gt;
+## 1   9544 700788                 702240 DOCK1                       20100919
+## 2   9544 -                      707717 LOC707717                   20110304
+## 3   9544 -                      708767 TNNI3K                      20110308
+## 4   9544 100423619              711097 MAP4                        20130430
+## 5   9544 -                      714619 LOC714619                   20110326
+## 6   9544 -                      714812 MATR3                       20110401
+## 7   9544 -                      715750 LOC715750                   20110325
+## 8   9544 -                      720334 MEF2B                       20110329
+## 9   9544 712686              100424395 LOC100424395                20100928</code></pre>
+<p>Ok it’s not so bad. Not sure what’s the reason behind this but it doesn’t seem like a catastrophic failure.</p>
+<p>So now we can filter the <code>gene_history</code> to only include species that we are interested in and events that happened after the earliest discontinuation date.</p>
+<pre class="r"><code>relevant_gene_history = gene_history %&gt;% filter(Discontinue_Date &gt;= earlierst_date &amp; 
+                                                    tax_id %in% homologene::taxData$tax_id)
+
+dim(relevant_gene_history)</code></pre>
+<pre><code>## [1] 96776     5</code></pre>
+<p>That’s a much smaller search space. Now we can just trace the history of every single gene with a different ID than before. I will probably end up including a version of this function to the <code>geneSynonym</code> package as pretty much all gene lists are at least a little out of date.</p>
+<pre class="r"><code>traceID = function(id){
+    print(id)
+    event = relevant_gene_history %&gt;% filter(Discontinued_GeneID == id)
+    if(nrow(event)&gt;1){
+        # just in case. if the same ID is discontinued twice, there is a problem...
+        return(&quot;multiple events&quot;)
+    }
+    while(TRUE){
+        # see if the new ID is discontinued as well
+        next_event = relevant_gene_history %&gt;%
+            filter(Discontinued_GeneID == event$GeneID)
+        if(nrow(next_event)==0){
+            # if not, previous ID is the right one
+            return(event$GeneID)
+        } else if(nrow(next_event)&gt;1){
+            # just in case, if the same ID is discontinued twice, there is a problem...
+            return(&quot;multiple events&quot;)
+        } else if(nrow(next_event) == 1){
+            # if the new IDs is discontinued, continue the loop and check if it has a parent
+            event = next_event
+        }
+    }
+}</code></pre>
+<pre class="r"><code>discontinued_ids$Gene.ID %&gt;%
+    sapply(traceID) -&gt;
+    new_ids</code></pre>
+<p>Not the most efficient code probably but it’ll be run as a CRON job in the office machine at around 6 am on Sundays so I don’t really care that much about efficiency.</p>
+<p>Lets do a few sanity checks</p>
+<pre class="r"><code># are there any ids that had multiple events
+any(new_ids == &quot;multiple events&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># are there any new ids that the geneSynonym package doesn&#39;t know about?
+all(new_ids[new_ids != &#39;-&#39;] %in% modern_IDs)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># how many of the discontinued IDs end up having new IDs instead of getting removed
+length(new_ids[new_ids != &#39;-&#39;])</code></pre>
+<pre><code>## [1] 1401</code></pre>
+<pre class="r"><code># how many IDs are lost forever
+length(new_ids[new_ids == &#39;-&#39;])</code></pre>
+<pre><code>## [1] 1768</code></pre>
+<p>Good.</p>
 </div>
 <div id="updating-homologene-gene-symbols" class="section level2">
 <h2>Updating homologene gene symbols</h2>
+<p>Since we have the new ids now, we can start building our new <code>homologeneData2</code> frame that will be added to the <code>homologene</code> package. I don’t want to overwrite the original data because people might use it expecting a perfect match with the NCBI database. Also if I messed up here I don’t want people to suffer without explicitly choosing to trust me instead of the actual database.</p>
+<pre class="r"><code># create a frame with new ids
+discontinued_fix = data.frame(HID = discontinued_ids$HID,
+                              Gene.Symbol = discontinued_ids$Gene.Symbol,
+                              Taxonomy = discontinued_ids$Taxonomy,
+                              Gene.ID = new_ids,
+                              stringsAsFactors = FALSE)
+
+# remove symbols that are discontinued
+discontinued_fix %&lt;&gt;% filter(Gene.ID != &#39;-&#39;)
+
+head(discontinued_fix)</code></pre>
+<pre><code>##   HID  Gene.Symbol Taxonomy Gene.ID
+## 1 194 LOC100538014     7955  445292
+## 2 402 LOC100535497     7955  550518
+## 3 522        ltbp1     7955  562072
+## 4 592    LOC563696     7955  556619
+## 5 595 LOC101882975     7955  561906
+## 6 639 LOC100537604     7955  557240</code></pre>
+<p>Before going further let’s make sure we aren’t doing anything crazy by peeking at the <a href="https://www.ncbi.nlm.nih.gov/gene/562072">NCBI website</a> for the id of Itbp1 gene we see there.</p>
+<p>All looks fine, so we can put everything together and replace the gene symbols as well</p>
+<pre class="r"><code># recombine the two lists sort by homology group
+homologeneData2 = 
+    rbind(discontinued_fix,unchanged_ids) %&gt;% 
+    arrange(HID)
+
+# change the names with the new names
+modern_symbols = list(syno10090,
+                      syno10116,
+                      syno6239,
+                      syno7227,
+                      syno7955,
+                      syno9544,
+                      syno9606) %&gt;% 
+    lapply(function(x){
+        strsplit(x,split = &quot;\\|&quot;) %&gt;% map_chr(1)
+    }) %&gt;% do.call(c,.)
+
+modern_frame = tibble(modern_IDs,
+                      modern_symbols)
+
+new_symbols = 
+    modern_frame$modern_symbols[match(homologeneData2$Gene.ID, modern_frame$modern_IDs)]
+
+# a sanity check. all genes with different symbols
+sum(homologeneData2$Gene.Symbol != new_symbols)</code></pre>
+<pre><code>## [1] 14964</code></pre>
+<pre class="r"><code># another sanity check, differences in mouse. 
+# we did this in the beginningas well
+# note that the number is higher than before 
+# since the new IDs allow more genes to be changed
+sum((homologeneData2$Gene.Symbol != new_symbols)[homologeneData2$Taxonomy ==10090])</code></pre>
+<pre><code>## [1] 1443</code></pre>
+<pre class="r"><code>homologeneData2 %&lt;&gt;% 
+    mutate(Gene.Symbol = modern_frame$modern_symbols[match(Gene.ID,modern_frame$modern_IDs)])
+
+head(homologeneData2)</code></pre>
+<pre><code>##   HID Gene.Symbol Taxonomy Gene.ID
+## 1   3      acdh-8     6239  173979
+## 2   3      acdh-7     6239  181758
+## 3   3     CG12262     7227   38864
+## 4   3       acadm     7955  406283
+## 5   3       ACADM     9544  705168
+## 6   3       ACADM     9606      34</code></pre>
+<p>The new homologene dataset and associated functions to use them should be on Github in a few days. Then I will set up a CRON job to update it weekly. The CRAN version will have to be perpetually out of date which is somewhat problematic, but it can’t be helped. I may include a function that builds the current version and let users specify the version they want to use. The new syntax will probably look like this:</p>
+<pre class="r"><code># translate using the old database
+homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
+                       inTax = 9606,
+                       outTax = 10090) 
+
+
+# translate using the new database
+homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
+                       inTax = 9606,
+                       outTax = 10090,
+                       db = homologene2) 
+
+# translate using the latest database
+homologene::update_homologene(path)
+homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
+                       inTax = 9606,
+                       outTax = 10090,
+                       db = path)
+</code></pre>
+<p>Before the next CRAN update I want to include a wrapper for biomaRt that uses the same syntax as homologene to make queries in ensembl so that’ll likely be the next post.</p>
 </div>
 <div id="bibliography" class="section level2 unnumbered">
 <h2>Bibliography</h2>
 <div id="refs" class="references">
 <div id="ref-biomart">
-<p>Durinck, Steffen, Yves Moreau, Arek Kasprzyk, Sean Davis, Bart De Moor, Alvis Brazma, and Wolfgang Huber. 2005. “BioMart and Bioconductor: A Powerful Link Between Biological Databases and Microarray Data Analysis.” <em>Bioinformatics</em> 21: 3439–40.</p>
+<p>1 Durinck S, Moreau Y, Kasprzyk A, Davis S, De Moor B, Brazma A <em>et al.</em> BioMart and bioconductor: A powerful link between biological databases and microarray data analysis. <em>Bioinformatics</em> 2005; <strong>21</strong>: 3439–3440.</p>
 </div>
 <div id="ref-mancarci2017cross">
-<p>Mancarci, B Ogan, Lilah Toker, Shreejoy J Tripathy, Brenna Li, Brad Rocco, Etienne Sibille, and Paul Pavlidis. 2017. “Cross-Laboratory Analysis of Brain Cell Type Transcriptomes with Applications to Interpretation of Bulk Tissue Data.” <em>eNeuro</em>. Society for Neuroscience, ENEURO–0212.</p>
+<p>2 Mancarci BO, Toker L, Tripathy SJ, Li B, Rocco B, Sibille E <em>et al.</em> Cross-laboratory analysis of brain cell type transcriptomes with applications to interpretation of bulk tissue data. <em>eNeuro</em> 2017;: ENEURO–0212.</p>
+</div>
+<div id="ref-informationGeneFrequentlyAsked2018">
+<p>3 Information NC for B, Pike USNL of M8R, MD B, Usa 2. <em>Gene Frequently Asked Questions</em>. National Center for Biotechnology Information (US), 2018.</p>
 </div>
 </div>
 </div>

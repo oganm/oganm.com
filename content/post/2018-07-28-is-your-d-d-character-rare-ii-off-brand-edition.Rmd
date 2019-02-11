@@ -763,11 +763,9 @@ c('Wizard','Cleric','Sorcerer','Druid','Warlock','Bard') %>% lapply(function(x){
     groupLevels[groupLevels %in% 'Level 0'] = 'Cantrip'
     
     frame %<>% select(spellNames,count,`%`)
-    saveRDS(frame,here('debug.rds'))
-    
+
     kbl = kable(frame,caption = x,format = 'html',escape = FALSE) %>% 
         kable_styling("striped", full_width = F) 
-    writeLines(kable(frame,caption = x,format = 'html'),here('debug.txt'))
 
     for(i in seq_along(groupLevels)){
         kbl %<>% group_rows(groupLevels[i],groupSep[i],groupSep[i+1]-1)

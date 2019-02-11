@@ -3,7 +3,8 @@
     <img src="{{ print "images/" .Site.Params.logo.url | relURL }}"
          width="{{ .Site.Params.logo.width }}"
          height="{{ .Site.Params.logo.height }}"
-         alt="{{ .Site.Params.logo.alt }}">
+         alt="{{ .Site.Params.logo.alt }}"
+         title="{{ .Site.Params.logo.title }}">
   </a>
   <ul class="nav-links">
     {{ range .Site.Menus.main }}
