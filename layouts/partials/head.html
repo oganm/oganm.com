@@ -1,17 +1,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {{ .Hugo.Generator }}
+<meta name="twitter:card" content="summary" >
+<meta name="twitter:site" content="@oganm" >
+<meta name="twitter:image" content="http://oganm.com/images/ogbrain.jpg" >
 
 {{ if eq .URL "/" }}
 <title>{{ .Site.Title }}</title>
 <meta property="og:title" content="{{ .Site.Title }}">
+<meta property="twitter:title" content="{{ .Site.Title }}">
+
 <meta property="og:type" content="website">
 {{ else }}
 <title>{{ .Title }}{{ with .Params.subtitle }} - {{ . }} {{ end }} - {{ .Site.Title }}</title>
-<meta name="twitter:card" content="summary" >
-<meta name="twitter:site" content="@oganm" >
 
-<meta name="twitter:image" content="http://oganm.com/images/ogbrain.jpg" >
 
 <meta property="twitter:title" content="{{ .Title }} - {{ .Site.Title }}">
 <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
