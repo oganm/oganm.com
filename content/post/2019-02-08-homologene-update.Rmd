@@ -131,6 +131,8 @@ That is `r nrow(mistmatched_new_names)` genes that have a different official sym
 Most common transformation I make is translating my lists of brain cell type markers that were created using mouse data [@mancarci2017cross] to their human orthologues. I can see which markers are lost due to differences in gene symbols when making this transformation.
 
 ```{r}
+# this package includes my marker gene list
+# github.com/pavlidisLab/markerGeneProfile
 library(markerGeneProfile)
 data("mouseMarkerGenesCombined")
 

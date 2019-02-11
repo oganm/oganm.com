@@ -130,7 +130,9 @@ head(mistmatched_new_names, 10)</code></pre>
 ## 10 1223        Adrbk1    10090    110355      Grk2</code></pre>
 <p>That is 1418 genes that have a different official symbol than they used to in 2014. And that is only in mouse. Considering this only corresponds to 6.7% of all gene symbols, this number isn’t too much but it does mean that we will be missing a few genes if we were using gene symbols to for matching. Alas, since I wasn’t wise enough 4 years ago when I started my projects, there are parts of my pipelines that still rely on gene symbol matching.</p>
 <p>Most common transformation I make is translating my lists of brain cell type markers that were created using mouse data<span class="citation"><sup>2</sup></span> to their human orthologues. I can see which markers are lost due to differences in gene symbols when making this transformation.</p>
-<pre class="r"><code>library(markerGeneProfile)
+<pre class="r"><code># this package includes my marker gene list
+# github.com/pavlidisLab/markerGeneProfile
+library(markerGeneProfile)
 data(&quot;mouseMarkerGenesCombined&quot;)
 
 mouseMarkerGenesCombined %&gt;% 
