@@ -24,14 +24,19 @@ editor_options:
 <li><a href="#homologene">Homologene</a></li>
 <li><a href="#what-is-wrong-with-homologene">What is wrong with homologene?</a></li>
 <li><a href="#updating-homologene-gene-ids">Updating homologene gene IDs</a></li>
-<li><a href="#updating-homologene-gene-symbols">Updating homologene gene symbols</a></li>
+<li><a href="#updating-homologene-gene-symbols">Updating homologene gene symbols</a><ul>
+<li><a href="#update">Update:</a></li>
+</ul></li>
 <li><a href="#bibliography">Bibliography</a></li>
 </ul>
 </div>
 
 <div id="homologene" class="section level2">
 <h2>Homologene</h2>
-<p>I am the author of a small package called <a href="https://github.com/oganm/homologene">homologene</a>. The package wraps the identically named <a href="https://www.ncbi.nlm.nih.gov/homologene">homologene database released by NCBI</a>. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing</p>
+<p>I am the author of a small package called <a href="https://github.com/oganm/homologene">homologene</a>. The package wraps
+the identically named <a href="https://www.ncbi.nlm.nih.gov/homologene">homologene database released by NCBI</a>. This database includes
+information about genes that are homologues/orthologues of each other. It is structured
+as a simple table. One can simply access it by doing</p>
 <pre class="r"><code>library(readr)
 library(magrittr)
 library(dplyr)
@@ -71,7 +76,9 @@ homologene</code></pre>
 ## 4   6       kat-1     6239  174161
 ## 5   6     T02G5.4     6239  187992
 ## 6  13     R04B3.2     6239  180550</code></pre>
-<p>At the time I removed the <code>Protein.GI</code> and <code>Protein.Accession</code> since my work had no use for them and limited the information to 7 popular model organisms to so that package wouldn’t be too bloated.</p>
+<p>At the time I removed the <code>Protein.GI</code> and <code>Protein.Accession</code> since my work had no use
+for them and limited the information to 7 popular model organisms to so that package
+wouldn’t be too bloated.</p>
 <p>The package includes functions to translate orthologues between species with a one liner</p>
 <pre class="r"><code>homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
                        inTax = 9606, # human
@@ -195,7 +202,11 @@ gene_history %&gt;% filter(Discontinued_GeneID %in% modern_IDs)</code></pre>
 ## # ... with 5 variables: tax_id &lt;dbl&gt;, GeneID &lt;chr&gt;,
 ## #   Discontinued_GeneID &lt;dbl&gt;, Discontinued_Symbol &lt;chr&gt;,
 ## #   Discontinue_Date &lt;dbl&gt;</code></pre>
-<p>No current ID was ever discontinued. That’s a good sign. I can just trace the history of discontinued IDs and find the current IDs. Note that when I first tried this here were 20 IDs here. 20 IDs that were discontinued since I last updated the <code>geneSynonym</code> package. Since all of these files area updated nightly it is important to update the databases at the same time.</p>
+<p>No current ID was ever discontinued. That’s a good sign. I can just trace
+the history of discontinued IDs and find the current IDs. Note that when I first tried
+this here were 20 IDs here. 20 IDs that were discontinued since I last updated the
+<code>geneSynonym</code> package. Since all of these files area updated nightly it is important
+to update the databases at the same time.</p>
 <pre class="r"><code>discontinued_ids = homologeneData %&gt;% 
     filter(Gene.ID %in% gene_history$Discontinued_GeneID)
 
@@ -203,7 +214,9 @@ dim(discontinued_ids)</code></pre>
 <pre><code>## [1] 3169    4</code></pre>
 <pre class="r"><code>unchanged_ids = homologeneData %&gt;%  
     filter(!Gene.ID %in% gene_history$Discontinued_GeneID)</code></pre>
-<p>It’s good to see that only a relatively small number of IDs were discontinued. We can trace their history to get their current IDs (if it exists). To make this process faster, we will also take a relevant subset of the <code>gene_history</code> frame.</p>
+<p>It’s good to see that only a relatively small number of IDs were discontinued. We
+can trace their history to get their current IDs (if it exists). To make this process
+faster, we will also take a relevant subset of the <code>gene_history</code> frame.</p>
 <pre class="r"><code># get the earliest date where we see one of our ID change events from homologene
 # since homologene was updated in 2014, this should be no earlier that that date
 earlierst_date = gene_history %&gt;%
@@ -231,13 +244,16 @@ gene_history %&gt;%
 ## 8   9544 -                      720334 MEF2B                       20110329
 ## 9   9544 712686              100424395 LOC100424395                20100928</code></pre>
 <p>Ok it’s not so bad. Not sure what’s the reason behind this but it doesn’t seem like a catastrophic failure.</p>
-<p>So now we can filter the <code>gene_history</code> to only include species that we are interested in and events that happened after the earliest discontinuation date.</p>
+<p>So now we can filter the <code>gene_history</code> to only include species that we are interested
+in and events that happened after the earliest discontinuation date.</p>
 <pre class="r"><code>relevant_gene_history = gene_history %&gt;% filter(Discontinue_Date &gt;= earlierst_date &amp; 
                                                     tax_id %in% homologene::taxData$tax_id)
 
 dim(relevant_gene_history)</code></pre>
 <pre><code>## [1] 96776     5</code></pre>
-<p>That’s a much smaller search space. Now we can just trace the history of every single gene with a different ID than before. I will probably end up including a version of this function to the <code>geneSynonym</code> package as pretty much all gene lists are at least a little out of date.</p>
+<p>That’s a much smaller search space. Now we can just trace the history of every single
+gene with a different ID than before. I will probably end up including a version of this function to the
+<code>geneSynonym</code> package as pretty much all gene lists are at least a little out of date.</p>
 <pre class="r"><code>traceID = function(id){
     print(id)
     event = relevant_gene_history %&gt;% filter(Discontinued_GeneID == id)
@@ -264,7 +280,8 @@ dim(relevant_gene_history)</code></pre>
 <pre class="r"><code>discontinued_ids$Gene.ID %&gt;%
     sapply(traceID) -&gt;
     new_ids</code></pre>
-<p>Not the most efficient code probably but it’ll be run as a CRON job in the office machine at around 6 am on Sundays so I don’t really care that much about efficiency.</p>
+<p>Not the most efficient code probably but it’ll be run as a CRON job in the office machine at around 6 am on Sundays
+so I don’t really care that much about efficiency.</p>
 <p>Lets do a few sanity checks</p>
 <pre class="r"><code># are there any ids that had multiple events
 any(new_ids == &quot;multiple events&quot;)</code></pre>
@@ -282,7 +299,11 @@ length(new_ids[new_ids == &#39;-&#39;])</code></pre>
 </div>
 <div id="updating-homologene-gene-symbols" class="section level2">
 <h2>Updating homologene gene symbols</h2>
-<p>Since we have the new ids now, we can start building our new <code>homologeneData2</code> frame that will be added to the <code>homologene</code> package. I don’t want to overwrite the original data because people might use it expecting a perfect match with the NCBI database. Also if I messed up here I don’t want people to suffer without explicitly choosing to trust me instead of the actual database.</p>
+<p>Since we have the new ids now, we can start building our new <code>homologeneData2</code> frame
+that will be added to the <code>homologene</code> package. I don’t want to overwrite the original data
+because people might use it expecting a perfect match with the NCBI database. Also if
+I messed up here I don’t want people to suffer without explicitly choosing to trust me
+instead of the actual database.</p>
 <pre class="r"><code># create a frame with new ids
 discontinued_fix = data.frame(HID = discontinued_ids$HID,
                               Gene.Symbol = discontinued_ids$Gene.Symbol,
@@ -301,7 +322,8 @@ head(discontinued_fix)</code></pre>
 ## 4 592    LOC563696     7955  556619
 ## 5 595 LOC101882975     7955  561906
 ## 6 639 LOC100537604     7955  557240</code></pre>
-<p>Before going further let’s make sure we aren’t doing anything crazy by peeking at the <a href="https://www.ncbi.nlm.nih.gov/gene/562072">NCBI website</a> for the id of Itbp1 gene we see there.</p>
+<p>Before going further let’s make sure we aren’t doing anything crazy by peeking
+at the <a href="https://www.ncbi.nlm.nih.gov/gene/562072">NCBI website</a> for the id of Itbp1 gene we see there.</p>
 <p>All looks fine, so we can put everything together and replace the gene symbols as well</p>
 <pre class="r"><code># recombine the two lists sort by homology group
 homologeneData2 = 
@@ -346,7 +368,9 @@ head(homologeneData2)</code></pre>
 ## 4   3       acadm     7955  406283
 ## 5   3       ACADM     9544  705168
 ## 6   3       ACADM     9606      34</code></pre>
-<p>The new homologene dataset and associated functions to use them should be on Github in a few days. Then I will set up a CRON job to update it weekly. The CRAN version will have to be perpetually out of date which is somewhat problematic, but it can’t be helped. I may include a function that builds the current version and let users specify the version they want to use. The new syntax will probably look like this:</p>
+<p>The new homologene dataset and associated functions to use them should be on Github in a few days.
+Then I will set up a CRON job to update it weekly. The CRAN version will have to be perpetually out of date which is somewhat problematic, but it can’t be helped. I may include a function that builds the current version and let users specify the version they want to use.
+The new syntax will probably look like this:</p>
 <pre class="r"><code># translate using the old database
 homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
                        inTax = 9606,
@@ -367,6 +391,19 @@ homologene::homologene(c(&#39;ENO2&#39;,&#39;MOG&#39;,&#39;GZMH&#39;),
                        db = path)
 </code></pre>
 <p>Before the next CRAN update I want to include a wrapper for biomaRt that uses the same syntax as homologene to make queries in ensembl so that’ll likely be the next post.</p>
+<div id="update" class="section level3">
+<h3>Update:</h3>
+<p>The features are implemented into the homologene package. The syntax is</p>
+<pre class="r"><code>homologene(c(&#39;Mesd&#39;,
+             &#39;Trp53rka&#39;,
+             &#39;Cstdc4&#39;,
+             &#39;Ifit3b&#39;),
+           inTax = 10090,
+           outTax = 9606,
+           db = homologeneData2)
+</code></pre>
+<p>Also all species in homologene database are in the package now.</p>
+</div>
 </div>
 <div id="bibliography" class="section level2 unnumbered">
 <h2>Bibliography</h2>

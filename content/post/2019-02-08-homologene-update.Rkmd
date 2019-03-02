@@ -447,21 +447,6 @@ homologene::homologene(c('ENO2','MOG','GZMH'),
 
 Before the next CRAN update I want to include a wrapper for biomaRt that uses the same syntax as homologene to make queries in ensembl so that'll likely be the next post.
 
-### Update:
 
-The features are implemented into the homologene package. The syntax is
-
-```r
-homologene(c('Mesd',
-             'Trp53rka',
-             'Cstdc4',
-             'Ifit3b'),
-           inTax = 10090,
-           outTax = 9606,
-           db = homologeneData2)
-
-```
-
-Also all species in homologene database are in the package now.
 
 ## Bibliography

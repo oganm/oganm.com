@@ -17,7 +17,7 @@
       <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/note-to-self-fine-tuning-the-site/</guid>
-      <description>Static resource organizationCode cleanupA wild issue appearedHomepageThis is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</description>
+      <description>Static resource organization Code cleanup A wild issue appeared Homepage   This is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Fri, 04 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/note-to-self-how-did-i-set-up-this-site/</guid>
-      <description>BaselineBasic set-upFont-awesome (and emojis)[[menu.main]] ChildrenA faviconCategory linksGoogle analytics and disqusHomepageThis is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</description>
+      <description>Baseline Basic set-up Font-awesome (and emojis) [[menu.main]] Children A favicon Category links Google analytics and disqus Homepage   This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</description>
     </item>
     
   </channel>

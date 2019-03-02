@@ -17,8 +17,8 @@
       <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/homologene-update/</guid>
-      <description>HomologeneWhat is wrong with homologene?Updating homologene gene IDsUpdating homologene gene symbolsBibliographyHomologeneI am the author of a small package called homologene. The package wraps the identically named homologene database released by NCBI. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing
-library(readr)library(magrittr)library(dplyr)dir.</description>
+      <description>Homologene What is wrong with homologene? Updating homologene gene IDs Updating homologene gene symbols Update:  Bibliography   Homologene I am the author of a small package called homologene. The package wraps the identically named homologene database released by NCBI. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing
+library(readr) library(magrittr) library(dplyr) dir.</description>
     </item>
     
   </channel>

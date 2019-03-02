@@ -17,8 +17,8 @@
       <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/homologene-update/</guid>
-      <description>HomologeneWhat is wrong with homologene?Updating homologene gene IDsUpdating homologene gene symbolsBibliographyHomologeneI am the author of a small package called homologene. The package wraps the identically named homologene database released by NCBI. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing
-library(readr)library(magrittr)library(dplyr)dir.</description>
+      <description>Homologene What is wrong with homologene? Updating homologene gene IDs Updating homologene gene symbols Update:  Bibliography   Homologene I am the author of a small package called homologene. The package wraps the identically named homologene database released by NCBI. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing
+library(readr) library(magrittr) library(dplyr) dir.</description>
     </item>
     
     <item>
@@ -27,7 +27,7 @@ library(readr)library(magrittr)library(dplyr)dir.</description>
       <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/note-to-self-fine-tuning-the-site/</guid>
-      <description>Static resource organizationCode cleanupA wild issue appearedHomepageThis is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</description>
+      <description>Static resource organization Code cleanup A wild issue appeared Homepage   This is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</description>
     </item>
     
     <item>
@@ -36,7 +36,7 @@ library(readr)library(magrittr)library(dplyr)dir.</description>
       <pubDate>Fri, 04 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/note-to-self-how-did-i-set-up-this-site/</guid>
-      <description>BaselineBasic set-upFont-awesome (and emojis)[[menu.main]] ChildrenA faviconCategory linksGoogle analytics and disqusHomepageThis is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</description>
+      <description>Baseline Basic set-up Font-awesome (and emojis) [[menu.main]] Children A favicon Category links Google analytics and disqus Homepage   This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</description>
     </item>
     
     <item>
@@ -45,8 +45,8 @@ library(readr)library(magrittr)library(dplyr)dir.</description>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
       <guid>/is-your-d-d-character-rare-ii-off-brand-edition/</guid>
-      <description>IntroductionIs Your D&amp;amp;D Character Rare? IIIs your character archetype rare?Is your alignment rare?Are your feat choices rare?Is your multiclass combination rare?Is power gaming rare?Are your spells rare?Is your game day rare?About the dataData accessAbout this documentChangelogEdited: 9 September 2018 (see changlelog)
-IntroductionAbout a year ago FiveThirtyEight published a short article called “Is Your D&amp;amp;D Character Rare?</description>
+      <description>Introduction Is Your D&amp;amp;D Character Rare? II Is your character archetype rare? Is your alignment rare? Are your feat choices rare? Is your multiclass combination rare? Is power gaming rare? Are your spells rare? Is your game day rare? About the data Data access About this document Changelog   Edited: 9 September 2018 (see changlelog)
+Introduction About a year ago FiveThirtyEight published a short article called “Is Your D&amp;amp;D Character Rare?</description>
     </item>
     
   </channel>

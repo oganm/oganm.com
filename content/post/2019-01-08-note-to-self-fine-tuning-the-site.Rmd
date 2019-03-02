@@ -141,7 +141,7 @@ This should not have any effect and as far as I can see, nothing seems to have c
 	weight = 9999
 ```
 
-![](images/fineTuning/dummy.png)
+![](/images/fineTuning/dummy.png)
 Note that weird gap in between dummy and everything else. Wonder what's happening there... Anyway, currently, it is a link that goes nowhere because the object is still generated as an `<a>` with no `href`. Before I proceed any further,
 I quickly google "hugo isset range" and find [this](https://discourse.gohugo.io/t/isset-in-range/12895) question that suggests using `with` instead or that `isset` in this context works as `isset . "argument"`. I won't have to trust on random experiments after all. Even the exact example given is mostly the same. So `menu.main.html` should be
 
