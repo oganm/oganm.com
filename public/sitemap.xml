@@ -40,6 +40,12 @@
   </url>
   
   <url>
+    <loc>/categories/code/</loc>
+    <lastmod>2019-02-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/dnd/</loc>
     <lastmod>2018-07-28T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -59,12 +65,6 @@
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2019-02-10T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/programming/</loc>
     <lastmod>2019-02-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

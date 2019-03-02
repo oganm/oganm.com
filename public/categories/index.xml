@@ -11,6 +11,15 @@
     
     
     <item>
+      <title>Code</title>
+      <link>/categories/code/</link>
+      <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/code/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Notes to Self</title>
       <link>/categories/notes-to-self/</link>
       <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
@@ -25,15 +34,6 @@
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
       <guid>/categories/other/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Programming</title>
-      <link>/categories/programming/</link>
-      <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/programming/</guid>
       <description></description>
     </item>
     

@@ -72,10 +72,10 @@ enableEmoji = false
 	weight = 3
 	url = "/categories/notes-to-self/"
 [[menu.main]]
-	name = "Programming"
+	name = "Code"
 	parent = "blog"
 	weight = 1
-	url = "/categories/programming/"
+	url = "/categories/Code/"
 [[menu.main]]
 	name = "Other"
 	parent = "blog"
