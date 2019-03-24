@@ -66,6 +66,12 @@ enableEmoji = false
 	name = "5e interactive sheet"
 	parent = "funtools"
 	url = "https://oganm.com/shiny/interactiveSheet/"
+	weight = 1
+[[menu.main]]
+	name = "Swarm Simulator"
+	parent = "funtools"
+	url = "https://oganm.com/shiny/swarm/"
+	weight = 3
 [[menu.main]]
 	name = "Notes to self"
 	parent = "blog"

@@ -55,7 +55,7 @@ Here's a [CV](http://oganm.github.io/CV/).
 
 * I maintain [**other D&D related packages**](https://github.com/topics/ogan-dnd) as well.
 
-* I run a small plumber [**API**](http://oganm.com/api/__swagger__/). It's main functionality is to create image from texts that are redirected to imgur. Try `oganm.com/api/t2img?t=Whatever`. Primarily developed for use in [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/).
+* I run a small plumber [**API**](http://oganm.com/api/__swagger__/). Its main functionality is to create image from texts that are redirected to imgur. Try `oganm.com/api/t2img?t=Whatever`. Primarily developed for use in [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/).
 
 </div>
 </div>
