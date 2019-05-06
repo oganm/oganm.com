@@ -1,9 +1,0 @@
-base
-readr
-magrittr
-dplyr
-bindrcpp
-geneSynonym
-homologene
-purrr
-markerGeneProfile
