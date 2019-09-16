@@ -6,21 +6,22 @@
     <description>Recent content in Categories on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Code</title>
       <link>/categories/code/</link>
-      <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/code/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Notes to Self</title>
+      <title>Notes To Self</title>
       <link>/categories/notes-to-self/</link>
       <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
       
@@ -29,7 +30,7 @@
     </item>
     
     <item>
-      <title>Other</title>
+      <title>other</title>
       <link>/categories/other/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       

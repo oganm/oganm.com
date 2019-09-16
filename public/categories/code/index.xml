@@ -6,10 +6,183 @@
     <description>Recent content in Code on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/code/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/categories/code/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using different/modified version of the same package</title>
+      <link>/multiple-package-versions/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/multiple-package-versions/</guid>
+      <description>
+
+
+&lt;p&gt;Sometimes a package on CRAN doesn’t behave quite as you would like. Maybe a change
+introduced broke your workflow so you want an older version, maybe you want to add
+additional functionality and the maintainer is uninterested in incorporating your
+changes which may not fit the scope or they are simply inactive and inaccessible.
+Now you have a version of the package that you need that conflicts with CRAN.&lt;/p&gt;
+&lt;p&gt;To make my life easier in a case like this I have written a small function &lt;code&gt;forkCRAN&lt;/code&gt; (code below). So I can simply do&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# read my github token for authentication
+token = readLines(&amp;#39;~/auth/gh_token&amp;#39;)
+forkCRAN(&amp;#39;ontologyIndex&amp;#39;, version = &amp;#39;2.5&amp;#39;, token=token, newname = &amp;#39;ontologyIndexOgfork&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and have a &lt;a href=&#34;https://github.com/oganm/ontologyIndexOgfork&#34;&gt;this&lt;/a&gt; github repository that contains
+ontologyIndex, version 2.5 with the name &lt;code&gt;ontologyIndexOgfork&lt;/code&gt;. I can use this repository like any other github package&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;#39;oganm/ontologyIndexOgfork&amp;#39;)
+library(ontologyIndexOgfork)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In this particular case, the original ontologyIndex package could not parse
+cyclic ontologies. I have introduced some changes so that it can parse such ontologies and my current pipeline
+depends on this change. Having this version allows me to write unambigious code that still
+can be replicated by third parties, especially since including remote package dependencies
+is fairly easy when using &lt;code&gt;remotes&lt;/code&gt;/&lt;code&gt;devtools&lt;/code&gt; family of install functions.&lt;/p&gt;
+&lt;p&gt;You can find &lt;code&gt;forkCRAN&lt;/code&gt; function &lt;a href=&#34;https://github.com/oganm/ogbox/blob/master/R/devtools.R#L36-L115&#34;&gt;here&lt;/a&gt;.
+Can be safely pasted elsewhere since it doesn’t depend on anything else in the package it’s in.&lt;/p&gt;
+&lt;p&gt;Note that this isn’t entirely safe to do. Especially when all you want to do is to use an older version.
+The code of the package will be preserved but it’s dependencies will continue to move forward in time.
+There are &lt;a href=&#34;https://cran.r-project.org/web/packages/packrat/index.html&#34;&gt;more&lt;/a&gt; &lt;a href=&#34;https://cran.r-project.org/web/packages/checkpoint/index.html&#34;&gt;robust&lt;/a&gt; solutions out
+there for long term reproducibility.&lt;/p&gt;
+&lt;p&gt;Another problem is that this doesn’t always behave nicely with pacakges that require compilation.
+In these cases the package name seems to be hard coded into the code.
+I initially noticed this when I tried to get a copy of the &lt;code&gt;glue&lt;/code&gt; package. For that particular
+case, all it took to fix it was to change the &lt;code&gt;useDynLib&lt;/code&gt; commands in the NAMESPACE and roxygen
+comments to use the new package. This change now happens automatically when the function is
+called but I have failed to make a generalized solution. &lt;code&gt;dplyr&lt;/code&gt;
+package for instance will still fail to work.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Interactive visualisation of MRI images in R</title>
+      <link>/mri-viz/</link>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mri-viz/</guid>
+      <description>
+&lt;script src=&#34;../../rmarkdown-libs/brainsprite/brainsprite.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;../../rmarkdown-libs/brainsprite/jquery.min.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;About a year and a half ago, my doctor in Canada requested me to get an MRI while trying to
+understand why am I having chronic headaches. I requested a copy of those files
+before going back to Turkey for a holiday to show them to another doctor
+so I ended up with a CD containing the raw data. I don’t normally work with MRI data
+but I did &lt;a href=&#34;https://github.com/oganm/brainspriteR&#34;&gt;port&lt;/a&gt; a &lt;a href=&#34;https://github.com/SIMEXP/brainsprite.js&#34;&gt;javascript library&lt;/a&gt; for MRI visualisation to R in a hackaton so I figured it shouldn’t be too hard to get a simple interactive visualisation of my own brain.&lt;/p&gt;
+&lt;p&gt;The CD contained the raw image files in the “&lt;a href=&#34;https://en.wikipedia.org/wiki/DICOM&#34;&gt;DICOM&lt;/a&gt;” format which is a standard
+method of storing medical imaging data. Individual slides are stored in a binary
+format which is a problem because my package requires a sprite sheet that looks like
+&lt;a href=&#34;https://github.com/oganm/brainspriteR/blob/master/inst/sprite.jpg?raw=true&#34;&gt;this&lt;/a&gt; to work properly.
+Thankfully parsing data from this format is already handled by existing R packages.
+I will use &lt;code&gt;oro.dicom&lt;/code&gt; package to dump all images into a directory.&lt;/p&gt;
+&lt;p&gt;I won’t be sharing the contents of the entire MRI CD here but if you have a similarly
+structured file, getting the images is quite simple.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(oro.dicom) # dicom processing
+library(magrittr)
+library(dplyr)
+library(OpenImageR) # saving black and white images from matrices
+library(magick) # reading images creating tiles
+library(ogbox) # github.com/oganm/ogbox. Just used to scale the data from 0 to 1
+library(brainspriteR) # github.com/oganm/brainspriteR&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# path to the files exported from the CD
+dicompath = &amp;#39;files/mri-vis/MRI&amp;#39;
+# list all image files
+imageFiles = list.files(file.path(dicompath,&amp;#39;DICOM&amp;#39;),
+                        recursive = TRUE,
+                        full.names = TRUE)
+metadata = oro.dicom::readDICOMFile(file.path(dicompath,&amp;#39;DICOMDIR&amp;#39;))
+
+# get all images in order
+imagesInOrder = metadata$hdr %&amp;gt;% 
+    filter(name==&amp;#39;ReferencedFileID&amp;#39; &amp;amp; grepl(&amp;#39;IM&amp;#39;,value)) %$% 
+    value %&amp;gt;% gsub(&amp;#39; &amp;#39;,&amp;#39;/&amp;#39;,.)
+
+imagePaths = file.path(dicompath,imagesInOrder)
+
+dir.create(&amp;#39;files/mri-vis/images&amp;#39;)
+
+# now read all images one by one.
+seq_along(imagePaths) %&amp;gt;% lapply(function(i){
+    x = imagePaths[i]
+    image = oro.dicom::readDICOMFile(x)
+    if(i ==2){
+        return(NULL)
+    }
+    # here we scale the matrices to be between 0 and 1 and write to file using OpenImageR
+    # we&amp;#39;ll use other image processing packages but this function proved to be the
+    # simplest way to write matrices as image files
+    image$img %&amp;gt;%
+        ogbox::scale01() %&amp;gt;%
+        writeImage(paste0(&amp;#39;files/mri-vis/images/&amp;#39;,i,&amp;#39;.png&amp;#39;))
+    return(NULL)
+})&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I didn’t bother fiddling with metadata and select images to extract which means the &lt;code&gt;images&lt;/code&gt; folder
+is filled with about 1500 images, only some of which are good enough to use in our 3D visualiser.
+What we are looking for is, images taken from close-by slices to cover the brain from one end
+to the other. There is a nice 128 image series that looks at axial slices that we can use.
+You can find the individual image files &lt;a href=&#34;../../files/mri-vis/images.zip&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# image ids of the interesting series
+imStart = 1394
+imEnd = 1521
+# read all images using magick
+imFiles = list.files(&amp;#39;files/mri-vis/images&amp;#39;,full.names = TRUE)
+imFiles = imFiles[imFiles %in% paste0(&amp;#39;files/mri-vis/images/&amp;#39;,imStart:imEnd,&amp;#39;.png&amp;#39;)]
+images = imFiles %&amp;gt;% lapply(image_read)
+# scale the images down a little
+images %&amp;lt;&amp;gt;% lapply(image_resize,&amp;#39;256x256&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we have to combine these images to create our sprites so that the &lt;code&gt;brainspriteR&lt;/code&gt;
+can visualise them.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# create rows composed of 12 images
+sideBySide = 1:ceiling(length(images)/12) %&amp;gt;% lapply(function(i){
+    image_append(do.call(c,images[(i*12-11):(i*12)]))
+})
+sideBySide[[3]]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-05-29-interactive-visualization-of-mri-images_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;1536&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# combine the rows
+sprites = sideBySide %&amp;gt;% 
+    do.call(c,.) %&amp;gt;%
+    image_append(stack = TRUE)
+
+sprites %&amp;gt;% image_write(&amp;#39;files/mri-vis/brainSprites.jpg&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           used (Mb) gc trigger (Mb) max used (Mb)
+## Ncells  571873 30.6    1202344 64.3  1085963 58.0
+## Vcells 1003036  7.7    8388608 64.0  3218271 24.6&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the end &lt;a href=&#34;../../files/mri-viz/brainSprites.jpg&#34;&gt;this&lt;/a&gt; is what the sprites look like.
+We can use this to create our visualisation. You can view different parts of the
+brain by clicking the area of interest in any of the slices.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;brainspriteR::brainsprite(&amp;#39;files/mri-vis/brainSprites.jpg&amp;#39;,
+    spriteHeight = 256,
+    spriteWidth = 256,
+    flagCoordinates = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;canvas id=&#34;id26bd541d2400&#34;&gt;
+&lt;img id=&#34;id26bd54013ed5&#34; src=&#34;../files/mri-vis/brainSprites.jpg&#34;/&gt;
+&lt;img id=&#34;id26bd3cd61d73&#34;/&gt;
+&lt;/div&gt;
+&lt;script&gt;$( id26bd54013ed5 ).load(function() {
+var brain = brainsprite({
+canvas: &#39;id26bd541d2400&#39;, // That is the ID of the canvas to build slices into
+sprite: &#39;id26bd54013ed5&#39;, // That is the ID of the sprite image that includes all (sagital) brain slices
+nbSlice: { &#39;Y&#39;:256 , &#39;Z&#39;:256 },
+colorBackground: &#39;#000000&#39;,
+colorFont: &#39;#FFFFFF&#39;,
+ flagCoordinates: true,
+ origin: {X: 0, Y: 0, Z: 0},
+ onclick: function shinyUpdate(brain){
+     Shiny.onInputChange(&#39;id26bd541d2400&#39;,[brain.coordinatesSlice.X,brain.coordinatesSlice.Y ,brain.coordinatesSlice.Z])
+ }});
+});&lt;/script&gt;
+&lt;p&gt;Here, the first image is directly taken from the sprite file while the next two, depicting sagittal and coronal planes are generated by placing the images on top of each other and cutting a section.
+The thickness of these two planes are somewhat arbitrary as they depend on the number of
+images present on the series rather than the actual size of the structure. If we had more images in the series, the generated images would have looked thicker. If I didn’t resize the images, the sagittal and coronal planes whould have looked very thin in comparison as they would have gotten longer with the same width. You can control how your image looks by resizing the original images, or duplicating/subsampling them.&lt;/p&gt;
+&lt;p&gt;I don’t know if the raw data includes any information about the actual distance between the images but if we had that, we could have created a more accurate model.&lt;/p&gt;
+&lt;p&gt;As a side note, when I first looked at this without a doctor present, the size of
+that larger right lateral ventricle scared me quite a bit (it looks particularly striking around z = 167 on the coronal plane) but I was told that it
+was fine. So I guess the lesson is, don’t look at your medical data when you
+don’t know what you’re doing, but if you want to, there’s an R package for that.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Updating the good old Homologene database</title>
@@ -17,8 +190,409 @@
       <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/homologene-update/</guid>
-      <description>Homologene What is wrong with homologene? Updating homologene gene IDs Updating homologene gene symbols Update:  Bibliography   Homologene I am the author of a small package called homologene. The package wraps the identically named homologene database released by NCBI. This database includes information about genes that are homologues/orthologues of each other. It is structured as a simple table. One can simply access it by doing
-library(readr) library(magrittr) library(dplyr) dir.</description>
+      <description>
+
+&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#homologene&#34;&gt;Homologene&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#what-is-wrong-with-homologene&#34;&gt;What is wrong with homologene?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#updating-homologene-gene-ids&#34;&gt;Updating homologene gene IDs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#updating-homologene-gene-symbols&#34;&gt;Updating homologene gene symbols&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#update&#34;&gt;Update:&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bibliography&#34;&gt;Bibliography&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div id=&#34;homologene&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Homologene&lt;/h2&gt;
+&lt;p&gt;I am the author of a small package called &lt;a href=&#34;https://github.com/oganm/homologene&#34;&gt;homologene&lt;/a&gt;. The package wraps
+the identically named &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/homologene&#34;&gt;homologene database released by NCBI&lt;/a&gt;. This database includes
+information about genes that are homologues/orthologues of each other. It is structured
+as a simple table. One can simply access it by doing&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(readr)
+library(magrittr)
+library(dplyr)
+dir.create(&amp;#39;homologene-files&amp;#39;,showWarnings = FALSE)
+download.file(url = &amp;quot;ftp://ftp.ncbi.nih.gov/pub/HomoloGene/current/homologene.data&amp;quot;, 
+              destfile = &amp;#39;homologene-files/homologene.data&amp;#39;)
+
+homologene = read_tsv(&amp;#39;homologene-files/homologene.data&amp;#39;,
+                      col_names = c(&amp;#39;HID&amp;#39;,
+                                  &amp;#39;Taxonomy&amp;#39;,
+                                  &amp;#39;Gene.ID&amp;#39;,
+                                  &amp;#39;Gene.Symbol&amp;#39;,
+                                  &amp;#39;Protein.GI&amp;#39;,
+                                  &amp;#39;Protein.Accession&amp;#39;))
+
+homologene&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 275,237 x 6
+##      HID Taxonomy Gene.ID Gene.Symbol     Protein.GI Protein.Accession
+##    &amp;lt;dbl&amp;gt;    &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;                &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;            
+##  1     3     9606      34 ACADM              4557231 NP_000007.1      
+##  2     3     9598  469356 ACADM            160961497 NP_001104286.1   
+##  3     3     9544  705168 ACADM            109008502 XP_001101274.1   
+##  4     3     9615  490207 ACADM            545503811 XP_005622188.1   
+##  5     3     9913  505968 ACADM            115497690 NP_001068703.1   
+##  6     3    10090   11364 Acadm              6680618 NP_031408.1      
+##  7     3    10116   24158 Acadm            292494885 NP_058682.2      
+##  8     3     7955  406283 acadm            390190229 NP_998175.2      
+##  9     3     7227   38864 CG12262           24660351 NP_648149.1      
+## 10     3     7165 1276346 AgaP_AGAP005662   58387602 XP_315683.2      
+## # ... with 275,227 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the homologene package, a subset of this data is available for querying.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(homologene::homologeneData)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   HID Gene.Symbol Taxonomy Gene.ID
+## 1   3      acdh-8     6239  173979
+## 2   3      acdh-7     6239  181758
+## 3   5     acdh-12     6239  174180
+## 4   6       kat-1     6239  174161
+## 5   6     T02G5.4     6239  187992
+## 6  13     R04B3.2     6239  180550&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;At the time I removed the &lt;code&gt;Protein.GI&lt;/code&gt; and &lt;code&gt;Protein.Accession&lt;/code&gt; since my work had no use
+for them and limited the information to 7 popular model organisms to so that package
+wouldn’t be too bloated.&lt;/p&gt;
+&lt;p&gt;The package includes functions to translate orthologues between species with a one liner&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;homologene::homologene(c(&amp;#39;ENO2&amp;#39;,&amp;#39;MOG&amp;#39;,&amp;#39;GZMH&amp;#39;),
+                       inTax = 9606, # human
+                       outTax = 10090) # mouse&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   9606 10090 9606_ID 10090_ID
+## 1 ENO2  Eno2    2026    13807
+## 2  MOG   Mog    4340    17441
+## 3 GZMH  Gzmd    2999    14941
+## 4 GZMH  Gzme    2999    14942
+## 5 GZMH  Gzmg    2999    14944
+## 6 GZMH  Gzmf    2999    14943&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In general I like using this method because it’s fast, the syntax is simple and it’s easy to extend it at a whim. A single set of gene symbols and IDs are used to identify genes and organism level data is tied to taxonomy identifiers which makes things easier. The obvious alternative to this would be to use &lt;code&gt;biomart&lt;/code&gt;&lt;span class=&#34;citation&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt; which to me, is less intuitive and clunky.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-is-wrong-with-homologene&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;What is wrong with homologene?&lt;/h2&gt;
+&lt;p&gt;Not everyone is happy with using homologene for orthology detection. The database has not been updated since 2014. This means it is not created using the latest annotations. The reference genomes have been getting updates and gene symbols change frequently. For example &lt;a href=&#34;https://github.com/oganm/geneSynonym/commit/c2b92a6965fd56d73c016cb0f31e5550b5be7da2&#34;&gt;here&lt;/a&gt; you can see a list of gene name changes that happened in a 15 day period at February 9th 2019.&lt;/p&gt;
+&lt;p&gt;That list above is generated by parsing &lt;a href=&#34;ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/&#34;&gt;gene_info.gz&lt;/a&gt; file provided by NCBI. I use this file to keep an up to date list of gene symbols and their synonyms. It comes in handy when I use data released by other researchers that only include gene symbols as identifiers. Using the data here, we can identify how many genes in homologene have changed their names, assuming the NCBI ids are the same. I will be using the data in the form it is made available in the &lt;a href=&#34;https://github.com/oganm/geneSynonym&#34;&gt;geneSyonym&lt;/a&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(geneSynonym)
+library(homologene)
+library(purrr)
+
+# get mouse gene IDs from the mouse synonym data shipped with geneSynonym
+gene_IDs = names(syno10090)
+
+# get mouse genes from the homologene data
+homologene::homologeneData %&amp;gt;%
+    filter(Gene.ID %in% gene_IDs) -&amp;gt;
+    mouse_genes
+
+# get fisrt names (official symbol) from the mouse synonym data
+syno10090[as.character(mouse_genes$Gene.ID)] %&amp;gt;%
+    strsplit(&amp;#39;\\|&amp;#39;) %&amp;gt;%
+    map_chr(1) -&amp;gt;
+    first_names
+
+# set new names as a column
+mouse_genes$new_names = first_names
+
+mistmatched_new_names = 
+    mouse_genes %&amp;gt;% filter(new_names != Gene.Symbol)
+
+# how many mismatches
+nrow(mistmatched_new_names)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1418&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# take a peek at the first 10
+head(mistmatched_new_names, 10)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     HID   Gene.Symbol Taxonomy   Gene.ID new_names
+## 1    93        Epb4.2    10090     13828     Epb42
+## 2   479          Daf2    10090     13137     Cd55b
+## 3   660        Gm3934    10090 100042625   Gstp-ps
+## 4   664       Gucy1b3    10090     54195   Gucy1b1
+## 5   984         Clca3    10090     23844     Clca1
+## 6  1137          Gbas    10090     14467  Nipsnap2
+## 7  1185          Ict1    10090     68572    Mrpl58
+## 8  1189 I830012O16Rik    10090    667370    Ifit3b
+## 9  1194         Cyr61    10090     16007      Ccn1
+## 10 1223        Adrbk1    10090    110355      Grk2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That is 1418 genes that have a different official symbol than they used to in 2014. And that is only in mouse. Considering this only corresponds to 6.7% of all gene symbols, this number isn’t too much but it does mean that we will be missing a few genes if we were using gene symbols for matching. Alas, since I wasn’t wise enough 4 years ago when I started my projects, there are parts of my pipelines that still rely on gene symbol matching.&lt;/p&gt;
+&lt;p&gt;Most common transformation I make is translating my lists of brain cell type markers that were created using mouse data&lt;span class=&#34;citation&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/span&gt; to their human orthologues. I can see which markers are lost due to differences in gene symbols when making this transformation.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# this package includes my marker gene list
+# github.com/pavlidisLab/markerGeneProfile
+library(markerGeneProfile)
+data(&amp;quot;mouseMarkerGenesCombined&amp;quot;)
+
+mouseMarkerGenesCombined %&amp;gt;% 
+    unlist %&amp;gt;%
+    unique %&amp;gt;% 
+    {.[. %in% mistmatched_new_names$new_names]} &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] &amp;quot;Adgrg1&amp;quot;   &amp;quot;Hacd2&amp;quot;    &amp;quot;Msmo1&amp;quot;    &amp;quot;Nat8f4&amp;quot;   &amp;quot;Pdzph1&amp;quot;   &amp;quot;Arhgap45&amp;quot;
+##  [7] &amp;quot;Cd300c2&amp;quot;  &amp;quot;Fam91a1&amp;quot;  &amp;quot;Hacd4&amp;quot;    &amp;quot;Siglecf&amp;quot;  &amp;quot;Washc2&amp;quot;   &amp;quot;Adgre1&amp;quot;  
+## [13] &amp;quot;Stk26&amp;quot;    &amp;quot;Vsir&amp;quot;     &amp;quot;Mcub&amp;quot;     &amp;quot;Plpp3&amp;quot;    &amp;quot;Patj&amp;quot;     &amp;quot;Scn2a&amp;quot;   
+## [19] &amp;quot;Diaph2&amp;quot;   &amp;quot;Epb41l2&amp;quot;  &amp;quot;Grk2&amp;quot;     &amp;quot;Nat8f5&amp;quot;   &amp;quot;Naprt&amp;quot;    &amp;quot;Nat8f1&amp;quot;  
+## [25] &amp;quot;Adgre5&amp;quot;   &amp;quot;Adgrf5&amp;quot;   &amp;quot;Adgrl4&amp;quot;   &amp;quot;Map3k20&amp;quot;  &amp;quot;Rflnb&amp;quot;    &amp;quot;Tns2&amp;quot;    
+## [31] &amp;quot;Nectin3&amp;quot;  &amp;quot;Adgre4&amp;quot;   &amp;quot;Cntrl&amp;quot;    &amp;quot;Hcar2&amp;quot;    &amp;quot;Rp2&amp;quot;      &amp;quot;Spata46&amp;quot; 
+## [37] &amp;quot;Cnmd&amp;quot;     &amp;quot;Plpp2&amp;quot;    &amp;quot;Ankub1&amp;quot;   &amp;quot;Mfsd13b&amp;quot;  &amp;quot;Phf24&amp;quot;    &amp;quot;Cbarp&amp;quot;   
+## [43] &amp;quot;Cops9&amp;quot;    &amp;quot;Ints6l&amp;quot;   &amp;quot;Epb41l1&amp;quot;  &amp;quot;Adgrb1&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That is 46 genes which corresponds to a 1.8%. This is probably a more realistic image of real world implications since not all genes are equally important. Many genes that are prone to change are pseudogenes, non-coding transcripts etc. Such genes are less likely to come up in an analysis.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;updating-homologene-gene-ids&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Updating homologene gene IDs&lt;/h2&gt;
+&lt;p&gt;One small thing we can do to improve this situation is to manually replace the old gene symbols with new ones. Assuming the gene IDs are the same, we could just replace the old names with the new. However, gene IDs are also prone to changes&lt;span class=&#34;citation&#34;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/span&gt; and there is a whole different file that keeps track of these changes. We need to look into that file and update the gene IDs too.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;download.file(url = &amp;quot;ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene_history.gz&amp;quot;, 
+              destfile = &amp;#39;homologene-files/gene_history.gz&amp;#39;)
+
+gene_history = read_tsv(&amp;#39;homologene-files/gene_history.gz&amp;#39;,
+                        col_names = c(&amp;#39;tax_id&amp;#39;, 
+                                      &amp;#39;GeneID&amp;#39;,
+                                      &amp;#39;Discontinued_GeneID&amp;#39;,
+                                      &amp;#39;Discontinued_Symbol&amp;#39;,
+                                      &amp;#39;Discontinue_Date&amp;#39;))
+
+gene_history&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11,165,348 x 5
+##    tax_id GeneID Discontinued_GeneID Discontinued_Symbol Discontinue_Date
+##     &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;                &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;                          &amp;lt;dbl&amp;gt;
+##  1      9 -                  1246494 repA1                       20031113
+##  2      9 -                  1246495 repA2                       20031113
+##  3      9 -                  1246496 leuA                        20031113
+##  4      9 -                  1246497 leuB                        20031113
+##  5      9 -                  1246498 leuC                        20031113
+##  6      9 -                  1246499 leuD                        20031113
+##  7      9 -                  1246506 yqhA                        20031113
+##  8      9 -                  1246507 repA2                       20031113
+##  9      9 -                  1246508 repA1                       20031113
+## 10     24 -                 24952829 jef                         20150716
+## # ... with 11,165,338 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;One unverified assumption I am making is that once an ID is discontinued, it won’t be used for another gene. Let’s make sure that is actually the case before doing anything else&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# combine all the modern IDs from the geneSynonym package (same species as the homologene package)
+modern_IDs  = list(syno10090,
+                   syno10116,
+                   syno6239,
+                   syno7227,
+                   syno7955,
+                   syno9544,
+                   syno9606) %&amp;gt;%
+    lapply(names) %&amp;gt;%
+    do.call(c,.)
+
+gene_history %&amp;gt;% filter(Discontinued_GeneID %in% modern_IDs)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 0 x 5
+## # ... with 5 variables: tax_id &amp;lt;dbl&amp;gt;, GeneID &amp;lt;chr&amp;gt;,
+## #   Discontinued_GeneID &amp;lt;dbl&amp;gt;, Discontinued_Symbol &amp;lt;chr&amp;gt;,
+## #   Discontinue_Date &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;No current ID was ever discontinued. That’s a good sign. I can just trace
+the history of discontinued IDs and find the current IDs. Note that when I first tried
+this here were 20 IDs here. 20 IDs that were discontinued since I last updated the
+&lt;code&gt;geneSynonym&lt;/code&gt; package. Since all of these files area updated nightly it is important
+to update the databases at the same time.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;discontinued_ids = homologeneData %&amp;gt;% 
+    filter(Gene.ID %in% gene_history$Discontinued_GeneID)
+
+dim(discontinued_ids)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3169    4&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;unchanged_ids = homologeneData %&amp;gt;%  
+    filter(!Gene.ID %in% gene_history$Discontinued_GeneID)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s good to see that only a relatively small number of IDs were discontinued. We
+can trace their history to get their current IDs (if it exists). To make this process
+faster, we will also take a relevant subset of the &lt;code&gt;gene_history&lt;/code&gt; frame.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# get the earliest date where we see one of our ID change events from homologene
+# since homologene was updated in 2014, this should be no earlier that that date
+earlierst_date = gene_history %&amp;gt;%
+    filter(Discontinued_GeneID %in% homologeneData$Gene.ID) %$%
+    Discontinue_Date %&amp;gt;% 
+    min
+
+earlierst_date&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 20100919&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is interesting. Why does homologene includes gene IDs that were discontinued 4 years before it’s creation? How many such IDs are out there&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# get all discontinuation events earlier than 2014. Events are coded as integers
+# in YYYYMMDD format
+gene_history %&amp;gt;%
+    filter(Discontinue_Date &amp;lt; 20140000 &amp;amp; Discontinued_GeneID %in% homologeneData$Gene.ID)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 9 x 5
+##   tax_id GeneID    Discontinued_GeneID Discontinued_Symbol Discontinue_Date
+##    &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;                   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;                          &amp;lt;dbl&amp;gt;
+## 1   9544 700788                 702240 DOCK1                       20100919
+## 2   9544 -                      707717 LOC707717                   20110304
+## 3   9544 -                      708767 TNNI3K                      20110308
+## 4   9544 100423619              711097 MAP4                        20130430
+## 5   9544 -                      714619 LOC714619                   20110326
+## 6   9544 -                      714812 MATR3                       20110401
+## 7   9544 -                      715750 LOC715750                   20110325
+## 8   9544 -                      720334 MEF2B                       20110329
+## 9   9544 712686              100424395 LOC100424395                20100928&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Ok it’s not so bad. Not sure what’s the reason behind this but it doesn’t seem like a catastrophic failure.&lt;/p&gt;
+&lt;p&gt;So now we can filter the &lt;code&gt;gene_history&lt;/code&gt; to only include species that we are interested
+in and events that happened after the earliest discontinuation date.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;relevant_gene_history = gene_history %&amp;gt;% filter(Discontinue_Date &amp;gt;= earlierst_date &amp;amp; 
+                                                    tax_id %in% homologene::taxData$tax_id)
+
+dim(relevant_gene_history)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 96776     5&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That’s a much smaller search space. Now we can just trace the history of every single
+gene with a different ID than before. I will probably end up including a version of this function to the
+&lt;code&gt;geneSynonym&lt;/code&gt; package as pretty much all gene lists are at least a little out of date.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;traceID = function(id){
+    print(id)
+    event = relevant_gene_history %&amp;gt;% filter(Discontinued_GeneID == id)
+    if(nrow(event)&amp;gt;1){
+        # just in case. if the same ID is discontinued twice, there is a problem...
+        return(&amp;quot;multiple events&amp;quot;)
+    }
+    while(TRUE){
+        # see if the new ID is discontinued as well
+        next_event = relevant_gene_history %&amp;gt;%
+            filter(Discontinued_GeneID == event$GeneID)
+        if(nrow(next_event)==0){
+            # if not, previous ID is the right one
+            return(event$GeneID)
+        } else if(nrow(next_event)&amp;gt;1){
+            # just in case, if the same ID is discontinued twice, there is a problem...
+            return(&amp;quot;multiple events&amp;quot;)
+        } else if(nrow(next_event) == 1){
+            # if the new IDs is discontinued, continue the loop and check if it has a parent
+            event = next_event
+        }
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;discontinued_ids$Gene.ID %&amp;gt;%
+    sapply(traceID) -&amp;gt;
+    new_ids&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Not the most efficient code probably but it’ll be run as a CRON job in the office machine at around 6 am on Sundays
+so I don’t really care that much about efficiency.&lt;/p&gt;
+&lt;p&gt;Lets do a few sanity checks&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# are there any ids that had multiple events
+any(new_ids == &amp;quot;multiple events&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] FALSE&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# are there any new ids that the geneSynonym package doesn&amp;#39;t know about?
+all(new_ids[new_ids != &amp;#39;-&amp;#39;] %in% modern_IDs)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# how many of the discontinued IDs end up having new IDs instead of getting removed
+length(new_ids[new_ids != &amp;#39;-&amp;#39;])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1401&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# how many IDs are lost forever
+length(new_ids[new_ids == &amp;#39;-&amp;#39;])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1768&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Good.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;updating-homologene-gene-symbols&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Updating homologene gene symbols&lt;/h2&gt;
+&lt;p&gt;Since we have the new ids now, we can start building our new &lt;code&gt;homologeneData2&lt;/code&gt; frame
+that will be added to the &lt;code&gt;homologene&lt;/code&gt; package. I don’t want to overwrite the original data
+because people might use it expecting a perfect match with the NCBI database. Also if
+I messed up here I don’t want people to suffer without explicitly choosing to trust me
+instead of the actual database.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# create a frame with new ids
+discontinued_fix = data.frame(HID = discontinued_ids$HID,
+                              Gene.Symbol = discontinued_ids$Gene.Symbol,
+                              Taxonomy = discontinued_ids$Taxonomy,
+                              Gene.ID = new_ids,
+                              stringsAsFactors = FALSE)
+
+# remove symbols that are discontinued
+discontinued_fix %&amp;lt;&amp;gt;% filter(Gene.ID != &amp;#39;-&amp;#39;)
+
+head(discontinued_fix)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   HID  Gene.Symbol Taxonomy Gene.ID
+## 1 194 LOC100538014     7955  445292
+## 2 402 LOC100535497     7955  550518
+## 3 522        ltbp1     7955  562072
+## 4 592    LOC563696     7955  556619
+## 5 595 LOC101882975     7955  561906
+## 6 639 LOC100537604     7955  557240&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Before going further let’s make sure we aren’t doing anything crazy by peeking
+at the &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/gene/562072&#34;&gt;NCBI website&lt;/a&gt; for the id of Itbp1 gene we see there.&lt;/p&gt;
+&lt;p&gt;All looks fine, so we can put everything together and replace the gene symbols as well&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# recombine the two lists sort by homology group
+homologeneData2 = 
+    rbind(discontinued_fix,unchanged_ids) %&amp;gt;% 
+    arrange(HID)
+
+# change the names with the new names
+modern_symbols = list(syno10090,
+                      syno10116,
+                      syno6239,
+                      syno7227,
+                      syno7955,
+                      syno9544,
+                      syno9606) %&amp;gt;% 
+    lapply(function(x){
+        strsplit(x,split = &amp;quot;\\|&amp;quot;) %&amp;gt;% map_chr(1)
+    }) %&amp;gt;% do.call(c,.)
+
+modern_frame = tibble(modern_IDs,
+                      modern_symbols)
+
+new_symbols = 
+    modern_frame$modern_symbols[match(homologeneData2$Gene.ID, modern_frame$modern_IDs)]
+
+# a sanity check. all genes with different symbols
+sum(homologeneData2$Gene.Symbol != new_symbols)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 14964&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# another sanity check, differences in mouse. 
+# we did this in the beginningas well
+# note that the number is higher than before 
+# since the new IDs allow more genes to be changed
+sum((homologeneData2$Gene.Symbol != new_symbols)[homologeneData2$Taxonomy ==10090])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1443&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;homologeneData2 %&amp;lt;&amp;gt;% 
+    mutate(Gene.Symbol = modern_frame$modern_symbols[match(Gene.ID,modern_frame$modern_IDs)])
+
+head(homologeneData2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   HID Gene.Symbol Taxonomy Gene.ID
+## 1   3      acdh-8     6239  173979
+## 2   3      acdh-7     6239  181758
+## 3   3     CG12262     7227   38864
+## 4   3       acadm     7955  406283
+## 5   3       ACADM     9544  705168
+## 6   3       ACADM     9606      34&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The new homologene dataset and associated functions to use them should be on Github in a few days.
+Then I will set up a CRON job to update it weekly. The CRAN version will have to be perpetually out of date which is somewhat problematic, but it can’t be helped. I may include a function that builds the current version and let users specify the version they want to use.
+The new syntax will probably look like this:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# translate using the old database
+homologene::homologene(c(&amp;#39;ENO2&amp;#39;,&amp;#39;MOG&amp;#39;,&amp;#39;GZMH&amp;#39;),
+                       inTax = 9606,
+                       outTax = 10090) 
+
+
+# translate using the new database
+homologene::homologene(c(&amp;#39;ENO2&amp;#39;,&amp;#39;MOG&amp;#39;,&amp;#39;GZMH&amp;#39;),
+                       inTax = 9606,
+                       outTax = 10090,
+                       db = homologene2) 
+
+# translate using the latest database
+homologene::update_homologene(path)
+homologene::homologene(c(&amp;#39;ENO2&amp;#39;,&amp;#39;MOG&amp;#39;,&amp;#39;GZMH&amp;#39;),
+                       inTax = 9606,
+                       outTax = 10090,
+                       db = path)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Before the next CRAN update I want to include a wrapper for biomaRt that uses the same syntax as homologene to make queries in ensembl so that’ll likely be the next post.&lt;/p&gt;
+&lt;div id=&#34;update&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Update:&lt;/h3&gt;
+&lt;p&gt;The features are implemented into the homologene package. The syntax is&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;homologene(c(&amp;#39;Mesd&amp;#39;,
+             &amp;#39;Trp53rka&amp;#39;,
+             &amp;#39;Cstdc4&amp;#39;,
+             &amp;#39;Ifit3b&amp;#39;),
+           inTax = 10090,
+           outTax = 9606,
+           db = homologeneData2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Also all species in homologene database are in the package now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;bibliography&#34; class=&#34;section level2 unnumbered&#34;&gt;
+&lt;h2&gt;Bibliography&lt;/h2&gt;
+&lt;div id=&#34;refs&#34; class=&#34;references&#34;&gt;
+&lt;div id=&#34;ref-biomart&#34;&gt;
+&lt;p&gt;1 Durinck S, Moreau Y, Kasprzyk A, Davis S, De Moor B, Brazma A &lt;em&gt;et al.&lt;/em&gt; BioMart and bioconductor: A powerful link between biological databases and microarray data analysis. &lt;em&gt;Bioinformatics&lt;/em&gt; 2005; &lt;strong&gt;21&lt;/strong&gt;: 3439–3440.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ref-mancarci2017cross&#34;&gt;
+&lt;p&gt;2 Mancarci BO, Toker L, Tripathy SJ, Li B, Rocco B, Sibille E &lt;em&gt;et al.&lt;/em&gt; Cross-laboratory analysis of brain cell type transcriptomes with applications to interpretation of bulk tissue data. &lt;em&gt;eNeuro&lt;/em&gt; 2017;: ENEURO–0212.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ref-informationGeneFrequentlyAsked2018&#34;&gt;
+&lt;p&gt;3 Information NC for B, Pike USNL of M8R, MD B, Usa 2. &lt;em&gt;Gene Frequently Asked Questions&lt;/em&gt;. National Center for Biotechnology Information (US), 2018.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>

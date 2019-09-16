@@ -1,0 +1,133 @@
+---
+title: Interactive visualisation of MRI images in R
+author: Ogan Mancarci
+date: '2019-06-01'
+slug: mri-viz
+categories:
+- Code
+tags:
+- R
+editor_options:
+chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/brainsprite/brainsprite.js"></script>
+<script src="/rmarkdown-libs/brainsprite/jquery.min.js"></script>
+
+
+<p>About a year and a half ago, my doctor in Canada requested me to get an MRI while trying to
+understand why am I having chronic headaches. I requested a copy of those files
+before going back to Turkey for a holiday to show them to another doctor
+so I ended up with a CD containing the raw data. I don’t normally work with MRI data
+but I did <a href="https://github.com/oganm/brainspriteR">port</a> a <a href="https://github.com/SIMEXP/brainsprite.js">javascript library</a> for MRI visualisation to R in a hackaton so I figured it shouldn’t be too hard to get a simple interactive visualisation of my own brain.</p>
+<p>The CD contained the raw image files in the “<a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a>” format which is a standard
+method of storing medical imaging data. Individual slides are stored in a binary
+format which is a problem because my package requires a sprite sheet that looks like
+<a href="https://github.com/oganm/brainspriteR/blob/master/inst/sprite.jpg?raw=true">this</a> to work properly.
+Thankfully parsing data from this format is already handled by existing R packages.
+I will use <code>oro.dicom</code> package to dump all images into a directory.</p>
+<p>I won’t be sharing the contents of the entire MRI CD here but if you have a similarly
+structured file, getting the images is quite simple.</p>
+<pre class="r"><code>library(oro.dicom) # dicom processing
+library(magrittr)
+library(dplyr)
+library(OpenImageR) # saving black and white images from matrices
+library(magick) # reading images creating tiles
+library(ogbox) # github.com/oganm/ogbox. Just used to scale the data from 0 to 1
+library(brainspriteR) # github.com/oganm/brainspriteR</code></pre>
+<pre class="r"><code># path to the files exported from the CD
+dicompath = &#39;files/mri-vis/MRI&#39;
+# list all image files
+imageFiles = list.files(file.path(dicompath,&#39;DICOM&#39;),
+                        recursive = TRUE,
+                        full.names = TRUE)
+metadata = oro.dicom::readDICOMFile(file.path(dicompath,&#39;DICOMDIR&#39;))
+
+# get all images in order
+imagesInOrder = metadata$hdr %&gt;% 
+    filter(name==&#39;ReferencedFileID&#39; &amp; grepl(&#39;IM&#39;,value)) %$% 
+    value %&gt;% gsub(&#39; &#39;,&#39;/&#39;,.)
+
+imagePaths = file.path(dicompath,imagesInOrder)
+
+dir.create(&#39;files/mri-vis/images&#39;)
+
+# now read all images one by one.
+seq_along(imagePaths) %&gt;% lapply(function(i){
+    x = imagePaths[i]
+    image = oro.dicom::readDICOMFile(x)
+    if(i ==2){
+        return(NULL)
+    }
+    # here we scale the matrices to be between 0 and 1 and write to file using OpenImageR
+    # we&#39;ll use other image processing packages but this function proved to be the
+    # simplest way to write matrices as image files
+    image$img %&gt;%
+        ogbox::scale01() %&gt;%
+        writeImage(paste0(&#39;files/mri-vis/images/&#39;,i,&#39;.png&#39;))
+    return(NULL)
+})</code></pre>
+<p>I didn’t bother fiddling with metadata and select images to extract which means the <code>images</code> folder
+is filled with about 1500 images, only some of which are good enough to use in our 3D visualiser.
+What we are looking for is, images taken from close-by slices to cover the brain from one end
+to the other. There is a nice 128 image series that looks at axial slices that we can use.
+You can find the individual image files <a href="/files/mri-vis/images.zip">here</a>.</p>
+<pre class="r"><code># image ids of the interesting series
+imStart = 1394
+imEnd = 1521
+# read all images using magick
+imFiles = list.files(&#39;files/mri-vis/images&#39;,full.names = TRUE)
+imFiles = imFiles[imFiles %in% paste0(&#39;files/mri-vis/images/&#39;,imStart:imEnd,&#39;.png&#39;)]
+images = imFiles %&gt;% lapply(image_read)
+# scale the images down a little
+images %&lt;&gt;% lapply(image_resize,&#39;256x256&#39;)</code></pre>
+<p>Now we have to combine these images to create our sprites so that the <code>brainspriteR</code>
+can visualise them.</p>
+<pre class="r"><code># create rows composed of 12 images
+sideBySide = 1:ceiling(length(images)/12) %&gt;% lapply(function(i){
+    image_append(do.call(c,images[(i*12-11):(i*12)]))
+})
+sideBySide[[3]]</code></pre>
+<p><img src="/post/2019-05-29-interactive-visualization-of-mri-images_files/figure-html/unnamed-chunk-5-1.png" width="1536" /></p>
+<pre class="r"><code># combine the rows
+sprites = sideBySide %&gt;% 
+    do.call(c,.) %&gt;%
+    image_append(stack = TRUE)
+
+sprites %&gt;% image_write(&#39;files/mri-vis/brainSprites.jpg&#39;)</code></pre>
+<pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
+## Ncells  571873 30.6    1202344 64.3  1085963 58.0
+## Vcells 1003036  7.7    8388608 64.0  3218271 24.6</code></pre>
+<p>In the end <a href="/files/mri-viz/brainSprites.jpg">this</a> is what the sprites look like.
+We can use this to create our visualisation. You can view different parts of the
+brain by clicking the area of interest in any of the slices.</p>
+<pre class="r"><code>brainspriteR::brainsprite(&#39;files/mri-vis/brainSprites.jpg&#39;,
+    spriteHeight = 256,
+    spriteWidth = 256,
+    flagCoordinates = TRUE)</code></pre>
+<div>
+<canvas id="id26bd541d2400">
+<img id="id26bd54013ed5" src="../files/mri-vis/brainSprites.jpg"/>
+<img id="id26bd3cd61d73"/>
+</div>
+<script>$( id26bd54013ed5 ).load(function() {
+var brain = brainsprite({
+canvas: 'id26bd541d2400', // That is the ID of the canvas to build slices into
+sprite: 'id26bd54013ed5', // That is the ID of the sprite image that includes all (sagital) brain slices
+nbSlice: { 'Y':256 , 'Z':256 },
+colorBackground: '#000000',
+colorFont: '#FFFFFF',
+ flagCoordinates: true,
+ origin: {X: 0, Y: 0, Z: 0},
+ onclick: function shinyUpdate(brain){
+     Shiny.onInputChange('id26bd541d2400',[brain.coordinatesSlice.X,brain.coordinatesSlice.Y ,brain.coordinatesSlice.Z])
+ }});
+});</script>
+<p>Here, the first image is directly taken from the sprite file while the next two, depicting sagittal and coronal planes are generated by placing the images on top of each other and cutting a section.
+The thickness of these two planes are somewhat arbitrary as they depend on the number of
+images present on the series rather than the actual size of the structure. If we had more images in the series, the generated images would have looked thicker. If I didn’t resize the images, the sagittal and coronal planes whould have looked very thin in comparison as they would have gotten longer with the same width. You can control how your image looks by resizing the original images, or duplicating/subsampling them.</p>
+<p>I don’t know if the raw data includes any information about the actual distance between the images but if we had that, we could have created a more accurate model.</p>
+<p>As a side note, when I first looked at this without a doctor present, the size of
+that larger right lateral ventricle scared me quite a bit (it looks particularly striking around z = 167 on the coronal plane) but I was told that it
+was fine. So I guess the lesson is, don’t look at your medical data when you
+don’t know what you’re doing, but if you want to, there’s an R package for that.</p>

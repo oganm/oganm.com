@@ -1,0 +1,28 @@
+%FDF-1.2
+%����
+1 0 obj 
+<<
+/FDF 
+<<
+/Fields [
+<<
+/V (I am writing this to the PDF form)
+/T (TextField)
+>> 
+<<
+/V /Off
+/T (OptionButton)
+>> 
+<<
+/V /Yes
+/T (CheckBox)
+>>]
+>>
+>>
+endobj 
+trailer
+
+<<
+/Root 1 0 R
+>>
+%%EOF

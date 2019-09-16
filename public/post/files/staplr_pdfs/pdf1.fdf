@@ -1,0 +1,28 @@
+%FDF-1.2
+%‚„œ”
+1 0 obj 
+<<
+/FDF 
+<<
+/Fields [
+<<
+/V ()
+/T (TextField)
+>> 
+<<
+/V /Off
+/T (OptionButton)
+>> 
+<<
+/V /Off
+/T (CheckBox)
+>>]
+>>
+>>
+endobj 
+trailer
+
+<<
+/Root 1 0 R
+>>
+%%EOF

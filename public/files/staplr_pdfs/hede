@@ -1,0 +1,14 @@
+---
+FieldType: Text
+FieldName: TextField
+FieldFlags: 4096
+FieldValue: 
+FieldJustification: Left
+---
+FieldType: Button
+FieldName: RadioButton
+FieldFlags: 49152
+FieldValue: Off
+FieldJustification: Left
+FieldStateOption: 
+FieldStateOption: Off

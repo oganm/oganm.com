@@ -2,7 +2,7 @@
 title: 'index'
 author: 'Ogan Mancarci'
 date: ''
-keywords: ogan,mancarci,bioinformatics,rstats,dnd,oganm
+keywords: ogan,mancarci,burak,bioinformatics,rstats,dnd,oganm
 ---
 
 
@@ -25,7 +25,7 @@ Here's a [CV](http://oganm.github.io/CV/).
 
 ##  Projects
 
-* [**NeuroExpresso**](http://neuroexpresso.org/) is my lab's database cell type specific gene expression. It was released with [Mancarci et al. 2017](http://www.eneuro.org/content/4/6/ENEURO.0212-17.2017) paper. 
+* [**NeuroExpresso**](http://neuroexpresso.org/) is my lab's database cell type specific gene expression. It was released with [Mancarci et al. 2017](http://www.eneuro.org/content/4/6/ENEURO.0212-17.2017) paper.
 
 * [**markerGeneProfile**](https://github.com/PavlidisLab/markerGeneProfile) is an R package to infer cell type proportion changes from whole tissue expression profiles. My current work involves improving the reliability of this package and using it on as many whole tissue datasets as I can find.
 
@@ -35,7 +35,7 @@ Here's a [CV](http://oganm.github.io/CV/).
 
 * [**allenBrain**](https://github.com/oganm/allenBrain) is an R package that wraps parts of the [Allen Brain Atlas](http://portal.brain-map.org/) API. It focuses on extracting ISH images and syncronization between reference atlases and ISH images.
 
-* I maintain bunch of other [**bioinformatics related packages**](https://github.com/topics/ogan-bio) as well. Packages for gene [homology](https://github.com/oganm/homologene) and [synonym](https://github.com/oganm/geneSynonym) detection, an [MRI visualization tool](https://github.com/oganm/brainspriteR) etc. As a bonus, here's [my brain](https://oganm.github.io/ogbrain) visualized by said tool. Coronal and saggital plane images are inferred using actual images from the axial plane.
+* I maintain bunch of other [**bioinformatics related packages**](https://github.com/topics/ogan-bio) as well. Packages for gene [homology](https://github.com/oganm/homologene) and [synonym](https://github.com/oganm/geneSynonym) detection, an [MRI visualization tool](https://github.com/oganm/brainspriteR) etc.
 
 ## Side projects
 
@@ -43,15 +43,17 @@ Here's a [CV](http://oganm.github.io/CV/).
 
 * [**stockfisher**](https://github.com/oganm/stockfisher) is an R package that allows easy interaction with UCI capable chess engines through R.
 
+* [**rdog**](https://github.com/oganm/rdog) is an R package that wraps the [zdog](https://zzz.dog) pseudo 3D rendering engine.
+
 * [**import5eChar**](https://github.com/oganm/import5eChar) is an R package that reads D&D character data exported from Walter Kammerer's [Fifth Edition Character Sheet](https://play.google.com/store/apps/details?id=com.wgkammerer.testgui.basiccharactersheet.app) and allows automation of character actions and printing PDF character sheets (this is where staplr contributions came from). It also includes a shiny app that acts as an interactive character sheet.
 
 * [**printSheetApp**](http://oganm.com/shiny/printSheetApp/) is a shiny app that wraps import5eChar's pdf printing functionality for non-R-users.
 
 * [**interactiveSheet**](http://oganm.com/shiny/interactiveSheet/) is the shiny app that ships with import5eChar package
 
-* [**diceSyntax**](https://github.com/oganm/diceSyntax) is an R package that supports complex dice rolling syntax such as `10d8d3ro<3`. That means roll 10 d8s, reroll anything below 3 once, drop three lowest dice. import5eChar and my other D&D related packages depend on this
+* I maintain a dataset of D&D characters submitted to the apps above at [**dnddata**](https://github.com/oganm/dnddata).
 
-* I wrote [**this article**](https://oganm.github.io/dndstats) about statistics of D&D characters submitted to my shiny applications.
+* [**diceSyntax**](https://github.com/oganm/diceSyntax) is an R package that supports complex dice rolling syntax such as `10d8d3ro<3`. That means roll 10 d8s, reroll anything below 3 once, drop three lowest dice. import5eChar and my other D&D related packages depend on this
 
 * I maintain [**other D&D related packages**](https://github.com/topics/ogan-dnd) as well.
 

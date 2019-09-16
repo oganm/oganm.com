@@ -1,0 +1,44 @@
+---
+title: Using different/modified version of the same package
+author: Ogan Mancarci
+date: '2019-07-31'
+categories:
+  - Code
+tags:
+  - R
+slug: multiple-package-versions
+---
+
+
+
+<p>Sometimes a package on CRAN doesn’t behave quite as you would like. Maybe a change
+introduced broke your workflow so you want an older version, maybe you want to add
+additional functionality and the maintainer is uninterested in incorporating your
+changes which may not fit the scope or they are simply inactive and inaccessible.
+Now you have a version of the package that you need that conflicts with CRAN.</p>
+<p>To make my life easier in a case like this I have written a small function <code>forkCRAN</code> (code below). So I can simply do</p>
+<pre class="r"><code># read my github token for authentication
+token = readLines(&#39;~/auth/gh_token&#39;)
+forkCRAN(&#39;ontologyIndex&#39;, version = &#39;2.5&#39;, token=token, newname = &#39;ontologyIndexOgfork&#39;)</code></pre>
+<p>and have a <a href="https://github.com/oganm/ontologyIndexOgfork">this</a> github repository that contains
+ontologyIndex, version 2.5 with the name <code>ontologyIndexOgfork</code>. I can use this repository like any other github package</p>
+<pre class="r"><code>devtools::install_github(&#39;oganm/ontologyIndexOgfork&#39;)
+library(ontologyIndexOgfork)</code></pre>
+<p>In this particular case, the original ontologyIndex package could not parse
+cyclic ontologies. I have introduced some changes so that it can parse such ontologies and my current pipeline
+depends on this change. Having this version allows me to write unambigious code that still
+can be replicated by third parties, especially since including remote package dependencies
+is fairly easy when using <code>remotes</code>/<code>devtools</code> family of install functions.</p>
+<p>You can find <code>forkCRAN</code> function <a href="https://github.com/oganm/ogbox/blob/master/R/devtools.R#L36-L115">here</a>.
+Can be safely pasted elsewhere since it doesn’t depend on anything else in the package it’s in.</p>
+<p>Note that this isn’t entirely safe to do. Especially when all you want to do is to use an older version.
+The code of the package will be preserved but it’s dependencies will continue to move forward in time.
+There are <a href="https://cran.r-project.org/web/packages/packrat/index.html">more</a> <a href="https://cran.r-project.org/web/packages/checkpoint/index.html">robust</a> solutions out
+there for long term reproducibility.</p>
+<p>Another problem is that this doesn’t always behave nicely with pacakges that require compilation.
+In these cases the package name seems to be hard coded into the code.
+I initially noticed this when I tried to get a copy of the <code>glue</code> package. For that particular
+case, all it took to fix it was to change the <code>useDynLib</code> commands in the NAMESPACE and roxygen
+comments to use the new package. This change now happens automatically when the function is
+called but I have failed to make a generalized solution. <code>dplyr</code>
+package for instance will still fail to work.</p>

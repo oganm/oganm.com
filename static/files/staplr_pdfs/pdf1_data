@@ -1,0 +1,23 @@
+---
+FieldType: Text
+FieldName: TextField
+FieldFlags: 4096
+FieldValue: 
+FieldJustification: Left
+---
+FieldType: Button
+FieldName: CheckBox
+FieldFlags: 0
+FieldValue: Off
+FieldJustification: Left
+FieldStateOption: Off
+FieldStateOption: Yes
+---
+FieldType: Button
+FieldName: OptionButton
+FieldFlags: 49152
+FieldValue: Off
+FieldJustification: Left
+FieldStateOption: 1
+FieldStateOption: 2
+FieldStateOption: Off

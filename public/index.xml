@@ -6,10 +6,28 @@
     <description>Recent content in index on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using different/modified version of the same package</title>
+      <link>/multiple-package-versions/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/multiple-package-versions/</guid>
+      <description>Sometimes a package on CRAN doesn’t behave quite as you would like. Maybe a change introduced broke your workflow so you want an older version, maybe you want to add additional functionality and the maintainer is uninterested in incorporating your changes which may not fit the scope or they are simply inactive and inaccessible. Now you have a version of the package that you need that conflicts with CRAN.</description>
+    </item>
+    
+    <item>
+      <title>Interactive visualisation of MRI images in R</title>
+      <link>/mri-viz/</link>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mri-viz/</guid>
+      <description>About a year and a half ago, my doctor in Canada requested me to get an MRI while trying to understand why am I having chronic headaches. I requested a copy of those files before going back to Turkey for a holiday to show them to another doctor so I ended up with a CD containing the raw data. I don’t normally work with MRI data but I did port a javascript library for MRI visualisation to R in a hackaton so I figured it shouldn’t be too hard to get a simple interactive visualisation of my own brain.</description>
+    </item>
     
     <item>
       <title>Updating the good old Homologene database</title>
@@ -41,10 +59,10 @@ library(readr) library(magrittr) library(dplyr) dir.</description>
     
     <item>
       <title>Is your D&amp;D character rare? II: Off-brand edition</title>
-      <link>/is-your-d-d-character-rare-ii-off-brand-edition/</link>
+      <link>/dndstats/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>/is-your-d-d-character-rare-ii-off-brand-edition/</guid>
+      <guid>/dndstats/</guid>
       <description>Introduction Is Your D&amp;amp;D Character Rare? II Is your character archetype rare? Is your alignment rare? Are your feat choices rare? Is your multiclass combination rare? Is power gaming rare? Are your spells rare? Is your game day rare? About the data Data access About this document Changelog   Edited: 9 September 2018 (see changlelog)
 Introduction About a year ago FiveThirtyEight published a short article called “Is Your D&amp;amp;D Character Rare?</description>
     </item>

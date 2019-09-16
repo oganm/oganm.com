@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blogdown on B. Ogan Mancarci</title>
+    <title>blogdown on B. Ogan Mancarci</title>
     <link>/tags/blogdown/</link>
-    <description>Recent content in Blogdown on B. Ogan Mancarci</description>
+    <description>Recent content in blogdown on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 08 Jan 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/blogdown/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/blogdown/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -17,7 +17,222 @@
       <pubDate>Tue, 08 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/note-to-self-fine-tuning-the-site/</guid>
-      <description>Static resource organization Code cleanup A wild issue appeared Homepage   This is still me rambling about the building process of this site but I have a better idea how things work. It seems like for now this blog is mostly about itself. I am generally happy with how things look but there are still a few visible and invisible changes I want to make to the site.</description>
+      <description>
+
+&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#static-resource-organization&#34;&gt;Static resource organization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#code-cleanup&#34;&gt;Code cleanup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#a-wild-issue-appeared&#34;&gt;A wild issue appeared&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#homepage&#34;&gt;Homepage&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is still me rambling about the building process of this site but I have a better idea
+how things work. It seems like for now this blog is mostly about itself.
+I am generally happy with how things look but there are still a few visible and invisible
+changes I want to make to the site.&lt;/p&gt;
+&lt;p&gt;Currently the site looks like this&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/fineTuning/before.png&#34; height=&#34;400&#34;&gt;&lt;/p&gt;
+&lt;p&gt;My plan now is to make a two column structure for the homepage and some behind the scene changes that should help me to make changes easier and organize things better.&lt;/p&gt;
+&lt;div id=&#34;static-resource-organization&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Static resource organization&lt;/h2&gt;
+&lt;p&gt;In the last post, I was saving the images I was using into the &lt;code&gt;static/images&lt;/code&gt; directory haphazardly. This is not ideal as I am more likely to make a mistake resulting in a missing/wrong images. I also can’t go through the images for a particular post easily. So I want to separate images based on the posts they belong. I am unsure how should I name the directories though. I figure I can probably follow the same standards as an &lt;code&gt;Rmd&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;Since this is an &lt;code&gt;.Rmd&lt;/code&gt; file I can create a plot and see where it is saved when the site is built&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(1:3)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-01-08-note-to-self-fine-tuning-the-site_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;288&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Hmm… So the image is created as&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;img src=&amp;quot;../post/2019-01-08-note-to-self-fine-tuning-the-site_files/figure-html/unnamed-chunk-1-1.png&amp;quot; width=&amp;quot;288&amp;quot;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;But I don’t see the image saved in my project directory. It seems like they are saved directly into &lt;code&gt;public/post&lt;/code&gt; and I don’t want to save my images there. I guess I can continue to use &lt;code&gt;static/images&lt;/code&gt; directory with more descriptive names. Don’t want the name to be that long though. Autocomplete does not work in these files by default since the default working directory is the project root not within &lt;code&gt;static/images&lt;/code&gt;. For simplicity, I will place all additional files used by this post in &lt;code&gt;static/images/fineTuning&lt;/code&gt; directory and will move the images used in the previous post to &lt;code&gt;static/images/settingUp&lt;/code&gt;. Any future posts will get their own little directories.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;code-cleanup&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Code cleanup&lt;/h2&gt;
+&lt;p&gt;As I was looking at the code of the default theme, I noticed that Disqus comment section
+is already controlled by a built in variable &lt;code&gt;disable_comments&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{{ if and (not (eq .Site.DisqusShortname &amp;quot;&amp;quot;)) (not .Params.disable_comments) }}
+...
+{{end}}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Which means my edit to the &lt;code&gt;single.html&lt;/code&gt; was completely unnecesary. The built in support
+also has me set the variable to &lt;code&gt;true&lt;/code&gt; to disable. Based on experimentation with the previous
+post, the default value for a variable seems to be &lt;code&gt;false&lt;/code&gt; as my&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{{if .Params.disqus}}
+{{ partial &amp;quot;disqus.html&amp;quot; .}}
+{{end}}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;block in the &lt;code&gt;single.html&lt;/code&gt; caused disqus comments to be disabled if I didn’t set anything.
+The default approach is simply superior and I didn’t make any other changes on the &lt;code&gt;single.html&lt;/code&gt;. I was considering just deleting it but then I remembered I didn’t want the reading time to appear next to my page title so I’ll just revert my previous edits and comment out the reading time section instead.&lt;/p&gt;
+&lt;p&gt;The other thing I want to change is how I handle the &lt;code&gt;Pre&lt;/code&gt; argument of &lt;code&gt;[[menu.main]]&lt;/code&gt; items in &lt;code&gt;config.toml&lt;/code&gt; are handled. Currently, it assumes they are a font-awesome icon. It also sets the &lt;code&gt;aria-hidden&lt;/code&gt; attribute of the icons to &lt;code&gt;true&lt;/code&gt;. &lt;code&gt;aria-hidden&lt;/code&gt; appears to be an &lt;a href=&#34;https://fontawesome.com/how-to-use/on-the-web/other-topics/accessibility&#34;&gt;accessibility&lt;/a&gt; feature that makes screen readers ignore the icon. I want better control over what I add before a menu item because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Some of the menu items only use the icon to describe themselves. So making them invisible for the blind is not the best idea.&lt;/li&gt;
+&lt;li&gt;On font-awesome website, it automatically copies the entire required code when you search for an icon and click it’s code. Which means having to write the name of the icon by itself is actually more work than writing the entire code&lt;/li&gt;
+&lt;li&gt;I may want to add something that is not a font-awesome icon before the menu items.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So it’s best that &lt;code&gt;Pre&lt;/code&gt; is simply placed as is and when I want icons I should just add the tag in its entirety&lt;/p&gt;
+&lt;p&gt;The part of &lt;code&gt;nav.html&lt;/code&gt; that deals with iterating over menu items is&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+        &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+            &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;
+                &amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}
+                &amp;lt;i class=&amp;quot;fas fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+            &amp;lt;/button&amp;gt;
+            &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+                {{range .Children}}
+                    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+                {{ end }}
+             &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+    {{ else }}
+        &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    {{ end }}
+{{ end }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;{{ .Pre }}&lt;/code&gt; is repeated 3 times here. For regular menu items, for dropdowns and for children. Children and regular menu items are essentially
+identical. They are both links and have an icon and the name. The parent items currently do not support links. If I make the &lt;code&gt;URL&lt;/code&gt; argument an optional one
+I can create a tiny &lt;code&gt;partial&lt;/code&gt; for all of them that should eliminate this code triplication. I also might want to add links to dropdown roots themselves in the future. For instance the “Blog” button currently list categories (manually, I may want to automate this) but clicking on itself might lead to the &lt;code&gt;/post&lt;/code&gt; address and list all posts regardless of category.&lt;/p&gt;
+&lt;p&gt;To make the &lt;code&gt;URL&lt;/code&gt; an optional argument, I need to make sure the output doesn’t have the &lt;code&gt;&amp;lt;a&amp;gt;&lt;/code&gt; tag if URL is not defined. Based on &lt;a href=&#34;https://discourse.gohugo.io/t/solved-isset-how-to-check-variable-is-empty/1764&#34;&gt;this&lt;/a&gt; question on Hugo support site, one can check if an argument is defined using
+&lt;code&gt;isset&lt;/code&gt; However in the example they always use it like &lt;code&gt;(isset .Params &amp;quot;argument&amp;quot;)&lt;/code&gt; for arguments that are normally called with &lt;code&gt;.Params.argument&lt;/code&gt; syntax. I am still not well versed in the syntax and scoping rules of hugo but this is clearly different that how arguments are called within the iterators. So some experimentation is needed. Initially I replace the code for dropdown children and the code for regular menu items with the new partial that we will be calling.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+        &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+            &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;
+                &amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}
+                &amp;lt;i class=&amp;quot;fas fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+            &amp;lt;/button&amp;gt;
+            &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+                {{range .Children}}
+                    {{ partial &amp;quot;menu.main.html&amp;quot; .}}
+                    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+                {{ end }}
+             &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+    {{ else }}
+        {{ partial &amp;quot;menu.main.html&amp;quot; .}}
+        &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    {{ end }}
+{{ end }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and create a &lt;code&gt;layouts/partials/menu.main.html&lt;/code&gt; that has&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This should not have any effect and as far as I can see, nothing seems to have changed. Now let’s create a dummy &lt;code&gt;[[menu.main]]&lt;/code&gt; object in the &lt;code&gt;config.toml&lt;/code&gt; that doesn’t have a URL.&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+    name = &amp;quot;Dummy&amp;quot;
+    identifier = &amp;quot;dummy&amp;quot;
+    weight = 9999&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/fineTuning/dummy.png&#34; /&gt;
+Note that weird gap in between dummy and everything else. Wonder what’s happening there… Anyway, currently, it is a link that goes nowhere because the object is still generated as an &lt;code&gt;&amp;lt;a&amp;gt;&lt;/code&gt; with no &lt;code&gt;href&lt;/code&gt;. Before I proceed any further,
+I quickly google “hugo isset range” and find &lt;a href=&#34;https://discourse.gohugo.io/t/isset-in-range/12895&#34;&gt;this&lt;/a&gt; question that suggests using &lt;code&gt;with&lt;/code&gt; instead or that &lt;code&gt;isset&lt;/code&gt; in this context works as &lt;code&gt;isset . &amp;quot;argument&amp;quot;&lt;/code&gt;. I won’t have to trust on random experiments after all. Even the exact example given is mostly the same. So &lt;code&gt;menu.main.html&lt;/code&gt; should be&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;li&amp;gt;
+    {{ if isset . &amp;quot;URL&amp;quot; }}
+        &amp;lt;a href = {{.}}&amp;gt;
+    {{ end }}
+    
+    &amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}
+    
+    {{ if isset . &amp;quot;URL&amp;quot; }}
+        &amp;lt;/a&amp;gt;
+    {{ end }}
+&amp;lt;/li&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And Dummy is no longer a link. Just a text field that does nothing. Hmm.. so is everything else. Not sure why but it looks like &lt;code&gt;isset&lt;/code&gt; is returning false here. However when I replace &lt;code&gt;{{if isset . &amp;quot;URL&amp;quot;}}&lt;/code&gt; with &lt;code&gt;{{with .URL}}&lt;/code&gt; it just works . So I can now use it on dropdown menu titles in nav.html as well.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+        &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+            &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;
+                {{ partial &amp;quot;menu.main.html&amp;quot; .}}
+                &amp;lt;i class=&amp;quot;fas fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+            &amp;lt;/button&amp;gt;
+            &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+                {{range .Children}}
+                    {{ partial &amp;quot;menu.main.html&amp;quot; .}}
+                {{ end }}
+             &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+    {{ else }}
+        {{ partial &amp;quot;menu.main.html&amp;quot; .}}
+    {{ end }}
+{{ end }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that all menu labels are unified I can go back to dealing with &lt;code&gt;Pre&lt;/code&gt; tags. I simply replace the entire thing with &lt;code&gt;{{.Pre}}&lt;/code&gt;.
+Any addition should be written as full html.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;li&amp;gt;
+    {{ with .URL }}
+        &amp;lt;a href = {{.}}&amp;gt;
+    {{ end }}
+    
+    {{ with .Pre }}
+        {{ . }}
+    {{ end }}
+    {{ .Name }}
+    
+    {{ with .URL }}
+        &amp;lt;/a&amp;gt;
+    {{ end }}
+&amp;lt;/li&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This means &lt;code&gt;config.toml&lt;/code&gt; needs to be modified as well. For instance&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+    name = &amp;quot;&amp;quot;
+    identifier = &amp;quot;mail&amp;quot;
+    pre = &amp;quot;&amp;lt;i class=&amp;#39;fas fa-at&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;&amp;quot;
+    url = &amp;quot;mailto:ogan.mancarci@gmail.com&amp;quot;
+    weight = 3
+[[menu.main]]
+    name = &amp;quot;Publications&amp;quot;
+    identifier = &amp;quot;scholar&amp;quot;
+    pre = &amp;quot;&amp;lt;i class=&amp;#39;fas fa-graduation-cap&amp;#39; aria-hidden&amp;gt;&amp;lt;/i&amp;gt;&amp;quot;
+    url = &amp;quot;https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&amp;amp;hl=en&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note that I can set aria-hidden property from here for menu items that do have
+a text description.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-wild-issue-appeared&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;A wild issue appeared&lt;/h2&gt;
+&lt;p&gt;While I was dealing with all that I noticed a subtle change in the site. The URLs of the menu bars now link me to to relative links based on &lt;code&gt;oganm.com&lt;/code&gt; while in the previous build they used to provide relative links based on where I am. This must be related to the changes I have made with the navigation bar. Sure enough,
+if I change the code that generates the dropdown children into&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{range .Children}}
+    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;{{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    {{ partial &amp;quot;menu.main.html&amp;quot; .}}
+{{ end }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I get two links, the first one generated by the native code, second one generated by the new code. The first one is an appropriate relative link, second one just sends you back to the root no matter where you are. This is fine for the actual page but it breaks my testing environment.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/fineTuning/badlink.png&#34; /&gt;
+Now the code within the &lt;code&gt;menu.main.html&lt;/code&gt; should have been using the exact same arguments. Not sure what is causing the change here. I would have a better idea if I knew what was originally reponsible for changing the URL to be the way it is. Turns out instead of doing &lt;code&gt;&amp;lt;a href=&amp;quot;{{.}}&amp;quot;&amp;gt;&lt;/code&gt; in &lt;code&gt;menu.main.html&lt;/code&gt; I did &lt;code&gt;&amp;lt;a href={{.}}&amp;gt;&lt;/code&gt;. Not sure how the absence of quotes changes things but it certainly does.&lt;/p&gt;
+&lt;p&gt;Another thing I learned was not to use the output of &lt;code&gt;serve_site()&lt;/code&gt; directly to make deployments. &lt;code&gt;serve_site()&lt;/code&gt; also renders the draft sites which cause this post to be online prematurely. What I should be doing instead is to use &lt;code&gt;build_site()&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;homepage&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Homepage&lt;/h2&gt;
+&lt;p&gt;So far nothing I have done has changed anything visually. Before this post and after the previous one I fiddled with the colors and formatting a little. Replaced the link markers to a dark green, made them a little thinner to get them out of the way. I also used the same dark green on titles and navigation bar text. As a side effect, the navigation bar items turn black when moused over due to the pre-existing theme CSS so it added a subtle effect that I like. Currently the dropdown menu’s don’t have the same turn-to-black effect but they already drop down so I am unsure if they need any more responsiveness. I know that I like the dark green link identifiers better than their previous version but I am unsure if they are still too prominent for comfort.&lt;/p&gt;
+&lt;p&gt;I know however I am not really satisfied with the homepage. This is hard for me because along with not knowing much about web design I also have a limited taste in aesthetics. Once again, the academic theme’s setup seems welcoming with the two column structure and once again, I will refuse to switch to it and emulate it by hand for no good reason.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/fineTuning/academic.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I start with adding the entire bootstrap package which is probably an overkill but don’t have the time to write the code for creating multiple columns. I add bootstrap by modifying the &lt;code&gt;head.html&lt;/code&gt; in the default theme to require a &lt;code&gt;prehead.html&lt;/code&gt; before loading the other css items. In the &lt;code&gt;prehead.html&lt;/code&gt; I add the link to the bootstrap stylesheet as described &lt;a href=&#34;https://getbootstrap.com/docs/4.2/getting-started/introduction/&#34;&gt;here&lt;/a&gt;. I also add the javascript links at the end of the &lt;code&gt;footer.html&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Immedately, I see that this broke my dropdown menus. I am not sure what the issue here is. I should have been overwriting any bootstrap classes. Changing the class name from &lt;code&gt;dropdown&lt;/code&gt; to &lt;code&gt;drpdwn&lt;/code&gt; works for now but that may require further invenstigation in the future. Who doesn’t love some sweet technical dept. I did consider switching to boostrap’s drowndown menus but they seem to come with quite a few bells and whistles I don’t need right now.&lt;/p&gt;
+&lt;p&gt;Another thing that’s broken by bootstrap is the spacing between the Logo and the navigation links&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/fineTuning/navlinks.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Also the fonts have changed, the post links look funny. Bloody hell everything’s broken.&lt;/p&gt;
+&lt;p&gt;Maybe this wasn’t the best idea. I remove all marks of bootstrap. All I want from bootstrap is the column system. Googling “bootstrap just columns” leads me to &lt;a href=&#34;https://stackoverflow.com/questions/20403443/how-to-get-just-the-responsive-grid-from-bootstrap-3&#34;&gt;this&lt;/a&gt; stackoverflow question where I learn I can get parts of bootstrap &lt;a href=&#34;http://getbootstrap.com/customize/&#34;&gt;here&lt;/a&gt;. As advised I try to get a version of bootstrap that only includes column. The results are less horrible but for some reason, removing typography doesn’t seem to be a real option. When the page loads, they are quickly overwritten by the &lt;code&gt;main.css&lt;/code&gt; but you still see the flicker when the fonts change. I imagine someone must have implemented this on their own. After another quick look at google, I find &lt;a href=&#34;https://github.com/zirafa/bootstrap-grid-only&#34;&gt;this&lt;/a&gt; github repo. Dropping &lt;code&gt;grid-12.css&lt;/code&gt; Lets me use bootstraps columns without making a mess.&lt;/p&gt;
+&lt;p&gt;Now that I can have some columns, I can split my homepage into two. I simply use the &lt;code&gt;row&lt;/code&gt; and &lt;code&gt;col-sm&lt;/code&gt; tags within the &lt;code&gt;_index.Rmd&lt;/code&gt; to do this. Which cause the main page to look like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/fineTuning/columns.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This looks a little constrained to me. The reason is the default &lt;code&gt;max-width&lt;/code&gt; porperty for the article &lt;code&gt;content&lt;/code&gt;s which is 800px. To fix that I can just add another class to the &lt;code&gt;content&lt;/code&gt; of &lt;code&gt;index.html&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ partial &amp;quot;header.html&amp;quot; . }}
+
+
+&amp;lt;main class=&amp;quot;content homepage&amp;quot; role=&amp;quot;main&amp;quot;&amp;gt;
+  &amp;lt;article class=&amp;quot;article&amp;quot;&amp;gt;
+    &amp;lt;div class=&amp;quot;article-content&amp;quot;&amp;gt;
+    {{.Content}}
+    &amp;lt;/div&amp;gt;
+  &amp;lt;/article&amp;gt;
+&amp;lt;/main&amp;gt;
+
+
+{{ partial &amp;quot;footer.html&amp;quot; . }}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And add some css to expand the minimum size under those conditions. I also want to increase the max-width of content to 900px in general because I think 800 is too narrow even when left alone&lt;/p&gt;
+&lt;pre class=&#34;css&#34;&gt;&lt;code&gt;.content {
+    max-width: 900px;
+}
+
+.homepage{
+    max-width: 1200px;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally if I change the order of the text a little in &lt;code&gt;_index.Rmd&lt;/code&gt; it’ll look just fine.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/fineTuning/final.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I am happy how this looks for now. Based on google results it may need some SEO optimization though which might be the next post.&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
@@ -26,7 +241,569 @@
       <pubDate>Fri, 04 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/note-to-self-how-did-i-set-up-this-site/</guid>
-      <description>Baseline Basic set-up Font-awesome (and emojis) [[menu.main]] Children A favicon Category links Google analytics and disqus Homepage   This is mostly personal ramblings about how exactly this site is born. Kept for later reference. It’s not a tutorial. Just a description of every single step I followed to build this. It will include dead ends and obvious mistakes. It might be somewhat educational but I know nothing about Hugo and very little about web design so it might also include misguided attempts at pretty much everything.</description>
+      <description>
+
+&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#baseline&#34;&gt;Baseline&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#basic-set-up&#34;&gt;Basic set-up&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#font-awesome-and-emojis&#34;&gt;Font-awesome (and emojis)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#menu.main-children&#34;&gt;&lt;code&gt;[[menu.main]]&lt;/code&gt; Children&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#a-favicon&#34;&gt;A favicon&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#category-links&#34;&gt;Category links&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#google-analytics-and-disqus&#34;&gt;Google analytics and disqus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#homepage&#34;&gt;Homepage&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is mostly personal ramblings about how exactly this site is born. Kept for
+later reference. It’s not a tutorial. Just a description of every single step I
+followed to build this. It will include dead ends and obvious mistakes. It might
+be somewhat educational but I know nothing about Hugo and very little about web design
+so it might also include misguided attempts at pretty much everything.&lt;/p&gt;
+&lt;div id=&#34;baseline&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Baseline&lt;/h2&gt;
+&lt;p&gt;I am currently on my digitalocean server, set up mostly in accordance with Dean
+Attali’s &lt;a href=&#34;https://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/&#34;&gt;tutorial&lt;/a&gt; to run
+my shiny server. It is running an nginx web server.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;basic-set-up&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Basic set-up&lt;/h2&gt;
+&lt;p&gt;This site is created using &lt;a href=&#34;https://cran.r-project.org/web/packages/blogdown/index.html&#34;&gt;blogdown&lt;/a&gt;. Reading the &lt;a href=&#34;https://bookdown.org/yihui/blogdown/&#34;&gt;blogdown book&lt;/a&gt;, I simply started with the &lt;code&gt;blogdown::new_site()&lt;/code&gt;
+command which created the basic template and launched the site.
+As I looked at my creation for the first time, it looked horrible because images and css did not
+correctly load. This is because as described in &lt;a href=&#34;https://github.com/rstudio/blogdown/issues/124&#34;&gt;this&lt;/a&gt; issue,
+default settings break blogdown in rstudio and I need to add&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;relativeurls = true&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to the &lt;code&gt;config.toml&lt;/code&gt;. I may run into issues later as that conversation seems to
+continue in the issue but its midnight and I don’t have time to go on.&lt;/p&gt;
+&lt;p&gt;While I am at it I edit the title, github and twitter links in the &lt;code&gt;config.toml&lt;/code&gt;, along
+with adding a new image to &lt;code&gt;static/images&lt;/code&gt; path and change the url of the &lt;code&gt;[params.logo]&lt;/code&gt;
+to that filename.&lt;/p&gt;
+&lt;p&gt;I then started writing this post by doing &lt;code&gt;blogdown::new_post(title= &#39;Note to self: How did I set up this site&#39;,ext = &#39;.Rmd&#39;)&lt;/code&gt;. At this point I noticed
+the blogdown book mentions a blogdown addin. I click Addins and yes, blogdown options are already there in the UI.
+I don’t need to run commands manually anymore. I click “Update Metadata” to add categories and tags. Ideally I would want to
+be able to group things using the categories but will look into that later.&lt;/p&gt;
+&lt;p&gt;This is what the site looks like now&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/settingUp/site1.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Was half expecting that not to work. Just like the logo, I placed this image in the
+&lt;code&gt;static/images&lt;/code&gt; directory as &lt;code&gt;site1.PNG&lt;/code&gt; and did &lt;code&gt;![](/images/site1.PNG)&lt;/code&gt; to link to
+it. One of the first comments in the github issue was complaining about this not working.
+I won’t have to revisit that issue for now. I proceed to delete the files for the default posts.&lt;/p&gt;
+&lt;p&gt;I also rewrote the &lt;code&gt;content/about.md&lt;/code&gt; to write a few minor details about me.&lt;/p&gt;
+&lt;p&gt;I eventually have to deploy this site so third parties can see it. Based on my nginx
+configuration, &lt;code&gt;oganm.com&lt;/code&gt; leads to the index file stored at &lt;code&gt;var/www/html&lt;/code&gt;. By default
+the site is built into the &lt;code&gt;public&lt;/code&gt; directory. Don’t know how to change this and have
+no desire to do so. I create a file called deploy with the one liner&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+cp -r public/. /var/www/html&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I make the file executible by doing &lt;code&gt;chmod +x deploy&lt;/code&gt; and run&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo ./deploy&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to move all files to where they should be. I navigate to oganm.com and everything
+looks fine&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;font-awesome-and-emojis&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Font-awesome (and emojis)&lt;/h2&gt;
+&lt;p&gt;First thing I want to do add is the abilitiy to add support for font-awesome icons. I don’t like the Github and
+Twitter links literally saying “Github” and “Twitter”. They take too much space they can easily be replaced with icons.&lt;/p&gt;
+&lt;p&gt;A google search eventually leads me to &lt;a href=&#34;https://alison.rbind.io/slides/blogdown-workshop-slides.html#1&#34;&gt;these&lt;/a&gt; slides by Alison Hill
+through &lt;a href=&#34;https://mikmart.rbind.io/2018/02/18/testing-font-awesome/&#34;&gt;another blog&lt;/a&gt;. It
+is a pretty comprehensive summary of everything, it’s great.&lt;/p&gt;
+&lt;p&gt;On my way to font-awesome configuration I see that I also need to manually allow emojis.
+She adds one using the code &lt;code&gt;:heart :&lt;/code&gt;. Lets try: :heart:. Hmm you can’t see the code
+itself because I don’t know how to escape the thing that replaces the code with emojis here. I’ll just
+add a space after &lt;code&gt;heart&lt;/code&gt; to make it visible for now.&lt;/p&gt;
+&lt;p&gt;I wonder what happens if I
+add a real emoji ❤️. That also works so do I even need to set &lt;code&gt;enableEmoji = true&lt;/code&gt;?&lt;/p&gt;
+&lt;p&gt;Let’s try turning it off…
+Ok real emojis work on their own so I will keep this off
+for now. This means the previous paragraph will look very weird but oh well..&lt;/p&gt;
+&lt;p&gt;Using real emojis has its problems though. It seems like rstudio editor doesn’t
+quite know how to deal with emojis and they make the cursor appear at the wrong
+place. It is probably about how rstudio isn’t designed to support fonts that are
+not monospaced. That might push me to flip this setting back later. Anyway, back to
+font-awesome.&lt;/p&gt;
+&lt;details&gt;
+&lt;p&gt;&lt;summary&gt;&lt;i&gt;Hidden here is a rabbithole I got into that lead to nowhere. Click at your own peril. I will now pretend this never happened.&lt;/i&gt;&lt;/summary&gt;
+It seems like things have changed since these slides are prepared. They tell me to
+go to &lt;a href=&#34;http://fontawesome.io/get-started/&#34;&gt;this&lt;/a&gt; link and give them my e-mail to get
+my code but it just redirects me to &lt;a href=&#34;https://fontawesome.com/start&#34;&gt;here&lt;/a&gt; and providing
+an e-mail doesn’t seem to be necesary.&lt;/p&gt;
+&lt;p&gt;Actually I am not sure if things work the same way at all. I am instructed to add a &lt;code&gt;font-awesome.min.css&lt;/code&gt;
+to my path that is included in the github repo for the tutorial. I assume this file is
+acquired from font awesome and I google for the name. I am directed to &lt;a href=&#34;https://fontawesome.com/v4.7.0/get-started/&#34;&gt;this&lt;/a&gt; link
+which is a tutorial for an older version of font awesome. The page aggressively suggests
+I should switch to version 5.0. The code that is given in the link seems to include a remote css file but I am
+not a web design guy so who knows what is required.&lt;/p&gt;
+&lt;p&gt;Before I try anything I want to see if font awesome is supported by default. Things seems to have changed so why not
+this too. So lets do &lt;code&gt;&amp;lt;i class=&amp;quot;fa fa-envelope-open&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&lt;/code&gt; right here: &lt;i class=&#34;fa fa-envelope-open&#34; aria-hidden=&#34;true&#34;&gt;&lt;/i&gt;. There is probably an envelope there now (in the future) but right now I see nothing.
+So sadly, no default support for font awesome.&lt;/p&gt;
+&lt;p&gt;Before I give up and follow the instructions from the slides, I quickly google “fontawesome 5 blogdown” which
+leads me to &lt;a href=&#34;https://github.com/gcushen/hugo-academic/issues/541&#34;&gt;this&lt;/a&gt; issue on another theme
+that seems to support font awesome by default and switching to fontawesome 5. I could
+switch to that theme but I don’t want to get into that right now. Instead I look at the
+linked &lt;a href=&#34;https://github.com/gcushen/hugo-academic/pull/659/files&#34;&gt;pull request&lt;/a&gt; that is supposed to
+handle fontawesome 5 support. Quite a bit of files seem to be changed but most of them seem
+to be adding the icons to various places. The first important looking file is &lt;code&gt;data/assest.toml&lt;/code&gt;.
+I see that neither the default theme nor the current site has anything in &lt;code&gt;data&lt;/code&gt; directory. So I create
+the &lt;code&gt;assets.toml&lt;/code&gt; in there and copy the bits that seem to be related to font-awesome support, which are helpfully highlighted
+in the pull request’s diff. Well.. that didn’t work. Which means there are other pieces to this.&lt;/p&gt;
+&lt;p&gt;I am unsure if &lt;code&gt;assets.toml&lt;/code&gt; is even considered by default. So I search the entire repository for mention of &lt;a href=&#34;https://github.com/gcushen/hugo-academic/search?q=assets&amp;amp;unscoped_q=assets&amp;amp;type=Code&#34;&gt;&lt;code&gt;assets&lt;/code&gt;&lt;/a&gt;. I look at the file
+and it seems to have direct mentions of font awesome in multiple locations as well.&lt;/p&gt;
+&lt;p&gt;I see that &lt;code&gt;layouts/partials/header.html&lt;/code&gt; mentions &lt;a href=&#34;https://github.com/gcushen/hugo-academic/blob/935e31470d4769ca0e50f8f42a9cc5ca3481562c/layouts/partials/header.html#L34-L35&#34;&gt;assets&lt;/a&gt;. Come to think of it, the slides also mentioned the &lt;code&gt;partials&lt;/code&gt; directory. I go to the github repo to look at the &lt;a href=&#34;https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-head_custom.html&#34;&gt;file mentioned&lt;/a&gt; and it is a one liner.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;script src=&amp;quot;https://use.fontawesome.com/dc8f5495c2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So it only adds the font-awesome javascript.&lt;/p&gt;
+&lt;p&gt;I am unsure about the relationship between the &lt;code&gt;head_custom.html&lt;/code&gt; and &lt;code&gt;header.html&lt;/code&gt; and the the hugo-academic theme’s &lt;code&gt;header.html&lt;/code&gt; seems considerably complex. I am out of my depth for now and its 3 am. Will probably just return to doing what I am told by the slides tomorrow.
+That means I am using out of date fontawesome but I can deal with that later. Or maybe I’ll just switch to “hugo-academic”. I am an academic after all. I delete the &lt;code&gt;assets.toml&lt;/code&gt; before I leave to clean up the mess.&lt;/p&gt;
+&lt;hr&gt;
+&lt;/details&gt;
+&lt;p&gt;Like anyone who knows what they are doing would do, I went to &lt;a href=&#34;https://fontawesome.com/start&#34;&gt;this&lt;/a&gt; site to get the code required to enable font-awesome. I created &lt;code&gt;layouts/partials/head_custom.html&lt;/code&gt; and pasted the line in it. It just worked. Easy peasy. Note that I deviate from the slides a little here as I use the latest version of font-awesome. Both steps for setting it up and using them are slightly different.&lt;/p&gt;
+&lt;p&gt;Here’s an igloo: &lt;i class=&#34;fas fa-igloo&#34;&gt;&lt;/i&gt;&lt;/p&gt;
+&lt;p&gt;In order to enable font-awesome at the &lt;code&gt;[[menu.main]]&lt;/code&gt;s however I need to modify &lt;code&gt;nav.html&lt;/code&gt; as well. I will just get that from Allison Hill’s
+&lt;a href=&#34;https://github.com/apreshill/blogdown-workshop/blob/master/workshop-bundle/06b-nav.html&#34;&gt;workshop repository&lt;/a&gt;, hopefully icon ids are the same.&lt;/p&gt;
+&lt;p&gt;I go to &lt;code&gt;config.toml&lt;/code&gt; and add a &lt;code&gt;pre&lt;/code&gt; tag to Twitter&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+    name = &amp;quot;Twitter&amp;quot;
+    pre = &amp;quot;fa-twitter&amp;quot;
+    url = &amp;quot;https://twitter.com/oganm&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;aaand&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/settingUp/siteTwit.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Bah!. Ok things clearly aren’t the same. lets see how would you refer to the &lt;a href=&#34;https://fontawesome.com/icons/twitter?style=brands&#34;&gt;twitter icon now&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Ok if I read this right what we are currently doing does&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;i class=&amp;quot;fa fa-twitter fa-lg fa-fw&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What we should be doing is&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;i class=&amp;quot;fab fa-twitter&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So let’s dispense with the shortcuts here and change &lt;code&gt;nav.html&lt;/code&gt; to be&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;nav class=&amp;quot;nav&amp;quot;&amp;gt;
+  &amp;lt;a href=&amp;quot;{{ &amp;quot;/&amp;quot; | relURL }}&amp;quot; class=&amp;quot;nav-logo&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;{{ print &amp;quot;images/&amp;quot; .Site.Params.logo.url | relURL }}&amp;quot;
+         width=&amp;quot;{{ .Site.Params.logo.width }}&amp;quot;
+         height=&amp;quot;{{ .Site.Params.logo.height }}&amp;quot;
+         alt=&amp;quot;{{ .Site.Params.logo.alt }}&amp;quot;&amp;gt;
+  &amp;lt;/a&amp;gt;
+  &amp;lt;ul class=&amp;quot;nav-links&amp;quot;&amp;gt;
+    {{ range .Site.Menus.main }}
+    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    {{ end }}
+  &amp;lt;/ul&amp;gt;
+&amp;lt;/nav&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then we can give the entire id to &lt;code&gt;pre&lt;/code&gt; field in &lt;code&gt;config.toml&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+    name = &amp;quot;Twitter&amp;quot;
+    pre = &amp;quot;fab fa-twitter&amp;quot;
+    url = &amp;quot;https://twitter.com/oganm&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And it just works. Great. Now we can get rid of the names to leave the icons.&lt;/p&gt;
+&lt;p&gt;Actually we can’t
+because it seems like names are important in differentiating the menus. When I delete both of their names,
+one of them disappear. Looking at &lt;a href=&#34;https://github.com/mikmart/mikkomarttila/blob/master/config.toml&#34;&gt;someone else’s&lt;/a&gt;
+&lt;code&gt;config.toml&lt;/code&gt;, I infer that the name can be the same if you provide &lt;code&gt;weight&lt;/code&gt;s. Probably
+because they are sorted based on their names if a &lt;code&gt;weight&lt;/code&gt; isn’t provided.&lt;/p&gt;
+&lt;p&gt;Nope that didn’t fix it.
+Turns out it is the &lt;code&gt;identifier&lt;/code&gt;. &lt;code&gt;weight&lt;/code&gt; does allow sorting things though so that’s nice. Our final &lt;code&gt;[[menu.main]]&lt;/code&gt;s in
+&lt;code&gt;config.toml&lt;/code&gt; now look like this&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+    name = &amp;quot;About&amp;quot;
+    url = &amp;quot;/about/&amp;quot;
+    weight = -1
+[[menu.main]]
+    name = &amp;quot; &amp;quot;
+    identifier = &amp;quot;github&amp;quot;
+    pre = &amp;quot;fab fa-github&amp;quot;
+    url = &amp;quot;https://github.com/oganm&amp;quot;
+    weight = 1
+[[menu.main]]
+    name = &amp;quot; &amp;quot;
+    identifier = &amp;quot;twitter&amp;quot;
+    pre = &amp;quot;fab fa-twitter&amp;quot;
+    url = &amp;quot;https://twitter.com/oganm&amp;quot;
+    weight = 2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;menu.main-children&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;[[menu.main]]&lt;/code&gt; Children&lt;/h2&gt;
+&lt;p&gt;I want to be able to have menus with sublinks to direct to my various projects.&lt;/p&gt;
+&lt;p&gt;I simply googled “[[menu.main]] children” and found &lt;a href=&#34;https://discourse.gohugo.io/t/hierarchical-menus/2406&#34;&gt;this&lt;/a&gt; support ticket. Which seems to do what I want. Something like&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+name = &amp;quot;Projects&amp;quot;
+identifier = &amp;#39;projects&amp;#39;
+
+
+[[menu.main]]
+name = &amp;#39;printSheetApp&amp;#39;
+parent = &amp;#39;projects&amp;#39;
+url = &amp;#39;oganm.com/shiny/printSheetApp&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;should do the trick.&lt;/p&gt;
+&lt;p&gt;Alas it doesn’t work. It seems the default bookdown theme doesn’t support dropdown menus. Let’s look at a theme that does and see if we can
+steal the &lt;a href=&#34;https://github.com/gcushen/hugo-academic/blob/6cac50ecd6f97b52c4d38ff6f351ef1cace891d2/layouts/partials/navbar.html#L27-L67&#34;&gt;relevant code&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I can’t just copy and paste this code as it seems to use the menu item properties differently than the default theme. However just looking at the code I have a better understanding of how hugo is supposed to work. I see structures like loops&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ range .Site.Menus.main }}
+    {{ if .HasChildren }}
+    
+    do stuff
+    
+    {{ else }}
+    
+    do stuff
+    
+    {{ end }}
+{{end}}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I assume all &lt;code&gt;[[menu.main]]&lt;/code&gt; items are processed through this loop to create sub menus for items who have children. So if I change my existing code to&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;    {{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+    {{ else }}
+        &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    {{ end }}
+    {{ end }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Nothing should change.Note that the code above ignores any menu item with a child. That’s exactly what I see.&lt;/p&gt;
+&lt;p&gt;I imagine if I use the code in the academic theme, I’ll face issues with missing
+classes in my CSS. So I find a basic tutorial that explains &lt;a href=&#34;https://www.w3schools.com/howto/howto_css_dropdown_navbar.asp&#34;&gt;how to create a dropdown navbar&lt;/a&gt;. For now I will
+copy the entire css file and will tweak later if needed. I create a &lt;code&gt;dropdown.css&lt;/code&gt; file
+in &lt;code&gt;static/css&lt;/code&gt; (this is also explained in Alison Hill’s slides). To create the html portion I will
+see what the suggested code is and try to adapt it to incorporate the loop structure of Hugo.&lt;/p&gt;
+&lt;p&gt;The tutorial code looks like this&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;navbar&amp;quot;&amp;gt;
+  &amp;lt;a href=&amp;quot;#home&amp;quot;&amp;gt;Home&amp;lt;/a&amp;gt;
+  &amp;lt;a href=&amp;quot;#news&amp;quot;&amp;gt;News&amp;lt;/a&amp;gt;
+  &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+    &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;Dropdown 
+      &amp;lt;i class=&amp;quot;fa fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+    &amp;lt;/button&amp;gt;
+    &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+      &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;Link 1&amp;lt;/a&amp;gt;
+      &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;Link 2&amp;lt;/a&amp;gt;
+      &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;Link 3&amp;lt;/a&amp;gt;
+    &amp;lt;/div&amp;gt;
+  &amp;lt;/div&amp;gt; 
+&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and the css&lt;/p&gt;
+&lt;pre class=&#34;css&#34;&gt;&lt;code&gt;/* Navbar container */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px; 
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As I look at the code I see that it starts right from &lt;code&gt;&amp;lt;div class=&amp;quot;navbar&amp;quot;&amp;gt;&lt;/code&gt; to add the menu
+items. I won’t be using this class as that is already defined as &lt;code&gt;nav&lt;/code&gt; in my theme. Thankfully, dropdown
+classes are not defined as children of navbar so I shouldn’t need to edit the css for now.&lt;/p&gt;
+&lt;p&gt;After some fiddling my &lt;code&gt;nav.html&lt;/code&gt; file&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;&amp;lt;nav class=&amp;quot;nav&amp;quot;&amp;gt;
+  &amp;lt;a href=&amp;quot;{{ &amp;quot;/&amp;quot; | relURL }}&amp;quot; class=&amp;quot;nav-logo&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;{{ print &amp;quot;images/&amp;quot; .Site.Params.logo.url | relURL }}&amp;quot;
+         width=&amp;quot;{{ .Site.Params.logo.width }}&amp;quot;
+         height=&amp;quot;{{ .Site.Params.logo.height }}&amp;quot;
+         alt=&amp;quot;{{ .Site.Params.logo.alt }}&amp;quot;&amp;gt;
+  &amp;lt;/a&amp;gt;
+  &amp;lt;ul class=&amp;quot;nav-links&amp;quot;&amp;gt;
+    {{ range .Site.Menus.main }}
+    {{ if .HasChildren}}
+        &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+            &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;{{ .Name }}
+              &amp;lt;i class=&amp;quot;fas fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+            &amp;lt;/button&amp;gt;
+            &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+                {{range .Children}}
+                    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+                {{ end }}
+    {{ else }}
+        &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    {{ end }}
+    {{ end }}
+
+  &amp;lt;/ul&amp;gt;
+&amp;lt;/nav&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now this “works” but the coloring and placement of the item is very wrong. This should be solvable
+by fiddling with the css.&lt;/p&gt;
+&lt;p&gt;To simplify, I delete the &lt;code&gt;.navbar&lt;/code&gt; classes. The &lt;code&gt;.dropdown&lt;/code&gt; seems to be configured
+to float to left so I change that to right. The &lt;code&gt;.dropbtn&lt;/code&gt; has all sorts of properties like padding, font size etc.
+I imagine it will work fine if it just inherit those from it’s parent so I delete them. It stats looking like it belongs there now. I change the background color of the hovering to a respectable gray from that horrible red. It is almost perfect.&lt;/p&gt;
+&lt;p&gt;However when the page is enlarged, the submenu items appear on the same line. It is because I used &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; tag before &lt;code&gt;&amp;lt;a&amp;gt;&lt;/code&gt; tag on those links.
+I need to make sure &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; tags have the &lt;code&gt;display: block&lt;/code&gt; in the css instead of &lt;code&gt;&amp;lt;a&amp;gt;&lt;/code&gt; tags.&lt;/p&gt;
+&lt;p&gt;It seems that I now have an alignment problem. When I have two elements on the submenu,
+they don’t align together. Examining the element reveals the issue: the default theme.&lt;/p&gt;
+&lt;p&gt;While
+the theme doesn’t have support for dropdown menus, it seems to have set properties for the &lt;code&gt;.nav-linkgs li:first-child&lt;/code&gt;. It has a &lt;code&gt;margin-left: 0px&lt;/code&gt; in it which makes it slide
+differently than the child element. No idea what is the purpose of that but I can get behind that 0 margin so I add it to &lt;code&gt;.dropdown-content li&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The only issue is the font size. It seems like the scaling of the menu and its items doesn’t work like the scaling of other navbar
+elements. The title of the dropdown menu never scales while its sub elements does. Inspecting the elements lead me to something I never saw before. Properties of the elements seem to change based on the screen size, as directed by
+&lt;code&gt;@media&lt;/code&gt; sections. These sections are followed by something that looks like a condition &lt;code&gt;min-width: 600px&lt;/code&gt;
+It seems like one can set things to behave differently in different screen sizes. Scary stuff. I will have to copy the behaviour of regular links so the dropdown title behaves the same. Just to be sure I look for other &lt;code&gt;@media&lt;/code&gt; tags in the main css and there doesnt’t seem
+to be anything else other than 600 pixel minimum width condition.&lt;/p&gt;
+&lt;p&gt;I add&lt;/p&gt;
+&lt;pre class=&#34;css&#34;&gt;&lt;code&gt;@media (min-width: 600px) {
+    .dropdown .dropbtn {
+          font-size: 18px;
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to the &lt;code&gt;dropdown.css&lt;/code&gt; so it knows to scale up the dropdown menu titles when screen size
+grows.&lt;/p&gt;
+&lt;p&gt;Now I want sub elements of the dropdown menu to be slightly smaller and also have sclaing rules so I give them 12pt on small screens and 14pt on large screens. So the final css looks like this&lt;/p&gt;
+&lt;pre class=&#34;css&#34;&gt;&lt;code&gt;
+/* The dropdown container */
+.dropdown {
+  float: right;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  margin: 0 0 0 0px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #ddd;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 0px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content li {
+  font-size: 12px;
+  margin-left: 0;
+  float: none;
+  text-align: left;
+  color: black;
+  padding: 10px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content li:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+@media (min-width: 600px) {
+    .dropdown .dropbtn {
+          font-size: 18px;
+    }
+    .dropdown-content li {
+        font-size: 14px;
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Some parts of it could be not necessary and has inconsistent tabbing but we can deal with that later.&lt;/p&gt;
+&lt;p&gt;I probably need to &lt;a href=&#34;https://github.com/rstudio/blogdown/issues/155&#34;&gt;ask someone&lt;/a&gt; about what the deal with the definition of that first
+child in the theme css is…&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-favicon&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;A favicon&lt;/h2&gt;
+&lt;p&gt;Adding a favicon is easy enough. Just get your favicon.ico file into &lt;code&gt;static&lt;/code&gt; and add &lt;code&gt;&amp;lt;link rel=&amp;quot;icon&amp;quot; type=&amp;quot;image/png&amp;quot; href=&amp;quot;favicon.ico&amp;quot;&amp;gt;&lt;/code&gt; somewhere in the head. Keep &lt;a href=&#34;https://stackoverflow.com/questions/2208933/how-do-i-force-a-favicon-refresh&#34;&gt;this&lt;/a&gt; in mind if you ever want to change it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;category-links&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Category links&lt;/h2&gt;
+&lt;p&gt;I don’t like the main page looks right now. I think it would be better if I split the posts by category as I expect to
+write about wildly unrelated things and host wildy unrelated products. Which means a homepage that shows all the posts
+is not very helpful and needs to go. Through some experimentation, I know I can create links to all posts doing &lt;code&gt;http://oganm.com/post/&lt;/code&gt;, and to post within categories by doing &lt;code&gt;http://oganm.com/tags/blogdown/&lt;/code&gt; or &lt;code&gt;http://oganm.com/categories/notes-to-self/&lt;/code&gt;. Why post is singular while other stuff is plural? Doesn’t matter.&lt;/p&gt;
+&lt;p&gt;I start with creating a dropdown menu for my posts. I will be adding categories here as they become relevant. Currently it only has “Notes to self” option which
+is the category I assigned to this post. I suspect there’ll be an automated way to do this by looping over the categories or tags but I can look into that later. So currently my &lt;code&gt;[[menu.main]]&lt;/code&gt; list in the &lt;code&gt;config.toml&lt;/code&gt; looks like this&lt;/p&gt;
+&lt;pre class=&#34;toml&#34;&gt;&lt;code&gt;[[menu.main]]
+    name = &amp;quot;About&amp;quot;
+    url = &amp;quot;/about/&amp;quot;
+    weight = -1
+[[menu.main]]
+    name = &amp;quot; &amp;quot;
+    identifier = &amp;quot;github&amp;quot;
+    pre = &amp;quot;fab fa-github&amp;quot;
+    url = &amp;quot;https://github.com/oganm&amp;quot;
+    weight = 1
+[[menu.main]]
+    name = &amp;quot; &amp;quot;
+    identifier = &amp;quot;twitter&amp;quot;
+    pre = &amp;quot;fab fa-twitter&amp;quot;
+    url = &amp;quot;https://twitter.com/oganm&amp;quot;
+    weight = 2
+[[menu.main]]
+    name = &amp;quot;Tools&amp;quot;
+    identifier = &amp;quot;tools&amp;quot;
+    weight = 3
+[[menu.main]]
+    name = &amp;quot;5e char sheet printer&amp;quot;
+    parent = &amp;quot;tools&amp;quot;
+    url = &amp;quot;https://oganm.com/shiny/printSheetApp&amp;quot;
+[[menu.main]]
+    name = &amp;quot;5e interactive sheet&amp;quot;
+    parent = &amp;quot;tools&amp;quot;
+    url = &amp;quot;http://oganm.com/shiny/interactiveSheet/&amp;quot;
+[[menu.main]]
+    name = &amp;quot;Blog&amp;quot;
+    identifier = &amp;quot;blog&amp;quot;
+    weight = 4
+[[menu.main]]
+    name = &amp;quot;Notes to self&amp;quot;
+    parent = &amp;quot;blog&amp;quot;
+    url = &amp;quot;/categories/notes-to-self/&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Hmmm… what?&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/settingUp/nesting.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Ok this was totally unexpected. How the hell did that happen. I am guessing this will be
+a missing html closing tag from the time I wrote the dropdown menu code so I go back to &lt;code&gt;nav.html&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ if .HasChildren}}
+        &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+            &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}
+              &amp;lt;i class=&amp;quot;fas fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+            &amp;lt;/button&amp;gt;
+            &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+                {{range .Children}}
+                    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+                {{ end }}
+{{ else }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;yep, the &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt; that opens the dropdown menu never closes… I am surprised the entire site didn’t end up under that menu.
+So let’s change that with&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ if .HasChildren}}
+        &amp;lt;div class=&amp;quot;dropdown&amp;quot;&amp;gt;
+            &amp;lt;button class=&amp;quot;dropbtn&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}
+              &amp;lt;i class=&amp;quot;fas fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;
+            &amp;lt;/button&amp;gt;
+            &amp;lt;div class=&amp;quot;dropdown-content&amp;quot;&amp;gt;
+                {{range .Children}}
+                    &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;{{ .URL }}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;{{ .Pre }}&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;amp;nbsp; {{ .Name }}&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+                {{ end }}
+            &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+{{ else }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And sure enough we get the desired result.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/settingUp/correctNest.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Wait a minute no we don’t! Why did it place the tools tab before blog tab. Weren’t the weights
+responsible for keeping the correct order? I try shifting the weights of other objects and they to seem to follow the correct order for the most
+part. But dropdown menu’s are ignoring the ordering. I look at the page code and see that the code is generated in the correct order.
+So we must have a problem with the CSS. I remember having similar problems with &lt;code&gt;float&lt;/code&gt; options before so I remove&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;float: right;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;for the &lt;code&gt;dropdown&lt;/code&gt; class.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/settingUp/nofloat.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Well they are in the correct order now but also on top each other… Based on how the &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; tags are configured, It seems like doing&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;display: inline-block;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Somewhat solves the issue. Now they are not aligned with the rest of the icons though.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../images/settingUp/misaligned.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;It is not horrible so I’ll leave it like that for now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;google-analytics-and-disqus&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Google analytics and disqus&lt;/h2&gt;
+&lt;p&gt;This is an easy problem to solve. I create the tracking code from the google analytic page and paste it to
+&lt;code&gt;config.toml&lt;/code&gt;’s &lt;code&gt;googleAnalytics&lt;/code&gt; setting. However when I tested it there was no traffic.&lt;/p&gt;
+&lt;p&gt;After a short googling I remembered I use browser plugins to stop google from tracking me. I am now happy to see that it works on other browsers.&lt;/p&gt;
+&lt;p&gt;For disqus I just created a forum from disqus page and added the code in to the &lt;code&gt;config.toml&lt;/code&gt;. It just worked.&lt;/p&gt;
+&lt;p&gt;I remember disqus adding horrible ads all around though. That didn’t seem to happen now even when I made sure I am not using an adblocker. I should probably ask Dean about it later. He had issues with ads before.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;homepage&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Homepage&lt;/h2&gt;
+&lt;p&gt;Now we need to replace the default homepage that shows all posts. I’ll go back to Alison Hill’s slides for that. Seems like I
+need to place an &lt;code&gt;index.html&lt;/code&gt; to the layouts section. A question is what do I want my homepage to look like. Also do I need an About page if I am going to have a homepage? All the big questions…&lt;/p&gt;
+&lt;p&gt;I kinda like how the academic theme home looks, I can try to replicate it. At this point I copied or attempted to copy so much stuff from the academic theme that I might as well switch to it. But I’ll let the sunk cost fallacy rule the day for now.&lt;/p&gt;
+&lt;p&gt;For starters, I know I don’t want to deal with html. This is where I part from Alison Hill’s slides again as the way she does it looks like it’ll force me edit html. To make a markdown file render, I figured I could just make a &lt;code&gt;index.md&lt;/code&gt; or &lt;code&gt;index.Rmd&lt;/code&gt; on the &lt;code&gt;content&lt;/code&gt; dir. Sure enough creating that file replaces the index file that lists the posts. However since this file is created based on &lt;code&gt;single.html&lt;/code&gt; of the template, just like posts, it also has a disqus commenting section. This means I need to create my own &lt;code&gt;single.html&lt;/code&gt; and make the appearance of disqus conditional. I place the code that generates the discus thingy in an if caluse.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{if .Params.disqus}}
+    {{ partial &amp;quot;disqus.html&amp;quot; .}}
+{{end}}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This means I in my &lt;code&gt;disqus.Rmd&lt;/code&gt; I can set &lt;code&gt;disqus: false&lt;/code&gt; using the yaml and discus section should disappear… And it did. So I guess I am done for now. I will delete the about file now and if I change anything else, I will return…&lt;/p&gt;
+&lt;p&gt;Well that didn’t take long did it. Turns out you can’t have an &lt;code&gt;index.Rmd&lt;/code&gt; in &lt;code&gt;content&lt;/code&gt;. &lt;a href=&#34;https://discourse.gohugo.io/t/render-index-md-as-single/5533&#34;&gt;It has to be named &lt;code&gt;_index.Rmd&lt;/code&gt;&lt;/a&gt;. The annoying thing is, this causes updates to fail silently while existing posts and front page updates work fine…&lt;/p&gt;
+&lt;p&gt;And now that I use &lt;code&gt;_index.Rmd&lt;/code&gt;, the posts appear underneath again. Should have expected that… That is because the &lt;code&gt;list.html&lt;/code&gt; file in layout is being used. Should have listened to Alison Hill… Here’s the relevant bit from &lt;code&gt;list.html&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;  &amp;lt;article class=&amp;quot;article&amp;quot;&amp;gt;
+    &amp;lt;div class=&amp;quot;article-content&amp;quot;&amp;gt;
+      {{ .Content }}
+    &amp;lt;/div&amp;gt;
+  &amp;lt;/article&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It seems like the &lt;code&gt;list.html&lt;/code&gt; includes the &lt;code&gt;_index.Rmd&lt;/code&gt; when rendering using the &lt;code&gt;{{ .Content }}&lt;/code&gt; tag. That part is all I need so I can create an &lt;code&gt;index.html&lt;/code&gt; in &lt;code&gt;layouts&lt;/code&gt; that only copies the relevant bits from &lt;code&gt;list.html&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;html&#34;&gt;&lt;code&gt;{{ partial &amp;quot;header.html&amp;quot; . }}
+
+&amp;lt;main class=&amp;quot;content&amp;quot; role=&amp;quot;main&amp;quot;&amp;gt;
+  &amp;lt;article class=&amp;quot;article&amp;quot;&amp;gt;
+    &amp;lt;div class=&amp;quot;article-content&amp;quot;&amp;gt;
+    {{.Content}}
+    &amp;lt;/div&amp;gt;
+  &amp;lt;/article&amp;gt;
+&amp;lt;/main&amp;gt;
+
+{{ partial &amp;quot;footer.html&amp;quot; . }}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Also it turns out I need to add &lt;code&gt;disqus: true&lt;/code&gt; on the beginning of my posts now
+to enable disqus because the default doesn’t seem to be true. Didn’t notice it when index
+file was blocking updates. Also since I am using the &lt;code&gt;index.html&lt;/code&gt; as a template now, disqus argument
+might not be necassarry at all but I will keep it to use in posts in case I want to suppress the masses.&lt;/p&gt;
+&lt;p&gt;I finally solved the alignment of the navbar items by adding a &lt;code&gt;vertical-align: middle&lt;/code&gt; to both &lt;code&gt;.nav-links li&lt;/code&gt; and &lt;code&gt;.dropdown&lt;/code&gt; in the css.&lt;/p&gt;
+&lt;p&gt;Ok now I’m done I think…&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>
