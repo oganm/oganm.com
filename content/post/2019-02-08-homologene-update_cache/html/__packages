@@ -1,0 +1,8 @@
+base
+readr
+magrittr
+dplyr
+geneSynonym
+homologene
+purrr
+markerGeneProfile

@@ -3,7 +3,8 @@ languageCode = "en-us"
 title = "B. Ogan Mancarci"
 theme = "hugo-lithium"
 googleAnalytics = "UA-111816736-3"
-disqusShortname = "oganm"
+# disqusShortname = "oganm/oganm.com"
+hede = "oganm/oganm.com"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 relativeurls = true
 enableEmoji = false
@@ -93,6 +94,7 @@ enableEmoji = false
     author = "Ogan Mancarci"
 	customCSS = ["css/dropdown.css?v=1","css/navbarcolors.css?v=1","css/mainoverwrite.css?v=1","css/misc.css"]
 	preCSS = ["css/grid12.css"]
+	utterances = "oganm/oganm.com"
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.12.0"
     highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"

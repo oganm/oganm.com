@@ -6,10 +6,219 @@
     <description>Recent content in R on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building an Interactive Fiction System for D&amp;D 5e</title>
+      <link>/5e-interactive-fiction/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/5e-interactive-fiction/</guid>
+      <description>
+&lt;script src=&#34;../../rmarkdown-libs/htmlwidgets/htmlwidgets.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;../../rmarkdown-libs/jquery/jquery.min.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;../../rmarkdown-libs/leaflet/leaflet.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;../../rmarkdown-libs/leaflet/leaflet.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;../../rmarkdown-libs/leafletfix/leafletfix.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;../../rmarkdown-libs/Proj4Leaflet/proj4-compressed.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;../../rmarkdown-libs/Proj4Leaflet/proj4leaflet.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;../../rmarkdown-libs/rstudio_leaflet/rstudio_leaflet.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;../../rmarkdown-libs/leaflet-binding/leaflet.js&#34;&gt;&lt;/script&gt;
+
+&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#picking-the-adventure-format&#34;&gt;Picking the adventure format&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#dealing-with-maps&#34;&gt;Dealing with maps&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Some time ago I noticed an interesting product on DM’s Guild. Someone has written
+a &lt;a href=&#34;https://www.dmsguild.com/product/271175/Solo-Adventure-Bundle-1&#34;&gt;series of solo adventures&lt;/a&gt; that are played in a similar manner to choose your own adventure games
+of the good old days. An adventure comes as a pdf file, describing a scene, presenting the player with options and directing the player to another section in the pdf file based on their choices. What makes in different is that it incorporates rules of D&amp;amp;D, asking for
+checks and other rolls when needed, setting up encounters on grid maps, prompting the player to use
+certain items from their inventory if they have them etc…&lt;/p&gt;
+&lt;p&gt;While playing, I found myself with three pdf files open in front of me. One for narrative sections, another copy of the same file for tile-map descriptions, one to see the actual tile-maps. At the same time on my browser, I have my own &lt;a href=&#34;https://oganm.com/shiny/interactiveSheet&#34;&gt;interactive character sheet&lt;/a&gt; app in one tab, rule references in few other tabs, and a text editor window to keep notes. It was an enjoyable but busy experience.&lt;/p&gt;
+&lt;p&gt;I stopped and got back to work while thinking to myself, “it’s a shame that this can’t be automated with ease” which made me decide to write an application that would do just that. I announced my intentions to the &lt;a href=&#34;https://www.reddit.com/r/dndnext/comments/ezpcek/market_research_choose_your_adventure_system_for/&#34;&gt;supportive 5th Edition community&lt;/a&gt;, got their input for a few issues and started building the application. We are here now. &lt;strong&gt;I will be writing this during the production process, so it will be a mixture of a design document and a summary of pitfalls that someone whose expertise isn’t to develop web-tools will fall along the way. It will be edited as I continue building the application as some sort of a diary. Sections might be added non-chronologically to create some appearance of narrative and to keep the related parts close to each other.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I do bioinformatics by trade and my “native” programming language is R. Surely a statistical computing language isn’t the best tool for this task but rest of my D&amp;amp;D related code that I intend to re-use is written in R already so I’m sticking to it… The whole thing will likely be a combination of R and javascript haphazardly glued together.&lt;/p&gt;
+&lt;div id=&#34;picking-the-adventure-format&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Picking the adventure format&lt;/h2&gt;
+&lt;p&gt;I want to start the project by defining the file format for the adventure first. This will allow me to see what features I need to implement. My initial thoughts on this are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;It should be easy to learn. Not even drastically different from creating a pdf like the solo adventures that inspired me in the first place. So the file format will probably be markdown with some special syntax&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;I don’t have a background on language design. So it can’t be very complex I am hoping to get away with using existing markdown parsers to tokenize the input. I will probably be using &lt;code&gt;commonmark&lt;/code&gt; package for this purpose.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;It will not be executing user generated R code. I briefly considered allowing
+using RMD files but since the application will be run on my servers, I don’t want
+people to have that kind of power. This also means that the language will not be anywhere near Turing complete.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;I am aware that there are interactive fiction writing software out there with
+their own languages, so I might take a look at the stuff they did to see anything
+I might need.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Upon some reading and Redditting, I came up with a list of features. The format should support:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Asking for characters to be uploaded. Currently I do not plan on having the ability
+to restrict the nature of these characters in any way. Creator should explain
+what the suggested level for the adventure is and what kind of character would be preferred but there will be no validation. It should be possible to have multiple party members if the adventure calls for it. Currently unsure if I will allow players to add more characters outside the creator’s instructions.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to create scenes that can be linked to other scenes through words/buttons.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A way to add scenes that are appended after a scene rather than force a full
+scene switch.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to add buttons for character features such as saves or ability checks.
+If multiple characters are present in the party, choosing between adding buttons for all party members, just picking member with the maximum modifier or rolling a group check&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to add referencable objects. These will represent characters, monster stat blocks, items, spells. They will have to be represented in a standard format
+which will probably a table, under headers with reserved names. I will use the &lt;code&gt;import5eChar&lt;/code&gt;’s character definition &lt;code&gt;monsteR&lt;/code&gt;’s monster definition and &lt;code&gt;wizaRd&lt;/code&gt;’s spell definition. Not sure how to treat the items.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to add a custom PC to the party&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to refer to external files. This will turn the format into something
+like a zip file rather than a single markdown file but it should make working on a
+project easier. One can also make compendiums of referencable objects to be used
+in multiple projects. Possibly I may allow including things like image files in here
+as well though this will add some overhead to the server. Could be better
+to just trust that there will always be a URL with the required resources.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to suggest changes to the player’s inventory, notes, character and any
+other record keeping device I end up adding.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to check player record keeping devices for some basic conditions, probably regex dependent to alter a scene. The suggested use of this feature is to
+highlight certain options rather than restricting them.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Being able to start encounters with a defined map image and monsters tokens/data&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pre-built PCs for the adventure&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Many interactive fiction software has ways to add some flare to the text being
+displayed I think I will leave this out or now. Normal html tags continue to work
+and I can allow people to use their own CSS files if they are really into it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Finally, as a final sanity check, I want to make sure that any interactive
+action that was attempted in the 5e Solo Gamebooks to be supported.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This should have been followed by a minimal example of a file but I got distracted for now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;dealing-with-maps&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Dealing with maps&lt;/h2&gt;
+&lt;p&gt;The most annoying task for me in this project seems to be the grid combat layer since I am
+not good at javascript myself and there aren’t specialized tools to deal with the issue
+We need the ability to use a custom background image to act as a map and some draggable tokens. It would be a bonus to be able align tokens to a grid but I have concerns about it since it would force content creator to align the files properly as well.&lt;/p&gt;
+&lt;p&gt;A quick search for a javascript library that I may port using &lt;code&gt;htmlwidgets&lt;/code&gt; lead to
+nowhere. So it appears that the best scenario here is to use &lt;code&gt;leaflet&lt;/code&gt; or something similar. From memory I can say leaflet can have image overlays, it can add markers with custom images on a map. So I should be able to use a leaflet map without a background tile
+layer. Maybe I should consider allowing creation of actual tile layers to allow for larger maps but let’s stick to the basics for now.&lt;/p&gt;
+&lt;p&gt;Initially, googling for how to add images to a leaflet map lead me to the &lt;code&gt;addRasterImage&lt;/code&gt; function. However it appears
+that it &lt;a href=&#34;https://github.com/rstudio/leaflet/issues/371&#34;&gt;doesn’t behave well&lt;/a&gt; with non-projected coordinate systems which we want to be using because we are not mapping a globe here. Also my quick and dirty attempt to show &lt;a href=&#34;https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3&#34;&gt;this&lt;/a&gt; random map I found lead to an undesirable result.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(leaflet)
+library(raster)
+library(magrittr)
+
+download.file(&amp;#39;https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3&amp;#39;,
+              destfile = &amp;#39;map.jpg&amp;#39;)
+map = raster::raster(&amp;#39;map.jpg&amp;#39;)
+crs(map) = CRS(&amp;quot;+init=epsg:4326&amp;quot;)
+
+leaflet() %&amp;gt;%
+    leaflet::addRasterImage(map)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../files/5eif/badPic.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;After a quick visit to &lt;a href=&#34;https://stackoverflow.com/questions/60160039/adding-just-an-arbitrary-image-to-a-leaflet-map&#34;&gt;stackoverflow&lt;/a&gt; I don’t know what exactly is wrong with &lt;code&gt;addRasterImage&lt;/code&gt; function but I know that I can use javascript to work around it.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;imageURL = &amp;#39;https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3&amp;#39;
+
+# get image data. we&amp;#39;ll use this to set the image size
+imageData = 
+    magick::image_read(imageURL) %&amp;gt;% magick::image_info()
+
+leaflet(options = leafletOptions(crs = leafletCRS(&amp;#39;L.CRS.Simple&amp;#39;), minZoom = -1)) %&amp;gt;%
+        setView(0,0,zoom = -1) %&amp;gt;%
+        htmlwidgets::onRender(glue::glue(&amp;quot;
+      function(el, x) {
+        var myMap = this;
+        var imageUrl = &amp;#39;&amp;lt;imageURL&amp;gt;&amp;#39;;
+        var imageBounds = [[&amp;lt;-imageData$height/2&amp;gt;,&amp;lt;-imageData$width/2&amp;gt;], [&amp;lt;imageData$height/2&amp;gt;,&amp;lt;imageData$width/2&amp;gt;]];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(myMap);
+      }
+      &amp;quot;,.open = &amp;#39;&amp;lt;&amp;#39;, .close = &amp;#39;&amp;gt;&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-1&#34; style=&#34;width:672px;height:480px;&#34; class=&#34;leaflet html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-1&#34;&gt;{&#34;x&#34;:{&#34;options&#34;:{&#34;minZoom&#34;:-1,&#34;crs&#34;:{&#34;crsClass&#34;:&#34;L.CRS.Simple&#34;,&#34;code&#34;:null,&#34;proj4def&#34;:null,&#34;projectedBounds&#34;:null,&#34;options&#34;:{}}},&#34;setView&#34;:[[0,0],-1,[]]},&#34;evals&#34;:[],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x, data) {\n  return (function(el, x) {\n  var myMap = this;\n  var imageUrl = &#39;https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3&#39;;\n  var imageBounds = [[-1020.5,-1404], [1020.5,1404]];\n\n  L.imageOverlay(imageUrl, imageBounds).addTo(myMap);\n}).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
+&lt;p&gt;So now we can show arbitrary images as maps using leaflet. If we add movable tokens of different sizes to this map, the basic functionality will be complete. &lt;code&gt;addMarkers&lt;/code&gt; function of leaflet is the easiest way to do this. You give it an image and coordinates and it places it where you want. Lets use a random map I grabbed from &lt;a href=&#34;https://davesmapper.com/&#34;&gt;Dave’s Mapper&lt;/a&gt;
+and try adding some tokens that are grabbed from &lt;a href=&#34;https://game-icons.net/1x1/cathelineau/swordman.html&#34;&gt;game-icons.net&lt;/a&gt;. While doing that we should make sure that the size of the token we are adding matches the size of a single square on the map. In the actual app, the creator should be able to give a unit square size and spawn characters of&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;imagePath = &amp;#39;files/5eif/tile.png&amp;#39;
+
+imageData = 
+    magick::image_read(imagePath) %&amp;gt;% magick::image_info()
+
+# this tile is 10x10 squares
+gridWidth = imageData$height/10
+gridHeight = imageData$width/10
+
+leaflet(options = leafletOptions(crs = leafletCRS(&amp;#39;L.CRS.Simple&amp;#39;), minZoom = 0)) %&amp;gt;%
+        setView(0,0,zoom = 0) %&amp;gt;%
+    addMarkers(lng = gridWidth/2, lat = gridHeight/2,options =  markerOptions(draggable = TRUE),
+               icon = list(iconUrl = &amp;#39;https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg&amp;#39;, 
+                                    iconSize = c(gridHeight,gridWidth))) %&amp;gt;%
+        htmlwidgets::onRender(glue::glue(&amp;quot;
+      function(el, x) {
+        var myMap = this;
+        var imageUrl = &amp;#39;&amp;lt;imagePath&amp;gt;&amp;#39;;
+        var imageBounds = [[&amp;lt;-imageData$height/2&amp;gt;,&amp;lt;-imageData$width/2&amp;gt;], [&amp;lt;imageData$height/2&amp;gt;,&amp;lt;imageData$width/2&amp;gt;]];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(myMap);
+      }
+      &amp;quot;,.open = &amp;#39;&amp;lt;&amp;#39;, .close = &amp;#39;&amp;gt;&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-2&#34; style=&#34;width:672px;height:480px;&#34; class=&#34;leaflet html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-2&#34;&gt;{&#34;x&#34;:{&#34;options&#34;:{&#34;minZoom&#34;:0,&#34;crs&#34;:{&#34;crsClass&#34;:&#34;L.CRS.Simple&#34;,&#34;code&#34;:null,&#34;proj4def&#34;:null,&#34;projectedBounds&#34;:null,&#34;options&#34;:{}}},&#34;setView&#34;:[[0,0],0,[]],&#34;calls&#34;:[{&#34;method&#34;:&#34;addMarkers&#34;,&#34;args&#34;:[15,15,{&#34;iconUrl&#34;:{&#34;data&#34;:&#34;https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg&#34;,&#34;index&#34;:0},&#34;iconSize&#34;:[[30,30]]},null,null,{&#34;interactive&#34;:true,&#34;draggable&#34;:true,&#34;keyboard&#34;:true,&#34;title&#34;:&#34;&#34;,&#34;alt&#34;:&#34;&#34;,&#34;zIndexOffset&#34;:0,&#34;opacity&#34;:1,&#34;riseOnHover&#34;:false,&#34;riseOffset&#34;:250},null,null,null,null,null,{&#34;interactive&#34;:false,&#34;permanent&#34;:false,&#34;direction&#34;:&#34;auto&#34;,&#34;opacity&#34;:1,&#34;offset&#34;:[0,0],&#34;textsize&#34;:&#34;10px&#34;,&#34;textOnly&#34;:false,&#34;className&#34;:&#34;&#34;,&#34;sticky&#34;:true},null]}],&#34;limits&#34;:{&#34;lat&#34;:[15,15],&#34;lng&#34;:[15,15]}},&#34;evals&#34;:[],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x, data) {\n  return (function(el, x) {\n  var myMap = this;\n  var imageUrl = &#39;../files/5eif/tile.png&#39;;\n  var imageBounds = [[-150,-150], [150,150]];\n\n  L.imageOverlay(imageUrl, imageBounds).addTo(myMap);\n}).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
+&lt;p&gt;Now we have a token that is appears to be at the right size on the map and fits a
+tile square. However, if you zoom in, you’ll notice that the size of the marker
+doesn’t scale with the map’s zoom level. Markers’ normal use case is to be map markers
+that are visible regardless of map’s zoom level so they are not scaled by default.
+Also there are no options to make them simply resize on a zoom event. After searching for a while
+I find &lt;a href=&#34;https://gis.stackexchange.com/questions/216558/leaflet-resize-markers-in-layer-when-zoom-in&#34;&gt;this&lt;/a&gt; answer
+in stack exchange which leads me to believe I’ll have to use
+&lt;a href=&#34;https://leafletjs.com/reference-1.6.0.html#map-zoomend&#34;&gt;zoomend&lt;/a&gt; event to resize the tokens when zoom level changes.&lt;/p&gt;
+&lt;p&gt;There is some experimenting in between finding that answer and writing the code below but basically, I found that
+if you have multiple tokens in different layers, you have to apply &lt;code&gt;setIcon&lt;/code&gt; function on each layer to update them all. I also seem to be doing something wrong when using &lt;code&gt;addMarker&lt;/code&gt; function as is doesn’t like me adding multiple markers with a single call so I’ll likely have to iterate over multiple layers to change the icon size. The easiest way to iterate a bunch of layers appears to be grouping them together and using &lt;code&gt;map.layerManager.getLayerGroup()&lt;/code&gt; to iterate over all the layers. We will be adding the code required into the
+&lt;code&gt;htmlwidgets::onRender&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;imagePath = &amp;#39;files/5eif/tile.png&amp;#39;
+
+imageData = 
+    magick::image_read(imagePath) %&amp;gt;% magick::image_info()
+
+# this tile is 10x10 squares
+gridWidth = imageData$height/10
+gridHeight = imageData$width/10
+
+leaflet(options = leafletOptions(crs = leafletCRS(&amp;#39;L.CRS.Simple&amp;#39;), minZoom = 0)) %&amp;gt;%
+        setView(0,0,zoom = 0) %&amp;gt;%
+    addMarkers(lng = gridWidth/2, lat = gridHeight/2,group = &amp;#39;tokens&amp;#39;,options =  markerOptions(draggable = TRUE),
+               icon = list(iconUrl = &amp;#39;https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg&amp;#39;, 
+                                    iconSize = c(gridHeight,gridWidth))) %&amp;gt;%
+    addMarkers(lng = gridWidth/2+2*gridWidth, lat = gridHeight/2,group = &amp;#39;tokens&amp;#39;,options =  markerOptions(draggable = TRUE),
+               icon = list(iconUrl = &amp;#39;https://game-icons.net/icons/000000/ffffff/1x1/lorc/bowman.svg&amp;#39;, 
+                                    iconSize = c(gridHeight,gridWidth))) %&amp;gt;% 
+        htmlwidgets::onRender(glue::glue(&amp;quot;
+      function(el, x) {
+        var myMap = this;
+        var imageUrl = &amp;#39;/&amp;lt;imagePath&amp;gt;&amp;#39;;
+        var imageBounds = [[&amp;lt;-imageData$height/2&amp;gt;,&amp;lt;-imageData$width/2&amp;gt;], [&amp;lt;imageData$height/2&amp;gt;,&amp;lt;imageData$width/2&amp;gt;]];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(myMap);
+        
+        myMap.on(&amp;#39;zoomend&amp;#39;, function() {
+            var currentZoom = myMap.getZoom();
+            myMap.layerManager.getLayerGroup(&amp;#39;tokens&amp;#39;).getLayers().forEach(function(value,i){
+                value.setIcon(L.icon({iconUrl: value._icon.src, iconSize: [&amp;lt;gridHeight&amp;gt;*Math.pow(2,currentZoom),&amp;lt;gridWidth&amp;gt;*Math.pow(2,currentZoom)]}))
+            })
+        
+        })
+      }
+      &amp;quot;,.open = &amp;#39;&amp;lt;&amp;#39;, .close = &amp;#39;&amp;gt;&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-3&#34; style=&#34;width:672px;height:480px;&#34; class=&#34;leaflet html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-3&#34;&gt;{&#34;x&#34;:{&#34;options&#34;:{&#34;minZoom&#34;:0,&#34;crs&#34;:{&#34;crsClass&#34;:&#34;L.CRS.Simple&#34;,&#34;code&#34;:null,&#34;proj4def&#34;:null,&#34;projectedBounds&#34;:null,&#34;options&#34;:{}}},&#34;setView&#34;:[[0,0],0,[]],&#34;calls&#34;:[{&#34;method&#34;:&#34;addMarkers&#34;,&#34;args&#34;:[15,15,{&#34;iconUrl&#34;:{&#34;data&#34;:&#34;https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg&#34;,&#34;index&#34;:0},&#34;iconSize&#34;:[[30,30]]},null,&#34;tokens&#34;,{&#34;interactive&#34;:true,&#34;draggable&#34;:true,&#34;keyboard&#34;:true,&#34;title&#34;:&#34;&#34;,&#34;alt&#34;:&#34;&#34;,&#34;zIndexOffset&#34;:0,&#34;opacity&#34;:1,&#34;riseOnHover&#34;:false,&#34;riseOffset&#34;:250},null,null,null,null,null,{&#34;interactive&#34;:false,&#34;permanent&#34;:false,&#34;direction&#34;:&#34;auto&#34;,&#34;opacity&#34;:1,&#34;offset&#34;:[0,0],&#34;textsize&#34;:&#34;10px&#34;,&#34;textOnly&#34;:false,&#34;className&#34;:&#34;&#34;,&#34;sticky&#34;:true},null]},{&#34;method&#34;:&#34;addMarkers&#34;,&#34;args&#34;:[15,75,{&#34;iconUrl&#34;:{&#34;data&#34;:&#34;https://game-icons.net/icons/000000/ffffff/1x1/lorc/bowman.svg&#34;,&#34;index&#34;:0},&#34;iconSize&#34;:[[30,30]]},null,&#34;tokens&#34;,{&#34;interactive&#34;:true,&#34;draggable&#34;:true,&#34;keyboard&#34;:true,&#34;title&#34;:&#34;&#34;,&#34;alt&#34;:&#34;&#34;,&#34;zIndexOffset&#34;:0,&#34;opacity&#34;:1,&#34;riseOnHover&#34;:false,&#34;riseOffset&#34;:250},null,null,null,null,null,{&#34;interactive&#34;:false,&#34;permanent&#34;:false,&#34;direction&#34;:&#34;auto&#34;,&#34;opacity&#34;:1,&#34;offset&#34;:[0,0],&#34;textsize&#34;:&#34;10px&#34;,&#34;textOnly&#34;:false,&#34;className&#34;:&#34;&#34;,&#34;sticky&#34;:true},null]}],&#34;limits&#34;:{&#34;lat&#34;:[15,15],&#34;lng&#34;:[15,75]}},&#34;evals&#34;:[],&#34;jsHooks&#34;:{&#34;render&#34;:[{&#34;code&#34;:&#34;function(el, x, data) {\n  return (function(el, x) {\n  var myMap = this;\n  var imageUrl = &#39;../files/5eif/tile.png&#39;;\n  var imageBounds = [[-150,-150], [150,150]];\n\n  L.imageOverlay(imageUrl, imageBounds).addTo(myMap);\n  \n  myMap.on(&#39;zoomend&#39;, function() {\n  \tvar currentZoom = myMap.getZoom();\n  \tmyMap.layerManager.getLayerGroup(&#39;tokens&#39;).getLayers().forEach(function(value,i){\n  \t\tvalue.setIcon(L.icon({iconUrl: value._icon.src, iconSize: [30*Math.pow(2,currentZoom),30*Math.pow(2,currentZoom)]}))\n  \t})\n  \n  })\n}).call(this.getMap(), el, x, data);\n}&#34;,&#34;data&#34;:null}]}}&lt;/script&gt;
+&lt;p&gt;As it stands, we’re done at a bare bones level. I’ll have to add groups for each size category unless I find a reliable way to pull token size. Token object properties doesn’t seem to be consistently updated on a size change so I don’t trust them yet.
+It shouldn’t affect performance too much… I will also turn this into a module with the inputs:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;background map&lt;/li&gt;
+&lt;li&gt;minimum, maximum zoom&lt;/li&gt;
+&lt;li&gt;initial zoom&lt;/li&gt;
+&lt;li&gt;image paths for the tokens&lt;/li&gt;
+&lt;li&gt;size category for the tokens (need to decide what to do about possible rectangles even though 5e doesn’t technically have them)&lt;/li&gt;
+&lt;li&gt;initial locations of the tokens. If no location is provided, possibly line them on the top of the map so the player can place the tokens as instructed. It would be difficult to have conditional token placement unless alternative encounter scenes are created.&lt;/li&gt;
+&lt;li&gt;possibly pop up data for the tokens. At a bare minimum, I should be adding names. Might display more information if I can.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Using different/modified version of the same package</title>
@@ -146,8 +355,8 @@ sprites = sideBySide %&amp;gt;%
 
 sprites %&amp;gt;% image_write(&amp;#39;files/mri-vis/brainSprites.jpg&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  571873 30.6    1202344 64.3  1085963 58.0
-## Vcells 1003036  7.7    8388608 64.0  3218271 24.6&lt;/code&gt;&lt;/pre&gt;
+## Ncells  579905 31.0    1201512 64.2  1201512 64.2
+## Vcells 1016680  7.8    8388608 64.0  2490311 19.0&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;In the end &lt;a href=&#34;../../files/mri-viz/brainSprites.jpg&#34;&gt;this&lt;/a&gt; is what the sprites look like.
 We can use this to create our visualisation. You can view different parts of the
 brain by clicking the area of interest in any of the slices.&lt;/p&gt;
@@ -156,21 +365,21 @@ brain by clicking the area of interest in any of the slices.&lt;/p&gt;
     spriteWidth = 256,
     flagCoordinates = TRUE)&lt;/code&gt;&lt;/pre&gt;
 &lt;div&gt;
-&lt;canvas id=&#34;id26bd541d2400&#34;&gt;
-&lt;img id=&#34;id26bd54013ed5&#34; src=&#34;../files/mri-vis/brainSprites.jpg&#34;/&gt;
-&lt;img id=&#34;id26bd3cd61d73&#34;/&gt;
+&lt;canvas id=&#34;id46873911df74&#34;&gt;
+&lt;img id=&#34;id46871511b13b&#34; src=&#34;../files/mri-vis/brainSprites.jpg&#34;/&gt;
+&lt;img id=&#34;id46876a9a825e&#34;/&gt;
 &lt;/div&gt;
-&lt;script&gt;$( id26bd54013ed5 ).load(function() {
+&lt;script&gt;$( id46871511b13b ).load(function() {
 var brain = brainsprite({
-canvas: &#39;id26bd541d2400&#39;, // That is the ID of the canvas to build slices into
-sprite: &#39;id26bd54013ed5&#39;, // That is the ID of the sprite image that includes all (sagital) brain slices
+canvas: &#39;id46873911df74&#39;, // That is the ID of the canvas to build slices into
+sprite: &#39;id46871511b13b&#39;, // That is the ID of the sprite image that includes all (sagital) brain slices
 nbSlice: { &#39;Y&#39;:256 , &#39;Z&#39;:256 },
 colorBackground: &#39;#000000&#39;,
 colorFont: &#39;#FFFFFF&#39;,
  flagCoordinates: true,
  origin: {X: 0, Y: 0, Z: 0},
  onclick: function shinyUpdate(brain){
-     Shiny.onInputChange(&#39;id26bd541d2400&#39;,[brain.coordinatesSlice.X,brain.coordinatesSlice.Y ,brain.coordinatesSlice.Z])
+     Shiny.onInputChange(&#39;id46873911df74&#39;,[brain.coordinatesSlice.X,brain.coordinatesSlice.Y ,brain.coordinatesSlice.Z])
  }});
 });&lt;/script&gt;
 &lt;p&gt;Here, the first image is directly taken from the sprite file while the next two, depicting sagittal and coronal planes are generated by placing the images on top of each other and cutting a section.

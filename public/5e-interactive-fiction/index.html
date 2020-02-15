@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  	<link rel="icon" type="image/png" href="http://oganm.com/favicon.ico?v=1">
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.55.6" />
+<meta name="twitter:card" content="summary" >
+<meta name="twitter:site" content="@oganm" >
+<meta name="twitter:image" content="http://oganm.com/images/ogbrain.jpg" >
+
+
+<title>Building an Interactive Fiction System for D&amp;D 5e - B. Ogan Mancarci</title>
+
+
+<meta property="twitter:title" content="Building an Interactive Fiction System for D&amp;D 5e - B. Ogan Mancarci">
+<meta property="og:title" content="Building an Interactive Fiction System for D&amp;D 5e - B. Ogan Mancarci">
+
+
+
+  
+
+
+
+
+
+
+
+	
+	<meta property="author" content="Ogan Mancarci">
+  	
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="../css/grid12.css">
+
+<link rel="stylesheet" href="../css/fonts.css" media="all">
+<link rel="stylesheet" href="../css/main.css" media="all">
+
+<link rel="stylesheet" href="../css/dropdown.css?v=1">
+
+<link rel="stylesheet" href="../css/navbarcolors.css?v=1">
+
+<link rel="stylesheet" href="../css/mainoverwrite.css?v=1">
+
+<link rel="stylesheet" href="../css/misc.css">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="../" class="nav-logo">
+    <img src="../images/ogbrain.jpg"
+         width="50"
+         height="50"
+         alt="Logo"
+         title="">
+  </a>
+  <ul class="nav-links">
+    
+    	
+    		<li>
+	
+	<a href="https://github.com/oganm">  
+	
+	
+	
+		<i class='fab fa-github'></i>
+	
+	
+	
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<li>
+	
+	<a href="https://twitter.com/oganm">  
+	
+	
+	
+		<i class='fab fa-twitter'></i>
+	
+	
+	
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<li>
+	
+	<a href="mailto:ogan.mancarci@gmail.com">  
+	
+	
+	
+		<i class='fas fa-at'></i>
+	
+	
+	
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<li>
+	
+	<a href="https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&amp;hl=en">  
+	
+	
+	
+		<i class='fas fa-graduation-cap' aria-hidden></i>
+	
+	
+	Publications
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				<li>
+	
+	
+	
+		&nbsp;
+	
+	
+	Tools
+	
+	
+	
+</li>
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				
+    					<li>
+	
+	<a href="http://neuroexpresso.org">  
+	
+	
+	
+	
+	NeuroExpresso
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    	     	</div>
+    		</div>
+    	
+    
+    	
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				<li>
+	
+	
+	
+		&nbsp;
+	
+	
+	Fun tools
+	
+	
+	
+</li>
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				
+    					<li>
+	
+	<a href="https://oganm.com/shiny/interactiveSheet/">  
+	
+	
+	
+	
+	5e interactive sheet
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="https://oganm.com/shiny/printSheetApp">  
+	
+	
+	
+	
+	5e char sheet printer
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="https://oganm.com/shiny/swarm/">  
+	
+	
+	
+	
+	Swarm Simulator
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    	     	</div>
+    		</div>
+    	
+    
+    	
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				<li>
+	
+	<a href="../post/">  
+	
+	
+	
+	
+	Blog
+	
+	
+	
+	</a>
+	
+</li>
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				
+    					<li>
+	
+	<a href="../categories/code/">  
+	
+	
+	
+	
+	Code
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="../categories/other/">  
+	
+	
+	
+	
+	Other
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="../categories/notes-to-self/">  
+	
+	
+	
+	
+	Notes to self
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    	     	</div>
+    		</div>
+    	
+    
+
+  </ul>
+</nav>
+      </header>
+
+
+<main class="content" role="main">
+	
+	<article class="article">
+	
+	
+	
+	
+	
+	<h1 class="article-title">Building an Interactive Fiction System for D&amp;D 5e</h1>
+	
+
+	
+	<span class="article-date">2020/02/11</span>
+	
+	
+	<div class="article-content">
+	
+<script src="../rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="../rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="../rmarkdown-libs/leaflet/leaflet.css" rel="stylesheet" />
+<script src="../rmarkdown-libs/leaflet/leaflet.js"></script>
+<link href="../rmarkdown-libs/leafletfix/leafletfix.css" rel="stylesheet" />
+<script src="../rmarkdown-libs/Proj4Leaflet/proj4-compressed.js"></script>
+<script src="../rmarkdown-libs/Proj4Leaflet/proj4leaflet.js"></script>
+<link href="../rmarkdown-libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+<script src="../rmarkdown-libs/leaflet-binding/leaflet.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#picking-the-adventure-format">Picking the adventure format</a></li>
+<li><a href="#dealing-with-maps">Dealing with maps</a></li>
+</ul>
+</div>
+
+<p>Some time ago I noticed an interesting product on DM’s Guild. Someone has written
+a <a href="https://www.dmsguild.com/product/271175/Solo-Adventure-Bundle-1">series of solo adventures</a> that are played in a similar manner to choose your own adventure games
+of the good old days. An adventure comes as a pdf file, describing a scene, presenting the player with options and directing the player to another section in the pdf file based on their choices. What makes in different is that it incorporates rules of D&amp;D, asking for
+checks and other rolls when needed, setting up encounters on grid maps, prompting the player to use
+certain items from their inventory if they have them etc…</p>
+<p>While playing, I found myself with three pdf files open in front of me. One for narrative sections, another copy of the same file for tile-map descriptions, one to see the actual tile-maps. At the same time on my browser, I have my own <a href="https://oganm.com/shiny/interactiveSheet">interactive character sheet</a> app in one tab, rule references in few other tabs, and a text editor window to keep notes. It was an enjoyable but busy experience.</p>
+<p>I stopped and got back to work while thinking to myself, “it’s a shame that this can’t be automated with ease” which made me decide to write an application that would do just that. I announced my intentions to the <a href="https://www.reddit.com/r/dndnext/comments/ezpcek/market_research_choose_your_adventure_system_for/">supportive 5th Edition community</a>, got their input for a few issues and started building the application. We are here now. <strong>I will be writing this during the production process, so it will be a mixture of a design document and a summary of pitfalls that someone whose expertise isn’t to develop web-tools will fall along the way. It will be edited as I continue building the application as some sort of a diary. Sections might be added non-chronologically to create some appearance of narrative and to keep the related parts close to each other.</strong></p>
+<p>I do bioinformatics by trade and my “native” programming language is R. Surely a statistical computing language isn’t the best tool for this task but rest of my D&amp;D related code that I intend to re-use is written in R already so I’m sticking to it… The whole thing will likely be a combination of R and javascript haphazardly glued together.</p>
+<div id="picking-the-adventure-format" class="section level2">
+<h2>Picking the adventure format</h2>
+<p>I want to start the project by defining the file format for the adventure first. This will allow me to see what features I need to implement. My initial thoughts on this are:</p>
+<ul>
+<li><p>It should be easy to learn. Not even drastically different from creating a pdf like the solo adventures that inspired me in the first place. So the file format will probably be markdown with some special syntax</p></li>
+<li><p>I don’t have a background on language design. So it can’t be very complex I am hoping to get away with using existing markdown parsers to tokenize the input. I will probably be using <code>commonmark</code> package for this purpose.</p></li>
+<li><p>It will not be executing user generated R code. I briefly considered allowing
+using RMD files but since the application will be run on my servers, I don’t want
+people to have that kind of power. This also means that the language will not be anywhere near Turing complete.</p></li>
+<li><p>I am aware that there are interactive fiction writing software out there with
+their own languages, so I might take a look at the stuff they did to see anything
+I might need.</p></li>
+</ul>
+<p>Upon some reading and Redditting, I came up with a list of features. The format should support:</p>
+<ul>
+<li><p>Asking for characters to be uploaded. Currently I do not plan on having the ability
+to restrict the nature of these characters in any way. Creator should explain
+what the suggested level for the adventure is and what kind of character would be preferred but there will be no validation. It should be possible to have multiple party members if the adventure calls for it. Currently unsure if I will allow players to add more characters outside the creator’s instructions.</p></li>
+<li><p>Being able to create scenes that can be linked to other scenes through words/buttons.</p></li>
+<li><p>A way to add scenes that are appended after a scene rather than force a full
+scene switch.</p></li>
+<li><p>Being able to add buttons for character features such as saves or ability checks.
+If multiple characters are present in the party, choosing between adding buttons for all party members, just picking member with the maximum modifier or rolling a group check</p></li>
+<li><p>Being able to add referencable objects. These will represent characters, monster stat blocks, items, spells. They will have to be represented in a standard format
+which will probably a table, under headers with reserved names. I will use the <code>import5eChar</code>’s character definition <code>monsteR</code>’s monster definition and <code>wizaRd</code>’s spell definition. Not sure how to treat the items.</p></li>
+<li><p>Being able to add a custom PC to the party</p></li>
+<li><p>Being able to refer to external files. This will turn the format into something
+like a zip file rather than a single markdown file but it should make working on a
+project easier. One can also make compendiums of referencable objects to be used
+in multiple projects. Possibly I may allow including things like image files in here
+as well though this will add some overhead to the server. Could be better
+to just trust that there will always be a URL with the required resources.</p></li>
+<li><p>Being able to suggest changes to the player’s inventory, notes, character and any
+other record keeping device I end up adding.</p></li>
+<li><p>Being able to check player record keeping devices for some basic conditions, probably regex dependent to alter a scene. The suggested use of this feature is to
+highlight certain options rather than restricting them.</p></li>
+<li><p>Being able to start encounters with a defined map image and monsters tokens/data</p></li>
+<li><p>Pre-built PCs for the adventure</p></li>
+<li><p>Many interactive fiction software has ways to add some flare to the text being
+displayed I think I will leave this out or now. Normal html tags continue to work
+and I can allow people to use their own CSS files if they are really into it.</p></li>
+<li><p>Finally, as a final sanity check, I want to make sure that any interactive
+action that was attempted in the 5e Solo Gamebooks to be supported.</p></li>
+</ul>
+<p>This should have been followed by a minimal example of a file but I got distracted for now.</p>
+</div>
+<div id="dealing-with-maps" class="section level2">
+<h2>Dealing with maps</h2>
+<p>The most annoying task for me in this project seems to be the grid combat layer since I am
+not good at javascript myself and there aren’t specialized tools to deal with the issue
+We need the ability to use a custom background image to act as a map and some draggable tokens. It would be a bonus to be able align tokens to a grid but I have concerns about it since it would force content creator to align the files properly as well.</p>
+<p>A quick search for a javascript library that I may port using <code>htmlwidgets</code> lead to
+nowhere. So it appears that the best scenario here is to use <code>leaflet</code> or something similar. From memory I can say leaflet can have image overlays, it can add markers with custom images on a map. So I should be able to use a leaflet map without a background tile
+layer. Maybe I should consider allowing creation of actual tile layers to allow for larger maps but let’s stick to the basics for now.</p>
+<p>Initially, googling for how to add images to a leaflet map lead me to the <code>addRasterImage</code> function. However it appears
+that it <a href="https://github.com/rstudio/leaflet/issues/371">doesn’t behave well</a> with non-projected coordinate systems which we want to be using because we are not mapping a globe here. Also my quick and dirty attempt to show <a href="https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3">this</a> random map I found lead to an undesirable result.</p>
+<pre class="r"><code>library(leaflet)
+library(raster)
+library(magrittr)
+
+download.file(&#39;https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3&#39;,
+              destfile = &#39;map.jpg&#39;)
+map = raster::raster(&#39;map.jpg&#39;)
+crs(map) = CRS(&quot;+init=epsg:4326&quot;)
+
+leaflet() %&gt;%
+    leaflet::addRasterImage(map)</code></pre>
+<p><img src="../files/5eif/badPic.png" /></p>
+<p>After a quick visit to <a href="https://stackoverflow.com/questions/60160039/adding-just-an-arbitrary-image-to-a-leaflet-map">stackoverflow</a> I don’t know what exactly is wrong with <code>addRasterImage</code> function but I know that I can use javascript to work around it.</p>
+<pre class="r"><code>imageURL = &#39;https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&amp;s=ff2fa2e448bb92c4ed6c049133f80370f306acb3&#39;
+
+# get image data. we&#39;ll use this to set the image size
+imageData = 
+    magick::image_read(imageURL) %&gt;% magick::image_info()
+
+leaflet(options = leafletOptions(crs = leafletCRS(&#39;L.CRS.Simple&#39;), minZoom = -1)) %&gt;%
+        setView(0,0,zoom = -1) %&gt;%
+        htmlwidgets::onRender(glue::glue(&quot;
+      function(el, x) {
+        var myMap = this;
+        var imageUrl = &#39;&lt;imageURL&gt;&#39;;
+        var imageBounds = [[&lt;-imageData$height/2&gt;,&lt;-imageData$width/2&gt;], [&lt;imageData$height/2&gt;,&lt;imageData$width/2&gt;]];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(myMap);
+      }
+      &quot;,.open = &#39;&lt;&#39;, .close = &#39;&gt;&#39;))</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"options":{"minZoom":-1,"crs":{"crsClass":"L.CRS.Simple","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[0,0],-1,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (function(el, x) {\n  var myMap = this;\n  var imageUrl = 'https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&s=ff2fa2e448bb92c4ed6c049133f80370f306acb3';\n  var imageBounds = [[-1020.5,-1404], [1020.5,1404]];\n\n  L.imageOverlay(imageUrl, imageBounds).addTo(myMap);\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<p>So now we can show arbitrary images as maps using leaflet. If we add movable tokens of different sizes to this map, the basic functionality will be complete. <code>addMarkers</code> function of leaflet is the easiest way to do this. You give it an image and coordinates and it places it where you want. Lets use a random map I grabbed from <a href="https://davesmapper.com/">Dave’s Mapper</a>
+and try adding some tokens that are grabbed from <a href="https://game-icons.net/1x1/cathelineau/swordman.html">game-icons.net</a>. While doing that we should make sure that the size of the token we are adding matches the size of a single square on the map. In the actual app, the creator should be able to give a unit square size and spawn characters of</p>
+<pre class="r"><code>imagePath = &#39;files/5eif/tile.png&#39;
+
+imageData = 
+    magick::image_read(imagePath) %&gt;% magick::image_info()
+
+# this tile is 10x10 squares
+gridWidth = imageData$height/10
+gridHeight = imageData$width/10
+
+leaflet(options = leafletOptions(crs = leafletCRS(&#39;L.CRS.Simple&#39;), minZoom = 0)) %&gt;%
+        setView(0,0,zoom = 0) %&gt;%
+    addMarkers(lng = gridWidth/2, lat = gridHeight/2,options =  markerOptions(draggable = TRUE),
+               icon = list(iconUrl = &#39;https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg&#39;, 
+                                    iconSize = c(gridHeight,gridWidth))) %&gt;%
+        htmlwidgets::onRender(glue::glue(&quot;
+      function(el, x) {
+        var myMap = this;
+        var imageUrl = &#39;&lt;imagePath&gt;&#39;;
+        var imageBounds = [[&lt;-imageData$height/2&gt;,&lt;-imageData$width/2&gt;], [&lt;imageData$height/2&gt;,&lt;imageData$width/2&gt;]];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(myMap);
+      }
+      &quot;,.open = &#39;&lt;&#39;, .close = &#39;&gt;&#39;))</code></pre>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"options":{"minZoom":0,"crs":{"crsClass":"L.CRS.Simple","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[0,0],0,[]],"calls":[{"method":"addMarkers","args":[15,15,{"iconUrl":{"data":"https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg","index":0},"iconSize":[[30,30]]},null,null,{"interactive":true,"draggable":true,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[15,15],"lng":[15,15]}},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (function(el, x) {\n  var myMap = this;\n  var imageUrl = '../files/5eif/tile.png';\n  var imageBounds = [[-150,-150], [150,150]];\n\n  L.imageOverlay(imageUrl, imageBounds).addTo(myMap);\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<p>Now we have a token that is appears to be at the right size on the map and fits a
+tile square. However, if you zoom in, you’ll notice that the size of the marker
+doesn’t scale with the map’s zoom level. Markers’ normal use case is to be map markers
+that are visible regardless of map’s zoom level so they are not scaled by default.
+Also there are no options to make them simply resize on a zoom event. After searching for a while
+I find <a href="https://gis.stackexchange.com/questions/216558/leaflet-resize-markers-in-layer-when-zoom-in">this</a> answer
+in stack exchange which leads me to believe I’ll have to use
+<a href="https://leafletjs.com/reference-1.6.0.html#map-zoomend">zoomend</a> event to resize the tokens when zoom level changes.</p>
+<p>There is some experimenting in between finding that answer and writing the code below but basically, I found that
+if you have multiple tokens in different layers, you have to apply <code>setIcon</code> function on each layer to update them all. I also seem to be doing something wrong when using <code>addMarker</code> function as is doesn’t like me adding multiple markers with a single call so I’ll likely have to iterate over multiple layers to change the icon size. The easiest way to iterate a bunch of layers appears to be grouping them together and using <code>map.layerManager.getLayerGroup()</code> to iterate over all the layers. We will be adding the code required into the
+<code>htmlwidgets::onRender</code> function.</p>
+<pre class="r"><code>imagePath = &#39;files/5eif/tile.png&#39;
+
+imageData = 
+    magick::image_read(imagePath) %&gt;% magick::image_info()
+
+# this tile is 10x10 squares
+gridWidth = imageData$height/10
+gridHeight = imageData$width/10
+
+leaflet(options = leafletOptions(crs = leafletCRS(&#39;L.CRS.Simple&#39;), minZoom = 0)) %&gt;%
+        setView(0,0,zoom = 0) %&gt;%
+    addMarkers(lng = gridWidth/2, lat = gridHeight/2,group = &#39;tokens&#39;,options =  markerOptions(draggable = TRUE),
+               icon = list(iconUrl = &#39;https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg&#39;, 
+                                    iconSize = c(gridHeight,gridWidth))) %&gt;%
+    addMarkers(lng = gridWidth/2+2*gridWidth, lat = gridHeight/2,group = &#39;tokens&#39;,options =  markerOptions(draggable = TRUE),
+               icon = list(iconUrl = &#39;https://game-icons.net/icons/000000/ffffff/1x1/lorc/bowman.svg&#39;, 
+                                    iconSize = c(gridHeight,gridWidth))) %&gt;% 
+        htmlwidgets::onRender(glue::glue(&quot;
+      function(el, x) {
+        var myMap = this;
+        var imageUrl = &#39;/&lt;imagePath&gt;&#39;;
+        var imageBounds = [[&lt;-imageData$height/2&gt;,&lt;-imageData$width/2&gt;], [&lt;imageData$height/2&gt;,&lt;imageData$width/2&gt;]];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(myMap);
+        
+        myMap.on(&#39;zoomend&#39;, function() {
+            var currentZoom = myMap.getZoom();
+            myMap.layerManager.getLayerGroup(&#39;tokens&#39;).getLayers().forEach(function(value,i){
+                value.setIcon(L.icon({iconUrl: value._icon.src, iconSize: [&lt;gridHeight&gt;*Math.pow(2,currentZoom),&lt;gridWidth&gt;*Math.pow(2,currentZoom)]}))
+            })
+        
+        })
+      }
+      &quot;,.open = &#39;&lt;&#39;, .close = &#39;&gt;&#39;))</code></pre>
+<div id="htmlwidget-3" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"options":{"minZoom":0,"crs":{"crsClass":"L.CRS.Simple","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[0,0],0,[]],"calls":[{"method":"addMarkers","args":[15,15,{"iconUrl":{"data":"https://game-icons.net/icons/000000/ffffff/1x1/cathelineau/swordman.svg","index":0},"iconSize":[[30,30]]},null,"tokens",{"interactive":true,"draggable":true,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMarkers","args":[15,75,{"iconUrl":{"data":"https://game-icons.net/icons/000000/ffffff/1x1/lorc/bowman.svg","index":0},"iconSize":[[30,30]]},null,"tokens",{"interactive":true,"draggable":true,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[15,15],"lng":[15,75]}},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (function(el, x) {\n  var myMap = this;\n  var imageUrl = '../files/5eif/tile.png';\n  var imageBounds = [[-150,-150], [150,150]];\n\n  L.imageOverlay(imageUrl, imageBounds).addTo(myMap);\n  \n  myMap.on('zoomend', function() {\n  \tvar currentZoom = myMap.getZoom();\n  \tmyMap.layerManager.getLayerGroup('tokens').getLayers().forEach(function(value,i){\n  \t\tvalue.setIcon(L.icon({iconUrl: value._icon.src, iconSize: [30*Math.pow(2,currentZoom),30*Math.pow(2,currentZoom)]}))\n  \t})\n  \n  })\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<p>As it stands, we’re done at a bare bones level. I’ll have to add groups for each size category unless I find a reliable way to pull token size. Token object properties doesn’t seem to be consistently updated on a size change so I don’t trust them yet.
+It shouldn’t affect performance too much… I will also turn this into a module with the inputs:</p>
+<ul>
+<li>background map</li>
+<li>minimum, maximum zoom</li>
+<li>initial zoom</li>
+<li>image paths for the tokens</li>
+<li>size category for the tokens (need to decide what to do about possible rectangles even though 5e doesn’t technically have them)</li>
+<li>initial locations of the tokens. If no location is provided, possibly line them on the top of the map so the player can place the tokens as instructed. It would be difficult to have conditional token placement unless alternative encounter scenes are created.</li>
+<li>possibly pop up data for the tokens. At a bare minimum, I should be adding names. Might display more information if I can.</li>
+</ul>
+</div>
+
+	</div>
+		</article>
+		
+<section id="comments">
+<script src="https://utteranc.es/client.js"
+        repo="oganm/oganm.com"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+</section>
+
+
+	</main>
+		
+	      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="../index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="../images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+           <li>
+            <a href="https://www.r-bloggers.com/" class="footer-links-kudos"><img src="../images/r-bloggers.png" alt="Img link to Rbloggers website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-111816736-3', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+	

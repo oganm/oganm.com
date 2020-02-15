@@ -1,0 +1,12 @@
+{{ if and (not (eq .Site.Params.Utterances "")) (not .Params.disable_comments) }}
+<section id="comments">
+<script src="https://utteranc.es/client.js"
+        repo="{{ .Site.Params.Utterances }}"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+</section>
+{{ end }}

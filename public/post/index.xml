@@ -6,10 +6,19 @@
     <description>Recent content in Posts on B. Ogan Mancarci</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building an Interactive Fiction System for D&amp;D 5e</title>
+      <link>/5e-interactive-fiction/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/5e-interactive-fiction/</guid>
+      <description>Picking the adventure format Dealing with maps   Some time ago I noticed an interesting product on DM’s Guild. Someone has written a series of solo adventures that are played in a similar manner to choose your own adventure games of the good old days. An adventure comes as a pdf file, describing a scene, presenting the player with options and directing the player to another section in the pdf file based on their choices.</description>
+    </item>
     
     <item>
       <title>Using different/modified version of the same package</title>

@@ -1,2 +1,4 @@
 #!/bin/bash
+rm -r /var/www/html/
+mkdir /var/www/html
 cp -r public/. /var/www/html
