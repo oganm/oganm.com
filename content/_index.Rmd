@@ -33,7 +33,7 @@ Here's a [CV](http://oganm.github.io/CV/).
 
 * [**ermineR**](https://github.com/PavlidisLab/ermineR) is an R package that wraps ermineJ, our lab's gene set enrichment tool.
 
-* [**allenBrain**](https://github.com/oganm/allenBrain) is an R package that wraps parts of the [Allen Brain Atlas](http://portal.brain-map.org/) API. It focuses on extracting ISH images and syncronization between reference atlases and ISH images.
+* [**allenBrain**](https://github.com/oganm/allenBrain) is an R package that wraps parts of the [Allen Brain Atlas](http://portal.brain-map.org/) API. It focuses on extracting ISH images and synchronization between reference atlases and ISH images.
 
 * I maintain bunch of other [**bioinformatics related packages**](https://github.com/topics/ogan-bio) as well. Packages for gene [homology](https://github.com/oganm/homologene) and [synonym](https://github.com/oganm/geneSynonym) detection, an [MRI visualization tool](https://github.com/oganm/brainspriteR) etc.
 
@@ -53,7 +53,7 @@ Here's a [CV](http://oganm.github.io/CV/).
 
 * I maintain a dataset of D&D characters submitted to the apps above at [**dnddata**](https://github.com/oganm/dnddata).
 
-* [**diceSyntax**](https://github.com/oganm/diceSyntax) is an R package that supports complex dice rolling syntax such as `10d8d3ro<3`. That means roll 10 d8s, reroll anything below 3 once, drop three lowest dice. import5eChar and my other D&D related packages depend on this
+* [**diceSyntax**](https://github.com/oganm/diceSyntax) is an R package that supports complex dice rolling syntax such as `10d8d3ro<3`. That means roll 10 d8s, re-roll anything below 3 once, drop three lowest dice. import5eChar and my other D&D related packages depend on this
 
 * I maintain [**other D&D related packages**](https://github.com/topics/ogan-dnd) as well.
 
