@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  	<link rel="icon" type="image/png" href="http://oganm.com/favicon.ico?v=1">
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.55.6" />
+<meta name="twitter:card" content="summary" >
+<meta name="twitter:site" content="@oganm" >
+<meta name="twitter:image" content="http://oganm.com/images/ogbrain.jpg" >
+
+
+<title>Filling PDF forms with staplr: Under the hood - B. Ogan Mancarci</title>
+
+
+<meta property="twitter:title" content="Filling PDF forms with staplr: Under the hood - B. Ogan Mancarci">
+<meta property="og:title" content="Filling PDF forms with staplr: Under the hood - B. Ogan Mancarci">
+
+
+
+  
+
+
+
+
+
+
+
+	
+	<meta property="author" content="Ogan Mancarci">
+  	
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="../css/grid12.css">
+
+<link rel="stylesheet" href="../css/fonts.css" media="all">
+<link rel="stylesheet" href="../css/main.css" media="all">
+
+<link rel="stylesheet" href="../css/dropdown.css?v=1">
+
+<link rel="stylesheet" href="../css/navbarcolors.css?v=1">
+
+<link rel="stylesheet" href="../css/mainoverwrite.css?v=1">
+
+<link rel="stylesheet" href="../css/misc.css">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="../" class="nav-logo">
+    <img src="../images/ogbrain.jpg"
+         width="50"
+         height="50"
+         alt="Logo"
+         title="">
+  </a>
+  <ul class="nav-links">
+    
+    	
+    		<li>
+	
+	<a href="https://github.com/oganm">  
+	
+	
+	
+		<i class='fab fa-github'></i>
+	
+	
+	
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<li>
+	
+	<a href="https://twitter.com/oganm">  
+	
+	
+	
+		<i class='fab fa-twitter'></i>
+	
+	
+	
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<li>
+	
+	<a href="mailto:ogan.mancarci@gmail.com">  
+	
+	
+	
+		<i class='fas fa-at'></i>
+	
+	
+	
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<li>
+	
+	<a href="https://scholar.google.ca/citations?user=4PWiDJgAAAAJ&amp;hl=en">  
+	
+	
+	
+		<i class='fas fa-graduation-cap' aria-hidden></i>
+	
+	
+	Publications
+	
+	
+	
+	</a>
+	
+</li>
+    	
+    
+    	
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				<li>
+	
+	
+	
+		&nbsp;
+	
+	
+	Tools
+	
+	
+	
+</li>
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				
+    					<li>
+	
+	<a href="http://neuroexpresso.org">  
+	
+	
+	
+	
+	NeuroExpresso
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    	     	</div>
+    		</div>
+    	
+    
+    	
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				<li>
+	
+	
+	
+		&nbsp;
+	
+	
+	Fun tools
+	
+	
+	
+</li>
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				
+    					<li>
+	
+	<a href="https://oganm.com/shiny/interactiveSheet/">  
+	
+	
+	
+	
+	5e interactive sheet
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="https://oganm.com/shiny/printSheetApp">  
+	
+	
+	
+	
+	5e char sheet printer
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="https://oganm.com/shiny/swarm/">  
+	
+	
+	
+	
+	Swarm Simulator
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    	     	</div>
+    		</div>
+    	
+    
+    	
+    		<div class="dropdown">
+    			<button class="dropbtn">
+    				<li>
+	
+	<a href="../post/">  
+	
+	
+	
+	
+	Blog
+	
+	
+	
+	</a>
+	
+</li>
+    				<i class="fas fa-caret-down"></i>
+    			</button>
+    			<div class="dropdown-content">
+    				
+    					<li>
+	
+	<a href="../categories/code/">  
+	
+	
+	
+	
+	Code
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="../categories/other/">  
+	
+	
+	
+	
+	Other
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    					<li>
+	
+	<a href="../categories/notes-to-self/">  
+	
+	
+	
+	
+	Notes to self
+	
+	
+	
+	</a>
+	
+</li>
+    				
+    	     	</div>
+    		</div>
+    	
+    
+
+  </ul>
+</nav>
+      </header>
+
+
+<main class="content" role="main">
+	
+	<article class="article">
+	
+	
+	
+	
+	
+	<h1 class="article-title">Filling PDF forms with staplr: Under the hood</h1>
+	
+
+	
+	<span class="article-date">2019/05/14</span>
+	
+	
+	<div class="article-content">
+	
+<script src="../rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="../rmarkdown-libs/viz/viz.js"></script>
+<link href="../rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="../rmarkdown-libs/grViz-binding/grViz.js"></script>
+
+
+<p><code>staplr</code> is an R package, written by <a href="https://github.com/pridiltal">Priyanga Dilini
+Talagala</a>. It is a wrapper for the
+<code>[pdftk](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)</code> which is a pdf
+manipulation toolkit. The package can flip files around, “staple” (hehe)
+different pdf files together or separate them into pages. It can
+also fill PDF forms. For instance if we have <a href="../files/staplr_pdfs/simpleForm.pdf">this</a> file.</p>
+<p><img src="../post/2019-05-14-filling-pdf-forms-with-staplr-under-the-hood_files/figure-html/unnamed-chunk-1-1.png" width="300" /></p>
+<p>We can fill it by doing:</p>
+<pre class="r"><code>library(staplr)</code></pre>
+<pre><code>## Warning in fun(libname, pkgname): couldn&#39;t connect to display &quot;:0&quot;</code></pre>
+<pre class="r"><code>fields = get_fields(&quot;files/staplr_pdfs/pdf1.pdf&quot;)
+fields$TextField$value = &quot;I am writing this to the PDF form&quot;
+fields$CheckBox$value = &quot;Yes&quot;
+fields$OptionButton$value = 1
+set_fields(&quot;files/staplr_pdfs/pdf1.pdf&quot;,
+           &quot;files/staplr_pdfs/output.pdf&quot;,
+           fields)</code></pre>
+<p>And you will get <a href="../files/staplr_pdfs/output.pdf">this</a> file with the fields field.</p>
+<p><img src="../post/2019-05-14-filling-pdf-forms-with-staplr-under-the-hood_files/figure-html/unnamed-chunk-2-1.png" width="300" /></p>
+<p>This isn’t exactly a new feature. I
+<a href="https://github.com/pridiltal/staplr/issues/2">suggested</a> the feature on late
+February 2018, when the package was about a month old, pushed the <a href="https://github.com/pridiltal/staplr/pull/3">first working
+version</a> on March 2018 and by May it
+was on CRAN. It worked pretty much the same way it worked now. However in
+reality I underestimated how complex a PDF could be even as I was interacting with it through <code>pdftk</code> which is doing the heavy lifting. In the past year, I have been iteratively fixing one edge case after another. Many of those issues could have been avoided if I skimmed the <a href="https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf">PDF file specification</a> earlier… This is a tale of those fixes.</p>
+<div id="prototype" class="section level2">
+<h2>Prototype</h2>
+<p>I wrote an early version of a PDF filling function using on October 2017, to
+fill <a href="https://oganm.com/shiny/printSheetApp">Dungeons and Dragons</a> character sheets.
+My brief search on how to fill pdf forms lead me to <code>pdftk</code>. The way it filled pdfs appeared to be fairly simple.</p>
+<div id="htmlwidget-1" style="width:672px;height:110px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"digraph {\n\ngraph [rankdir = LR,\nlayout = \"dot\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"PDF file\", width = \"0.5\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"2\" [label = \"pdftk\ngenerate_fdf\", width = \"0.8\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"3\" [label = \"FDF file\", width = \"0.5\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"4\" [label = \"pdftk\nfill_form\", width = \"0.5\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"5\" [label = \"Filled PDF\", width = \"0.6\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"6\" [label = \"Edit FDF\nto fill fields\", width = \"0.8\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"7\" [label = \"Filled FDF\", width = \"0.6\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"1\"->\"2\" \n  \"2\"->\"3\" \n  \"4\"->\"5\" \n  \"1\"->\"4\" \n  \"3\"->\"6\" \n  \"6\"->\"7\" \n  \"7\"->\"4\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>As shown in the diagram above, <code>pdftk</code> fill pdf files using an intermediate text file in the
+FDF format. FDF format is described in the PDF specification (which I didn’t read at the time)
+but just looking at the file creates a nice illusion of simplicity.</p>
+<pre class="bash"><code>pdftk files/staplr_pdfs/output.pdf generate_fdf output files/staplr_pdfs/output.fdf
+cat -v files/staplr_pdfs/output.fdf # have to use -v or knitr complains about the second line</code></pre>
+<pre><code>## %FDF-1.2
+## %M-bM-cM-OM-S
+## 1 0 obj 
+## &lt;&lt;
+## /FDF 
+## &lt;&lt;
+## /Fields [
+## &lt;&lt;
+## /V (I am writing this to the PDF form)
+## /T (TextField)
+## &gt;&gt; 
+## &lt;&lt;
+## /V /1
+## /T (OptionButton)
+## &gt;&gt; 
+## &lt;&lt;
+## /V /Yes
+## /T (CheckBox)
+## &gt;&gt;]
+## &gt;&gt;
+## &gt;&gt;
+## endobj 
+## trailer
+## 
+## &lt;&lt;
+## /Root 1 0 R
+## &gt;&gt;
+## %%EOF</code></pre>
+<p>This is the FDF output from the file we just filled and things look quite obvious.
+You have field contents written as <code>/V</code> followed by field names written as <code>/T (FieldName)</code>.
+Text fields are written within <code>()</code> while button states are written after a <code>/</code> (in this case <code>/Yes</code> for the checked box).</p>
+<p>My original implementation simply read this file and replaced the relevant <code>/V</code> lines
+with the correct text.</p>
+<pre class="r"><code>fdfEdit = function(x, field,fdf){
+    if(x == TRUE &amp; is.logical(x)){
+        x = &#39;/Yes&#39;
+    } else if (x == FALSE &amp; is.logical(x)){
+        x = &#39;/Off&#39;
+    } else {
+        x %&lt;&gt;%
+            # note the excessive use of escapes due to use of str_replace later
+            gsub(x = ., pattern = &#39;\\&#39;, replacement = &quot;\\\\\\\\&quot; , fixed=  TRUE) %&gt;%
+            gsub(x = ., pattern = &#39;(&#39;,replacement = &#39;\\\\(&#39;,fixed = TRUE) %&gt;%
+            gsub(x = ., pattern = &#39;)&#39;,replacement = &#39;\\\\)&#39;, fixed = TRUE)
+
+        x = paste0(&#39;(&#39;,x,&#39;)&#39;)
+    }
+
+    fdf = stringr::str_replace(string  = fdf,pattern = paste0(&#39;/V\\s.*\n/T\\s\\(&#39;,field,&#39;\\)&#39;),
+                               replacement = paste0(&#39;/V &#39;,x,&#39;\n/T \\(&#39;,field,&#39;\\)&#39;))
+    return(fdf)
+}</code></pre>
+<p>In the code above <code>x</code> is the content of the field, <code>field</code> is the name and <code>fdf</code> is a
+character containing the entire fdf file. So to fill a pdf file I would have to do something like</p>
+<pre class="r"><code>system(&#39;pdftk files/staplr_pdfs/pdf1.pdf generate_fdf output files/staplr_pdfs/output2.fdf&#39;)
+
+fdf = readLines(&#39;files/staplr_pdfs/output2.fdf&#39;) %&gt;% paste(collapse = &#39;\n&#39;)
+
+# write to text field
+fdf = fdfEdit(&#39;I am writing this to the PDF form&#39;,&#39;TextField&#39;,fdf)
+# check to checkbox
+fdf = fdfEdit(TRUE,&#39;CheckBox&#39;,fdf)
+
+write(fdf,&#39;files/staplr_pdfs/output2.fdf&#39;)
+
+system(&quot;pdftk files/staplr_pdfs/pdf1.pdf fill_form files/staplr_pdfs/output2.fdf output files/staplr_pdfs/output2.pdf&quot;)</code></pre>
+<p><img src="../post/2019-05-14-filling-pdf-forms-with-staplr-under-the-hood_files/figure-html/unnamed-chunk-6-1.png" width="300" /></p>
+</div>
+<div id="first-working-version" class="section level2">
+<h2>First “working” version</h2>
+<p>This was were I was when I started to work on staplr. The current version was
+enough for my personal use but even just looking at the example above, one can
+see that it is not enough. You may have noticed that the version above does not
+have a way to select the option buttons. Also if we look at the FDF file of the unfilled
+form:</p>
+<pre class="bash"><code>pdftk files/staplr_pdfs/pdf1.pdf generate_fdf output files/staplr_pdfs/pdf1.fdf
+cat -v files/staplr_pdfs/pdf1.fdf</code></pre>
+<pre><code>## %FDF-1.2
+## %M-bM-cM-OM-S
+## 1 0 obj 
+## &lt;&lt;
+## /FDF 
+## &lt;&lt;
+## /Fields [
+## &lt;&lt;
+## /V ()
+## /T (TextField)
+## &gt;&gt; 
+## &lt;&lt;
+## /V /Off
+## /T (OptionButton)
+## &gt;&gt; 
+## &lt;&lt;
+## /V /Off
+## /T (CheckBox)
+## &gt;&gt;]
+## &gt;&gt;
+## &gt;&gt;
+## endobj 
+## trailer
+## 
+## &lt;&lt;
+## /Root 1 0 R
+## &gt;&gt;
+## %%EOF</code></pre>
+<p>You can see that there is no distinction in the way the checkbox and the option
+button is encoded. For someone to be able to use this function as it is, they would
+have to experiment with the file to see how the values change when certain buttons are
+checked or certain options are selected. Ideally we would have a way of providing
+more information about the fields to the end user. Thankfully, <code>pdftk</code> has a separate
+command that creates a file with the required information,</p>
+<pre class="bash"><code>pdftk files/staplr_pdfs/pdf1.pdf dump_data_fields output files/staplr_pdfs/pdf1_data
+cat files/staplr_pdfs/pdf1_data</code></pre>
+<pre><code>## ---
+## FieldType: Text
+## FieldName: TextField
+## FieldFlags: 4096
+## FieldValue: 
+## FieldJustification: Left
+## ---
+## FieldType: Button
+## FieldName: CheckBox
+## FieldFlags: 0
+## FieldValue: Off
+## FieldJustification: Left
+## FieldStateOption: Off
+## FieldStateOption: Yes
+## ---
+## FieldType: Button
+## FieldName: OptionButton
+## FieldFlags: 49152
+## FieldValue: Off
+## FieldJustification: Left
+## FieldStateOption: 1
+## FieldStateOption: 2
+## FieldStateOption: Off</code></pre>
+<p>This is great, we see fields’ current values, their types and possible states that
+a field can be in. Why isn’t something like this used as input in the first place?
+That is not for me to know.</p>
+<p>This brings us to the basic way of how <code>staplr</code> currently
+works. <code>get_fields</code> function will parse this file and return an R list that
+contains information about the properties of the field. After editing this object
+<code>set_fields</code> is used to generate an <code>fdf</code> file using the original <code>fdfEdit</code> function.</p>
+<pre class="r"><code>fields = get_fields(&#39;files/staplr_pdfs/pdf1.pdf&#39;)
+fields</code></pre>
+<pre><code>## $TextField
+## $TextField$type
+## [1] &quot;Text&quot;
+## 
+## $TextField$name
+## [1] &quot;TextField&quot;
+## 
+## $TextField$value
+## [1] &quot;&quot;
+## 
+## 
+## $CheckBox
+## $CheckBox$type
+## [1] &quot;Button&quot;
+## 
+## $CheckBox$name
+## [1] &quot;CheckBox&quot;
+## 
+## $CheckBox$value
+## [1] Off
+## Levels: Yes Off
+## 
+## 
+## $OptionButton
+## $OptionButton$type
+## [1] &quot;Button&quot;
+## 
+## $OptionButton$name
+## [1] &quot;OptionButton&quot;
+## 
+## $OptionButton$value
+## [1] Off
+## Levels: 1 2 Off</code></pre>
+<pre class="r"><code>fields$TextField$value =&#39;Some text&#39;
+
+set_fields(input_filepath = &#39;files/staplr_pdfs/pdf1.pdf&#39;,
+           output_filepath = &#39;files/staplr_pdfs/pdf2.pdf&#39;,
+           fields = fields)</code></pre>
+<p>This alters our original pipeline a little</p>
+<pre class="r"><code>graph = create_graph() %&gt;% 
+    add_node(label = &#39;PDF file&#39;) %&gt;%  # 1
+    add_node(label = &#39;pdftk\ngenerate_fdf&#39;, # 2
+             node_aes = node_aes(width = .8)) %&gt;% 
+    add_node(label = &#39;FDF file&#39;) %&gt;%  # 3
+    add_node(label = &#39;pdftk\nfill_form&#39;) %&gt;%  # 4
+    add_node(label = &#39;Filled PDF&#39;, node_aes = list(width = 0.6)) %&gt;%  # 5
+    add_node(label = &#39;Edit FDF\nto fill fields&#39;, node_aes = list(width = 0.8)) %&gt;% # 6
+    add_node(label = &#39;Filled FDF&#39;, node_aes = list(width = 0.6)) %&gt;% # 7 
+    set_node_attrs(&#39;shape&#39;,
+                   &#39;rectangle&#39;,
+                   nodes = c(2,4,6)) %&gt;% 
+    set_node_attrs(&#39;fillcolor&#39;,
+                   &#39;lightgray&#39;,
+                   nodes = c(2,4,6)) %&gt;%
+    set_node_attrs(
+        node_attr = &#39;fontcolor&#39;,
+        values = &#39;black&#39;
+    )  %&gt;%
+    add_edge(from=1,to=2) %&gt;%
+    add_edge(from = 2, to = 3) %&gt;%
+    add_edge(from  = 4, to = 5) %&gt;%
+    add_edge(from =1, to =4) %&gt;% 
+    add_edge(from = 3, to = 6) %&gt;% 
+    add_edge(from = 6, to = 7) %&gt;% 
+    add_edge(from = 7, to = 4)
+
+
+graph %&gt;%
+    add_node(label = &#39;pdftk \n dump_data_fields&#39;, node_aes = list(width = 1.2)) %&gt;%  # 8
+    add_node(label = &#39;data fields\nfile&#39;) %&gt;% # 9
+    add_node(label = &#39;pdftk \n dump_data_fields&#39;, node_aes = list(width = 1.2)) %&gt;%  # 8
+    set_node_attrs(&#39;shape&#39;,
+                   &#39;rectangle&#39;,
+                   nodes = c(8)) %&gt;% 
+    set_node_attrs(&#39;fillcolor&#39;,
+                   &#39;lightgray&#39;,
+                   nodes = c(8)) %&gt;% 
+    set_node_attrs(
+        node_attr = &#39;fontcolor&#39;,
+        values = &#39;black&#39;
+    ) %&gt;% 
+    add_edge(from=1,to=8) %&gt;% 
+    add_edge(from = 8, to = 9) %&gt;% 
+    drawGraph()</code></pre>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"diagram":"digraph {\n\ngraph [rankdir = LR,\nlayout = \"dot\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"PDF file\", width = \"0.5\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"2\" [label = \"pdftk\ngenerate_fdf\", width = \"0.8\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"3\" [label = \"FDF file\", width = \"0.5\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"4\" [label = \"pdftk\nfill_form\", width = \"0.5\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"5\" [label = \"Filled PDF\", width = \"0.6\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"6\" [label = \"Edit FDF\nto fill fields\", width = \"0.8\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"7\" [label = \"Filled FDF\", width = \"0.6\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"8\" [label = \"pdftk \n dump_data_fields\", width = \"1.2\", shape = \"rectangle\", fillcolor = \"lightgray\", fontcolor = \"black\"] \n  \"9\" [label = \"data fields\nfile\", width = \"0.5\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"10\" [label = \"pdftk \n dump_data_fields\", width = \"1.2\", shape = \"circle\", fillcolor = \"aliceblue\", fontcolor = \"black\"] \n  \"1\"->\"2\" \n  \"2\"->\"3\" \n  \"4\"->\"5\" \n  \"1\"->\"4\" \n  \"3\"->\"6\" \n  \"6\"->\"7\" \n  \"7\"->\"4\" \n  \"1\"->\"8\" \n  \"8\"->\"9\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+
+	</div>
+		</article>
+		
+<section id="comments">
+<script src="https://utteranc.es/client.js"
+        repo="oganm/oganm.com"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+</section>
+
+
+	</main>
+		
+	      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="../index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="../images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+           <li>
+            <a href="https://www.r-bloggers.com/" class="footer-links-kudos"><img src="../images/r-bloggers.png" alt="Img link to Rbloggers website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-111816736-3', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+	

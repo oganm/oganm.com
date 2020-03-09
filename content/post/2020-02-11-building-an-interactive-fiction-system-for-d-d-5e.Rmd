@@ -11,12 +11,19 @@ output:
 tags:
   - R
   - dnd
+editor_options: 
+  chunk_output_type: console
 ---
 
-```{r, echo = FALSE,include=FALSE}
+```{r setup, echo = FALSE,include=FALSE}
 library(leaflet)
 library(raster)
 library(magrittr)
+library(commonmark)
+library(dplyr)
+library(xml2)
+library(purrr)
+library(DiagrammeR)
 ```
 
 Some time ago I noticed an interesting product on DM's Guild. Someone has written
@@ -27,11 +34,11 @@ certain items from their inventory if they have them etc...
 
 While playing, I found myself with three pdf files open in front of me. One for narrative sections, another copy of the same file for tile-map descriptions, one to see the actual tile-maps. At the same time on my browser, I have my own [interactive character sheet](https://oganm.com/shiny/interactiveSheet) app in one tab, rule references in few other tabs, and a text editor window to keep notes. It was an enjoyable but busy experience.
 
-I stopped and got back to work while thinking to myself, "it's a shame that this can't be automated with ease" which made me decide to write an application that would do just that. I announced my intentions to the [supportive 5th Edition community](https://www.reddit.com/r/dndnext/comments/ezpcek/market_research_choose_your_adventure_system_for/), got their input for a few issues and started building the application. We are here now. **I will be writing this during the production process, so it will be a mixture of a design document and a summary of pitfalls that someone whose expertise isn't to develop web-tools will fall along the way. It will be edited as I continue building the application as some sort of a diary. Sections might be added non-chronologically to create some appearance of narrative and to keep the related parts close to each other.**
+I stopped and got back to work while thinking to myself, "it's a shame that this can't be automated with ease" which made me decide to write an application that would do just that. I announced my intentions to the [supportive 5th Edition community](https://www.reddit.com/r/dndnext/comments/ezpcek/market_research_choose_your_adventure_system_for/), got their input for a few issues and started building the application. We are here now. **I will be writing this during the production process, so it will be a mixture of a design document and a summary of pitfalls that someone whose expertise isn't to develop web-tools will fall along the way. It will be edited as I continue building the application as some sort of a diary. Sections might be added non-chronologically to create some appearance of narrative and to keep the related parts close to each other. Section headers will be followed by the date they were last updated**
 
 I do bioinformatics by trade and my "native" programming language is R. Surely a statistical computing language isn't the best tool for this task but rest of my D&D related code that I intend to re-use is written in R already so I'm sticking to it... The whole thing will likely be a combination of R and javascript haphazardly glued together.
 
-## Picking the adventure format
+## Picking the adventure format (16-02-2020)
 
 I want to start the project by defining the file format for the adventure first. This will allow me to see what features I need to implement. My initial thoughts on this are:
 
@@ -90,9 +97,309 @@ and I can allow people to use their own CSS files if they are really into it.
 * Finally, as a final sanity check, I want to make sure that any interactive
 action that was attempted in the 5e Solo Gamebooks to be supported.
 
-This should have been followed by a minimal example of a file but I got distracted for now.
+Based on these criteria I will be using [this](/files/5eif/minimalExample.txt) file as a minimal example. The exact format and features might change as the project evolves. Currently monster and npc definitions aren't complete for instance. The linked file will change if I explain the changes on this chapter to make it look like I have planned it all, it will stay the same if I choose to explain them along with the aspect of the project that caused the change. I haven't decided yet...
 
-## Dealing with maps
+## Parsing the files (27-02-2020)
+
+I need a reliable way to parse the syntactical abomination I just defined up here. As I am writing this, there are still a few undefined parts such as NPC and monster definitions so the way to deal with them will have to wait for a bit.
+
+The main package that will be helping me here is `commonmark` which parses an md file and can convert it into an xml, which in turn I can turn into a list. There is currently one option that is defined by a yaml on top of the file, which can be read with `yaml` package.
+
+I will be using the `markdown_html` to get the output in html structure since that will allow me to insert the scenes I extract
+directly into the user UI, probably using `shiny::insertUI`.
+
+Lets start with the minimal example as is
+
+```{r readFile}
+library(commonmark)
+library(dplyr)
+library(xml2)
+library(purrr)
+library(gameicons)
+
+yamlOptions = yaml::read_yaml('files/5eif/minimalExample.txt')
+
+# in this minimal example these files aren't real but these files would be processed
+# in the same manner as the main campaign file
+# currently only yaml option is the import but that might change later
+yamlOptions
+
+fileLines = readLines('files/5eif/minimalExample.txt') 
+
+# the first two repeated -s are parts of the yaml and they are wrongly added into
+# the html as an h2 if passed down there so we'll be removing them and the lines in between
+fileLines = grep('--',fileLines)[1:2] %>% 
+	{seq(.[1],.[2])} %>% 
+	{fileLines[-.]}
+
+# let's cheat a little and place anything related to our syntax in a script tag so that they can be parsed
+# as html directly. otherwise we'd have to go through text after it is parsed
+
+fileLines %<>% 
+	gsub('{{','<script class="5eifCode">',.,fixed = 'TRUE') %>% gsub('}}','</script>',.,fixed = 'TRUE')
+
+
+campaign = fileLines %>% 
+	paste0(collapse = '\n') %>% 
+	markdown_html() %>% 
+	xml2::read_html() %>% 
+	xml2::as_list() %$% 
+	html %$% body
+
+```
+
+Won't be displaying the `campaign` object here since it's large and messy but the important part is that
+we know that:
+
+* Scenes are separated by `h2` headers
+
+* Campaign name is the first and currently only `h1` header
+
+* `h1`, `h2` and `p` and other tags are named elements in our list
+
+* Our custom commands appears withing `script` tags with a unique class name
+
+So lets start getting relevant information from the file.
+
+
+```{r processFile}
+
+
+
+# ensure that there is only one h1.
+assertthat::assert_that(sum(names(campaign) == 'h1') == 1)
+
+# get the title
+campaignTitle = 
+	campaign %>%
+	{.[[which(names(.) == 'h1')]]} %>% 
+	unlist %>% {.[. != '[ comment ]']} %>% # remove comments
+	paste(collapse = '')
+campaignTitle
+
+# get scene titles
+sceneIndices = which(names(campaign) == 'h2')
+sceneTitles = campaign[sceneIndices] %>% sapply(function(x){
+	x %>% unlist %>%  {.[. != '[ comment ]']}
+})
+
+
+# a small function to extract a scene
+get_scene = function(scene,campaign,sceneIndices, sceneTitles){
+	sceneIndexIndex = which(sceneTitles == scene)
+	
+	sceneBorders = sceneIndices[c(sceneIndexIndex,sceneIndexIndex+1)]
+	
+	if(is.na(sceneBorders[2])){
+		sceneBorders[2] = length(campaign)
+	}
+	
+	sceneData = campaign[seq(sceneBorders[1], sceneBorders[2]-1)]
+}
+
+
+room = get_scene("The Room", campaign, sceneIndices, sceneTitles)
+room %>% head
+```
+
+We will have to embed this data into a shiny application eventually so let's see if
+we can do that in a straightforward manner
+
+```{r sceneToTags}
+
+scene_to_tags = function(scene){
+	lapply(seq_along(scene),function(i){
+		tagName = names(scene[i])
+		if(!is.null(tagName) && tagName!=''){
+			# make sure we are not leaving attributes behind
+			attributes = attributes(scene[[i]])
+			attributes = attributes[!names(attributes) %in% 'names']
+			if(!is.null(names(attributes))){
+				names(attributes) = gsub('.','',names(attributes),fixed = TRUE)
+			}			
+			
+			if(length(scene[[i]]) > 1){
+				return(do.call(htmltools::tags[[tagName]],
+						# create a list to add the attributes if there are any
+						c(scene_to_tags(scene[[i]]),attributes)))
+			} else{
+				return(do.call(htmltools::tags[[tagName]],
+						c(scene[[i]],attributes)))
+			}
+		} else{
+			# if the tag has no name, it's a child of the parent tag so pass it as is.
+			# it will be processed by the parent call
+			if(scene[[i]]!= '[ comment ]'){
+				return(scene[[i]])
+			} else{return(NULL)}
+		}
+
+		
+		}) %>% do.call(shiny::tagList,.)
+}
+
+scene_to_tags(room)
+```
+
+`scene_to_tags` function will allow us to turn these scenes into html tags. Currently
+buttons are invisible since they are encoded as `script` tags. Ultimately we will be replacing
+the `script` tags with intractable buttons. My current thinking is to deal with the replacement
+within this function since we are already traversing the object. Since we will be adding
+buttons directly through html instead of the shiny functions, we will have to manually bind 
+them to shiny inputs. I will probably set a single shiny input that will be set to information about what button is pressed instead of creating shiny inputs for each new button. That means we can
+just have an internal syntax that tells a single listener what to do. I also want to extract some
+information about the scene while doing this.
+
+The details will of this will wait for the rest of the infrastructure but for now, lets turn the output into a list with two elements. First element is the tagList while second element is information extracted from the code within the scene. For now, showing which other scenes the scene is connected to. This is somewhat annoying to do due to recursive nature of the function. The tagList still needs to be created recursively, while the data we are extracting is non-hierarchical and can pop up anywhere within the function. We can deal with that by creating an object in the environment
+of the first function call and modify that object in the recursive calls by referring to the original environment.
+
+```{r getConnections}
+
+# modify the scene_to_tags function to intercept script tags
+
+process_scene = function(scene, env = NULL){
+
+	# if this is the first call, create the sceneData object
+	if(is.null(env)){
+		sceneData = list(
+			links = list()
+		)
+		env = environment()
+		isRoot = TRUE
+	} else{
+		isRoot = FALSE
+	}
+	
+	
+	tags = lapply(seq_along(scene),function(i){
+		tagName = names(scene[i])
+		if(!is.null(tagName) && tagName!=''){
+			# make sure we are not leaving attributes behind
+			attributes = attributes(scene[[i]])
+			attributes = attributes[!names(attributes) %in% 'names']
+			if(!is.null(names(attributes))){
+				names(attributes) = gsub('.','',names(attributes),fixed = TRUE)
+			}			
+			# intercept the script call to extract data
+			if(tagName =='script' && !is.null(attributes$class) && attributes$class == '5eifCode'){
+				if(grepl('^\\\\',scene[[i]][[1]])){
+					# ignore this for now. any command that starts with a \ is not a location link
+				} else{
+					# processing the syntax for room links. this syntax may change
+					if(grepl('\\|',scene[[i]][[1]])){
+						linkData = strsplit(scene[[i]][[1]],'\\|')[[1]]
+						linkText = linkData[1]
+						
+						linkData = linkData[2] %>% strsplit(':') %>% {.[[1]]}
+						linkTarget = linkData[1]
+						linkArgs = linkData[2]
+						
+						
+					} else{
+						linkData = strsplit(scene[[i]][[1]],':')[[1]]
+						linkText =linkData[1]
+						linkTarget = linkData[1]
+						linkArgs = linkData[2]
+						
+					}
+					append = list(list(
+						text = linkText,
+						target = linkTarget,
+						args = linkArgs))
+					names(append) = linkTarget
+						
+					env$sceneData$links = c(env$sceneData$links, 
+											append)
+				}
+				
+			}
+			
+			if(length(scene[[i]]) > 1){
+				return(do.call(htmltools::tags[[tagName]],
+						# create a list to add the attributes if there are any
+						c(process_scene(scene[[i]], env),attributes)))
+			} else{
+				return(do.call(htmltools::tags[[tagName]],
+						c(scene[[i]],attributes)))
+			}
+		} else{
+			# if the tag has no name, it's a child of the parent tag so pass it as is.
+			# it will be processed by the parent call
+			if(scene[[i]]!= '[ comment ]'){
+				return(scene[[i]])
+			} else{return(NULL)}
+		}
+
+		
+		}) %>% do.call(shiny::tagList,.)
+	
+	if(!isRoot){
+		return(tags)
+	} else{
+		return(list(tags = tags,
+					data = sceneData))
+	}
+	
+}
+
+roomData = process_scene(room)
+
+roomData$data$links
+```
+
+
+Now we have a function that returns the tag lists and some information about a room.
+Ultimately this will be modified to intercept all script tags with class `5eifCode` and replace them with relevant input devices. That part will come later.
+
+For now we can make a quick and dirty visualization tool
+
+```{r}
+library(DiagrammeR)
+
+
+processedScenes = sceneTitles %>% lapply(function(x){
+	get_scene(x,campaign,sceneIndices,sceneTitles) %>% process_scene()
+})
+names(processedScenes) = sceneTitles
+
+# just a way to fidget with graphs (https://stackoverflow.com/questions/54109621/r-diagrammer-horizontal-graph/56590762#56590762)
+draw_graph = function(graph){
+	graph %>% 
+		generate_dot() %>% 
+		gsub(pattern = 'neato',replacement = 'dot',x= .) %>%
+		gsub(pattern = "graph \\[",'graph \\[rankdir = LR,\n',x = .) %>% 
+		grViz()
+}
+
+
+graph = create_graph() 
+
+# remove special headers for now. Not sure if they'll be reserved words or will have a different syntax for them
+processedScenes = processedScenes[!names(processedScenes) %in% c('Characters','Stat Blocks')]
+
+for (i in seq_along(processedScenes)){
+	graph %<>% add_node(label = names(processedScenes[i]))
+	
+	links = processedScenes[[i]]$data$links %>% names
+	linkIndex = which(names(processedScenes) %in% links)
+	for(j in linkIndex){
+		# fun fact: apparently we can add edges to not-yet-existing nodes
+		graph %<>% add_edge(from =i, to = j)
+	}
+}
+
+graph %<>% set_node_attrs(
+		node_attr = 'fontcolor',
+		values = 'black'
+	) 
+
+draw_graph(graph)
+
+```
+
+I am also planning to make something like this available to content creators somehow.
+
+## Dealing with maps (14-02-2020)
 
 The most annoying task for me in this project seems to be the grid combat layer since I am
 not good at javascript myself and there aren't specialized tools to deal with the issue
@@ -105,7 +412,7 @@ layer. Maybe I should consider allowing creation of actual tile layers to allow 
 Initially, googling for how to add images to a leaflet map lead me to the `addRasterImage` function. However it appears
 that it [doesn't behave well](https://github.com/rstudio/leaflet/issues/371) with non-projected coordinate systems which we want to be using because we are not mapping a globe here. Also my quick and dirty attempt to show [this](https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&s=ff2fa2e448bb92c4ed6c049133f80370f306acb3) random map I found lead to an undesirable result.
 
-```{r, eval = FALSE}
+```{r badMap}
 library(leaflet)
 library(raster)
 library(magrittr)
@@ -119,12 +426,10 @@ leaflet() %>%
     leaflet::addRasterImage(map)
 ```
 
-![](/files/5eif/badPic.png)
-
 After a quick visit to [stackoverflow](https://stackoverflow.com/questions/60160039/adding-just-an-arbitrary-image-to-a-leaflet-map) I don't know what exactly is wrong with `addRasterImage` function but I know that I can use javascript to work around it.
 
 
-```{r}
+```{r workingMap}
 
 imageURL = 'https://external-preview.redd.it/7tYT__KHEh8FBKO6bsqPgC02OgLCHAFVPyjdVZI4bms.jpg?auto=webp&s=ff2fa2e448bb92c4ed6c049133f80370f306acb3'
 
@@ -148,7 +453,7 @@ leaflet(options = leafletOptions(crs = leafletCRS('L.CRS.Simple'), minZoom = -1)
 So now we can show arbitrary images as maps using leaflet. If we add movable tokens of different sizes to this map, the basic functionality will be complete. `addMarkers` function of leaflet is the easiest way to do this. You give it an image and coordinates and it places it where you want. Lets use a random map I grabbed from [Dave's Mapper](https://davesmapper.com/)
 and try adding some tokens that are grabbed from [game-icons.net](https://game-icons.net/1x1/cathelineau/swordman.html). While doing that we should make sure that the size of the token we are adding matches the size of a single square on the map. In the actual app, the creator should be able to give a unit square size and spawn characters of 
 
-```{r,eval = FALSE}
+```{r tokenMap,eval = FALSE}
 imagePath = 'files/5eif/tile.png'
 
 imageData = 
@@ -174,7 +479,7 @@ leaflet(options = leafletOptions(crs = leafletCRS('L.CRS.Simple'), minZoom = 0))
       ",.open = '<', .close = '>'))
 ```
 
-```{r,echo = FALSE}
+```{r tokenMapEval,echo = FALSE}
 imagePath = 'files/5eif/tile.png'
 
 imageData = 
@@ -298,3 +603,35 @@ It shouldn't affect performance too much... I will also turn this into a module 
 * size category for the tokens (need to decide what to do about possible rectangles even though 5e doesn't technically have them)
 * initial locations of the tokens. If no location is provided, possibly line them on the top of the map so the player can place the tokens as instructed. It would be difficult to have conditional token placement unless alternative encounter scenes are created.
 * possibly pop up data for the tokens. At a bare minimum, I should be adding names. Might display more information if I can.
+
+UI design (05-03-2020)
+----------------
+
+It's time to merge everything into a UI now. You'll notice that our plan is nowhere near complete now but I'll be canibalizing lots of code to make this work so it is a good idea how things get together before going too crazy with the details. I am planning to go with a `shinydashboard` design since we will need multiple windows to display all information on demand. Also my UI skills aren't amazing so I don't want to be designing features that will fail because I can't implement them on the UI end.
+
+My initial thinking is something like this
+
+<img src="/files/5eif/5esoloui.png"  width="600px">
+
+
+The main window is where the scenes and encounters will be displayed. Current plan is to have separate windows for scenes and encounters since encounters will require more complex UI elements, I might end up merging the two, allowing embedding encounters directly into the story text. The complex UI elements might be outsourced into the shortcuts section
+
+The main window can be used to display whole character sheets and notes such as inventory contents and other information that the campaign requires. Considering allowing a scene that can work as a world map/game summary/quest log here as well.
+
+The shortcuts section is there to save people from having to switch to viewing whole character sheets or notes all the time so it will have some of the information that may be relevant regardless of scene context.
+
+Finally the console output is where the reporting will happen. Any roll will be reported there. I can cut it in half for some encounter specific elements later. 
+
+Not pictured here but the sidebar will probably have something like an initiative tracker above or below the import/export buttons. Now I can proceed to write the modules.
+
+## Diversion: [gameicons](https://github.com/oganm/gameicons) package (05-03-2020)
+
+Shiny allows adding icons from fontawesome and glyphicons with the `icon` function. This is nice because one doesn't have to deal with css or adding the full tag to make the icons appear. These glyph fonts are a little limited for our purposes though. They are for general web use not for an RPG ui. Thankfully we have [game-icons](https://game-icons.net/) that include glyphs that are more useful for our purposes featuring both dungeons `r game_icon("dungeon-gate")` and dragons `r game_icon('dragon-head')`.
+
+The code for the entire package is rather short with a single important function (`game_icon()`) and the output class is identical to the `icon` package, making it usable as a replacement. Most of the heavy lifting was already done in [this](https://github.com/seiyria/gameicons-font/) repository where svg files provided by the site is turned into a font, also automatically incorporating any changes with daily updates. So the package only loads the CSS from there and inserts the correct syntax for the desired glyph into the site.
+
+One useful addition is the `iconTable` data frame which includes the author and license information for all icons provided through the package. Most of these icons were released under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) and require giving credit to the creator.
+
+```{r}
+head(gameicons::iconTable)
+```
